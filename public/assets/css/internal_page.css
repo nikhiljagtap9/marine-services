@@ -1,0 +1,76 @@
+
+
+.navbar-brand.m-0 .logo-white{
+    display: none !important;
+}
+
+.navbar-brand.m-0 .logo-dark {
+    display: inline-block !important;
+    float: left;
+    width: 150px;
+    height: auto;
+    margin-top: -16px;
+    margin-bottom: -23px;
+    border-radius: 20px;
+}
+
+.navbar .nav-link{
+    color:#333;
+}
+
+.navbar-nav .nav-link.active, .navbar-nav .nav-link.show{
+    color:#333;
+}
+
+.navbar-nav .nav-link.active, .navbar-nav .nav-link.show {
+        border-color: #333;
+    }
+
+    .custom-navbar.navbar.navbar-expand-lg i{
+        color:#333;
+    }
+
+    .main_map{
+     
+    }
+
+    .main_map iframe{
+        float: left;
+        width: 100%;
+        height: 100%;
+    }
+
+
+    .clear{
+        clear: both;
+    }
+
+
+    #hotel-list .hotel-item{
+        float: left;
+        width: 49%;
+        margin-left: 0.5%;
+        margin-right: 0.5%;
+    }
+
+
+.view_list {
+    float: right;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 99;
+    margin-top: -50px;
+    background: red;
+    backdrop-filter: blur(5px);
+    background-color: rgba(255, 255, 255, .2);
+    border: 1px solid #ffffff3d;
+    color: #fff;
+    padding: 4px 12px;
+    margin-left: 00px;
+    border-radius: 8px;
+    text-transform: uppercase;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    font-size: 13px;
+}

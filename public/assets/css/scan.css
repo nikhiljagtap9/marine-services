@@ -1,0 +1,94 @@
+.custom-navbar.navbar.navbar-expand-lg, footer{
+	display: none !important;
+}
+
+.reviw_wrap{
+	float: left;
+	width: 100%; 
+	height: 100%;
+	position: relative;
+}
+.reviw_wrap_inner{
+	float: left;
+	width: 100%;
+	position: fixed; 
+}
+
+.rewv_inner_scan{
+	float: left;
+	width: 80%;
+	margin-left: 10%;
+	padding: 20px 30px;
+	border-radius: 20px;
+	background:#fff;
+	position: absolute;
+	top: 0;
+	left: 0;
+	margin-top: 100px;
+	margin-bottom: 100px;
+
+}
+
+.logo_scn_centr{
+text-align: center;
+float: left;
+width: 100%;
+margin-top: -90px;
+}
+
+.logo_scn_logo{
+	width: 160px;
+	height: 160px;
+	border-radius: 100px;
+	border:8px solid #fff ;
+	background:#fff;
+}
+
+
+.scan_nam_titl{
+	float: left;
+	width: 100%;
+	text-align: center;
+	font-size: 30px;
+	font-weight: 600;
+
+}
+
+.rewv_inner_scan .detl_right_panl{
+	margin-top: 30px;
+	width: 100%;
+
+}
+
+.rewv_inner_scan .detl_right_panl .fw-semibold.fs-3.mb-4{
+	text-align: center;
+	margin-top: 30px;
+}
+
+.clear{
+	margin:0px;
+}
+
+
+.note_comn {
+    float: left;
+    width: 98%;
+    background: #e8e4e4;
+    font-size: 15px;
+    padding: 10px 20px;
+    line-height: 19px;
+    border-radius: 10px;
+    margin-left: 1%;
+    margin-top: -7px;
+    display: none;
+}
+
+
+.btn.btn-primary {
+    font-size: 21px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    padding: 15px 40px;
+    font-weight: 500;
+}
