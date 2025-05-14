@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminAuthController;
+use App\Http\Controllers\Admin\CountryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,6 +58,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Admin dashboard route (accessible only for authenticated admins)
     Route::middleware(['auth:admin', 'admin'])->group(function () {
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+      //  Route::resource('countries',CountryController::class);
+        Route::get('/countries', [CountryController::class, 'index'])->name('countries.index');
+Route::post('/countries', [CountryController::class, 'store'])->name('countries.store');
+        Route::get('/countries/list', [CountryController::class, 'getCountries'])->name('countries.list');
     });
 });
 
