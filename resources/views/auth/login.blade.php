@@ -58,7 +58,7 @@
                <!-- End Button -->
             </form>
             <!-- Start Bottom Text -->
-            <div class="bottom-text text-center mt-4"> Don't have an account? <a href="register.php" class="fw-medium text-decoration-underline">Register Now</a>
+            <div class="bottom-text text-center mt-4"> Don't have an account? <a href="{{route('register')}}" class="fw-medium text-decoration-underline">Register Now</a>
             </div>
             <!-- /.End Bottom Text -->
             <div class="or_cont_with">

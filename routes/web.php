@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AdminAuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,5 +46,19 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+// Admin routes
+Route::prefix('admin')->name('admin.')->group(function () {
+    // Admin login route
+    Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [AdminAuthController::class, 'login'])->name('login.post');
+    Route::post('logout', [AdminAuthController::class, 'logout'])->name('logout');
+
+    // Admin dashboard route (accessible only for authenticated admins)
+    Route::middleware(['auth:admin', 'admin'])->group(function () {
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+    });
+});
+
 
 require __DIR__.'/auth.php';
