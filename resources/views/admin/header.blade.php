@@ -72,7 +72,7 @@
                             </a>
                             <ul class="nav-second-level">
                                 <li><a href="{{ route('admin.countries.index') }}">Manage Countries</a></li>
-                                <li><a href="ports.php">Manage Ports</a></li> 
+                                <li><a href="{{ route('admin.ports.index') }}">Manage Ports</a></li> 
                                 <li><a href="categories.php">Manage Categories</a></li> 
                                 <li><a href="sub-categories.php">Manage Sub-Categories</a></li> 
                             </ul>

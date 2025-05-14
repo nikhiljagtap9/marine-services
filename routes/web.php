@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\CountryController;
+use App\Http\Controllers\Admin\PortController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,10 +59,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Admin dashboard route (accessible only for authenticated admins)
     Route::middleware(['auth:admin', 'admin'])->group(function () {
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
-      //  Route::resource('countries',CountryController::class);
-        Route::get('/countries', [CountryController::class, 'index'])->name('countries.index');
-Route::post('/countries', [CountryController::class, 'store'])->name('countries.store');
-        Route::get('/countries/list', [CountryController::class, 'getCountries'])->name('countries.list');
+        // Route::resource('countries',CountryController::class);
+         Route::get('/countries', [CountryController::class, 'index'])->name('countries.index');
+         Route::post('/countries', [CountryController::class, 'store'])->name('countries.store');
+         Route::get('/countries/list', [CountryController::class, 'getCountries'])->name('countries.list');
+
+
+     //   Route::resource('ports', PortController::class);
+        Route::get('/ports', [PortController::class, 'index'])->name('ports.index');
+         Route::post('/ports', [PortController::class, 'store'])->name('ports.store');
+         Route::get('ajax/ports', [PortController::class, 'getPorts'])->name('ports.list');
     });
 });
 

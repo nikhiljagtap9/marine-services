@@ -30,20 +30,20 @@ class CountryController extends Controller
      */
 
     public function store(Request $request)
-{
-    $request->validate([
-        'name' => 'required|string|max:255|unique:countries,name',
-    ]);
-
-    $country = Country::create(['name' => $request->name]);
-
-    
-        return response()->json([
-            'status' => true,
-            'message' => 'Country added successfully',
-            'country' => $country
+    {
+        $request->validate([
+            'name' => 'required|string|max:255|unique:countries,name',
         ]);
-}
+
+        $country = Country::create(['name' => $request->name]);
+
+        
+            return response()->json([
+                'status' => true,
+                'message' => 'Country added successfully',
+                'country' => $country
+            ]);
+    }
 
     /**
      * Display the specified resource.
