@@ -42,6 +42,7 @@
 
     <!-- Right Side Buttons -->
     <div class="d-flex order-lg-2">
+      @guest
       <!-- Login -->
       <a href="{{route('login')}}" class="btn-user position-relative d-flex align-items-center justify-content-center p-0"
          data-aos="fade-left" data-aos-delay="1200"
@@ -55,6 +56,22 @@
          data-bs-toggle="tooltip" data-bs-placement="bottom" title="Register">
         <i class="fa fa-user-plus"></i>
       </a>
+      @endguest
+
+      @auth
+          <!-- Logout -->
+          <a href="{{ route('logout') }}"
+            class="btn-user position-relative d-flex align-items-center justify-content-center p-0"
+            data-aos="fade-left" data-aos-delay="1200"
+            data-bs-toggle="tooltip" data-bs-placement="bottom" title="Logout"
+            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+              <i class="fa fa-sign-out"></i>
+          </a>
+
+          <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+              @csrf
+          </form>
+      @endauth
 
       <!-- Favourites -->
       <a href="#" class="btn-user position-relative d-flex align-items-center justify-content-center p-0"

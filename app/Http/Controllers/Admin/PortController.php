@@ -29,7 +29,7 @@ class PortController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Port added successfully',
-            'country' => $port
+            'port' => $port
         ]);
     }
 

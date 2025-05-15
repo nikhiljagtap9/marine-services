@@ -79,6 +79,10 @@ class CountryController extends Controller
 
     public function getCountries()
     {
-        return response()->json(['data' => Country::latest()->get()]);
+        $countries = Country::withCount('ports')->latest()->get();
+
+        return response()->json([
+            'data' => $countries
+        ]);
     }
 }

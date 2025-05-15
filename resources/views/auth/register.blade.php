@@ -27,33 +27,44 @@
                     <!-- Start Social Button Wrapper -->
                     
                     <!-- /.End Divider -->
-                    <form class="register-form">
+                    <form class="register-form" method="POST" action="{{ route('register') }}">
+                        @csrf
                         <!-- Start Form Group -->
                         <div class="form-group mb-4">
                             <label class="required">Full Name</label>
-                            <input type="text" class="form-control" required="">
+                            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" />
+                            @error('name')
+                                <div class="invalid-feedback text-start">{{ $message }}</div>
+                            @enderror
                         </div>
                         <!-- /.End Form Group -->
                         <!-- Start Form Group -->
                         <div class="form-group mb-4">
                             <label class="required">Enter Email</label>
-                            <input type="email" class="form-control">
+                            <input type="email" name="email" id="email"  class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}">
+                            @error('email')
+                                <div class="invalid-feedback text-start">{{ $message }}</div>
+                            @enderror
                         </div>
                         <!-- /.End Form Group -->
                         <!-- Start Form Group -->
                         <div class="form-group mb-4">
                             <label class="required">Password</label>
-                            <input id="password" type="password" class="form-control password" autocomplete="off">
-                             
+                            <input type="password" id="password"  name="password" class="form-control password @error('password') is-invalid @enderror"  autocomplete="off">           
                             <i data-bs-toggle="#password" class="fa fa-eye toggle-password " aria-hidden="true"></i>
+                            @error('password')
+                                <div class="invalid-feedback text-start">{{ $message }}</div>
+                            @enderror
                         </div>
                         <!-- /.End Form Group -->
                         <!-- Start Form Group -->
                         <div class="form-group mb-4">
                             <label class="required">Confirm Password</label>
-                            <input id="confirmPassword" type="password" class="form-control c-password" autocomplete="off">
-                            <i data-bs-toggle="#confirmPassword" class="fa fa-eye toggle-password " aria-hidden="true"></i>
-
+                            <input  type="password" id="password_confirmation" name="password_confirmation"  class="form-control c-password" autocomplete="off">
+                            <i data-bs-toggle="#password_confirmation" class="fa fa-eye toggle-password " aria-hidden="true"></i>
+                            @error('password')
+                                <div class="invalid-feedback text-start">{{ $message }}</div>
+                            @enderror
                         </div>
                         <!-- /.End Form Group -->
                         <!-- Start Checkbox -->
@@ -79,7 +90,7 @@
 
                     </form>
                     <!-- Start Bottom Text -->
-                    <div class="bottom-text mt-4 login_alrerdy"> <a href="login.php" class="fw-medium text-decoration-underline"> Already have an account? Login</a> </div>
+                    <div class="bottom-text mt-4 login_alrerdy"> <a href="{{ route('login') }}" class="fw-medium text-decoration-underline"> Already have an account? Login</a> </div>
                     <!-- /.End Bottom Text -->
                 </div>
             </div>

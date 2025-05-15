@@ -6,6 +6,8 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\CountryController;
 use App\Http\Controllers\Admin\PortController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\SubCategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -60,15 +62,22 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware(['auth:admin', 'admin'])->group(function () {
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
         // Route::resource('countries',CountryController::class);
-         Route::get('/countries', [CountryController::class, 'index'])->name('countries.index');
-         Route::post('/countries', [CountryController::class, 'store'])->name('countries.store');
-         Route::get('/countries/list', [CountryController::class, 'getCountries'])->name('countries.list');
-
+        Route::get('/countries', [CountryController::class, 'index'])->name('countries.index');
+        Route::post('/countries', [CountryController::class, 'store'])->name('countries.store');
+        Route::get('/countries/list', [CountryController::class, 'getCountries'])->name('countries.list');
 
      //   Route::resource('ports', PortController::class);
         Route::get('/ports', [PortController::class, 'index'])->name('ports.index');
-         Route::post('/ports', [PortController::class, 'store'])->name('ports.store');
-         Route::get('ajax/ports', [PortController::class, 'getPorts'])->name('ports.list');
+        Route::post('/ports', [PortController::class, 'store'])->name('ports.store');
+        Route::get('ajax/ports', [PortController::class, 'getPorts'])->name('ports.list');
+
+        Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+        Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+        Route::get('ajax/categories', [CategoryController::class, 'getCategories'])->name('categories.list');
+
+        Route::get('/sub-categories', [SubCategoryController::class, 'index'])->name('sub-categories.index');
+        Route::post('/sub-categories', [SubCategoryController::class, 'store'])->name('sub-categories.store');
+        Route::get('ajax/sub-categories', [SubCategoryController::class, 'getSubCategories'])->name('sub-categories.list');
     });
 });
 

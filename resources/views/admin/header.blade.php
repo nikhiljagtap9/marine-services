@@ -37,7 +37,7 @@
          <!-- Sidebar  -->
          <nav class="sidebar">
             <div class="sidebar-header">
-               <a href="index.php" class="sidebar-brand">
+               <a href="{{route('admin.dashboard')}}" class="sidebar-brand">
                <!-- <img class="sidebar-brand_icon" src="assets/dist/img/mini-logo.png" alt=""> -->
                <span class="sidebar-brand_text">
                    <img class="sidebar-brand_icon logo_main_as" src="assets/images/logo.png" alt="">
@@ -54,15 +54,15 @@
                            <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3" />
                         </svg>
                      </li>
-                     <li class="">
-                        <a href="index.php" class="index_activ" >
+                     <li class="{{request()->routeIs('admin.dashboard') ? 'mm-active' : ''}}">
+                        <a href="{{route('admin.dashboard')}}" class="index_activ" >
                           <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-home"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
                            <span class="ms-2">Dashboard</span>
                         </a>
                      </li>
                      
 
-                     <li>
+                     <li class="{{!request()->routeIs('admin.dashboard') ? 'mm-active' : ''}}">
                             <a class="has-arrow material-ripple" href="#">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-plus" viewBox="0 0 16 16">
                                     <path d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5" />
@@ -73,8 +73,8 @@
                             <ul class="nav-second-level">
                                 <li><a href="{{ route('admin.countries.index') }}">Manage Countries</a></li>
                                 <li><a href="{{ route('admin.ports.index') }}">Manage Ports</a></li> 
-                                <li><a href="categories.php">Manage Categories</a></li> 
-                                <li><a href="sub-categories.php">Manage Sub-Categories</a></li> 
+                                <li><a href="{{ route('admin.categories.index') }}">Manage Categories</a></li> 
+                                <li><a href="{{ route('admin.sub-categories.index') }}">Manage Sub-Categories</a></li> 
                             </ul>
                         </li>           
                   </ul>

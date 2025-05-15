@@ -20,24 +20,24 @@
       <div id="success-message" class="alert alert-success d-none"></div>
       <div class="card">
          <div class="card-header position-relative">
-            <h6 class="fs-17 fw-semi-bold my-1">Total Ports</h6>
+            <h6 class="fs-17 fw-semi-bold my-1">Total Sub-Categories</h6>
             <a onclick="openPopup()" class="ad_cntr_pop" >
                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-plus">
                   <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                   <path d="M12 5l0 14" />
                   <path d="M5 12l14 0" />
                </svg>
-               Add Port 
+               Add Sub-Categories 
             </a>
          </div>
          <div class="card-body">
             <div class="table-responsive">
-                <table id="portsTable" class="display table table-borderless text-nowrap">
+                <table id="subCategoriesTable" class="display table table-borderless text-nowrap">
                     <thead>
                         <tr>
-                           <th>Sr.</th>
-                           <th>Port Name</th>
-                           <th>Country</th>
+                           <th>SR</th>
+                           <th>Sub-Category</th>
+                           <th>Category</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -54,18 +54,18 @@
 <div class="popup-overlay popmain" id="popup">
    <div class="popup-content">
       <button class="close-btn" onclick="closePopup()">×</button>
-      <h2>Add Port</h2>
-       <form id="portForm">
+      <h2>Add Sub-Categories</h2>
+       <form id="subCategoriesForm">
          @csrf
           <div class="col-sm-6" bis_skin_checked="1">
             <!-- start form group -->
             <div class="" bis_skin_checked="1">
-               <label class="fw-medium mb-2">Select Country</label>
+               <label class="fw-medium mb-2">Select Category</label>
                
-               <select name="country_id" required class="form-control">
-                  <option value="">-- Select Country --</option>
-                  @foreach($countries as $country)
-                     <option value="{{ $country->id }}">{{ $country->name }}</option>
+               <select name="category_id" required class="form-control">
+                  <option value="">-- Select Category --</option>
+                  @foreach($categories as $category)
+                     <option value="{{ $category->id }}">{{ $category->name }}</option>
                   @endforeach
                </select>
             </div>
@@ -76,8 +76,8 @@
          <div class="col-sm-6" bis_skin_checked="1">
             <!-- start form group -->
             <div class="" bis_skin_checked="1">
-               <label class="fw-medium mb-2">Port Name</label>
-               <input type="text" name="name" class="form-control" placeholder="Enter Port Name">
+               <label class="fw-medium mb-2">Sub-Category Name</label>
+               <input type="text" name="name" class="form-control" placeholder="Enter Sub-Category Name">
             </div>
             <!-- end /. form group -->
             <div class="clear"></div>
@@ -113,19 +113,19 @@
         <script>
 
          $(document).ready(function () {
-            let table = $('#portsTable').DataTable({
+            let table = $('#subCategoriesTable').DataTable({
                  ajax: {
-                    url: '{{ route("admin.ports.list") }}',
+                    url: '{{ route("admin.sub-categories.list") }}',
                     dataSrc: 'data' // Important: DataTables expects 'data' key
                 },
                 columns: [
                     { data: 'id' },
                     { data: 'name' },
-                    { data: 'country.name' },
+                    { data: 'category.name' },
                 ]
             });
 
-            $('#portForm').on('submit', function (e) {
+            $('#subCategoriesForm').on('submit', function (e) {
                 e.preventDefault();
                 let formData = $(this).serialize();
 
@@ -134,13 +134,13 @@
                      $('.form-control').removeClass('is-invalid');
 
                 $.ajax({
-                    url: '{{ route("admin.ports.store") }}',
+                    url: '{{ route("admin.sub-categories.store") }}',
                     method: 'POST',
                     data: formData,
                     success: function (response) {
                         $('#success-message').removeClass('d-none').text(response.message);
                         $('#popup').hide(); 
-                        $('#portForm')[0].reset();
+                        $('#subCategoriesForm')[0].reset();
                         table.ajax.reload();
                         setTimeout(() => {
                          $('#success-message').addClass('d-none').text('');

@@ -32,19 +32,25 @@
                </p>
             </div>
             <!-- /.End Divider -->
-            <form class="register-form">
-               <!-- Start Form Group -->
+            <form class="register-form" method="POST" action="{{ route('login') }}">
+               @csrf
+                <!-- Start Form Group -->
                <div class="form-group mb-4">
-                  <label class="required">Enter Email</label>
-                  <input type="email" class="form-control is-invalid">
-                  <div class="invalid-feedback text-start">Enter your valid email</div>
+                    <label class="required">Enter Email</label>
+                    <input type="email" name="email" id="email"  class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}">
+                    @error('email')
+                        <div class="invalid-feedback text-start">{{ $message }}</div>
+                    @enderror
                </div>
                <!-- /.End Form Group -->
                <!-- Start Form Group -->
                <div class="form-group mb-4">
-                  <label class="required">Password</label>
-                  <input id="password" type="password" class="form-control password" autocomplete="off">
-                  <i data-bs-toggle="#password" class="fa-regular fa-eye-slash toggle-password"></i>
+                    <label class="required">Password</label>
+                    <input type="password" name="password" id="password" class="form-control password @error('password') is-invalid @enderror" autocomplete="off">
+                    <i data-bs-toggle="#password" class="fa-regular fa-eye-slash toggle-password"></i>
+                    @error('password')
+                        <div class="invalid-feedback text-start">{{ $message }}</div>
+                    @enderror
                </div>
                <!-- /.End Form Group -->
                <!-- Start Checkbox -->

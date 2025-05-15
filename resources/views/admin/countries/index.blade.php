@@ -35,9 +35,9 @@
                 <table id="countriesTable" class="display table table-borderless text-nowrap">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>Sr</th>
                             <th>Country Name</th>
-                            <th>Created At</th>
+                            <th>Total Ports</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -106,7 +106,7 @@
                 columns: [
                     { data: 'id' },
                     { data: 'name' },
-                    { data: 'created_at' }
+                    { data: 'ports_count', title: 'Total Ports'} 
                 ]
             });
 
@@ -123,13 +123,13 @@
                     method: 'POST',
                     data: formData,
                     success: function (response) {
-                       $('#success-message').removeClass('d-none').text(response.message);
-                       $('#popup').hide(); 
+                        $('#success-message').removeClass('d-none').text(response.message);
+                        $('#popup').hide(); 
                         $('#countryForm')[0].reset();
                         table.ajax.reload();
                         setTimeout(() => {
                          $('#success-message').addClass('d-none').text('');
-                     }, 3000);
+                        }, 3000);
                     },
                     error: function(xhr) {
                      if (xhr.status === 422) {
