@@ -82,7 +82,7 @@
       </a>
 
       <!-- Add Listing -->
-      <a href="https://persausive.com/client/Ugur_Form/" class="btn btn-primary d-none d-sm-flex align-items-center gap-2 rounded-5 bold_listng"
+      <a href="{{route('service-provider.create')}}" class="btn btn-primary d-none d-sm-flex align-items-center gap-2 rounded-5 bold_listng"
          data-aos="zoom-in" data-aos-delay="1500">
         <i class="bi bi-plus-circle"></i>
         <span class="d-none d-sm-inline-block">Add Listing</span>
@@ -120,7 +120,7 @@
 
       <!-- Add Listing Button (Mobile) -->
       <div class="d-sm-none" data-aos="zoom-in" data-aos-delay="1200">
-        <a href="https://persausive.com/client/Ugur_Form/" class="btn btn-primary d-flex gap-2 align-items-center justify-content-center rounded-3">
+        <a href="{{route('service-provider.create')}}" class="btn btn-primary d-flex gap-2 align-items-center justify-content-center rounded-3">
           <i class="bi bi-plus-circle"></i>
           <span>Add Listing</span>
         </a>

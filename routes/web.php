@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\CountryController;
 use App\Http\Controllers\Admin\PortController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\SubCategoryController;
+use App\Http\Controllers\ServiceProviderDetailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,6 +51,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+ Route::get('/service-provider/create', [ServiceProviderDetailController::class, 'create'])->name('service-provider.create');
+    Route::post('/service-provider/store', [ServiceProviderDetailController::class, 'store'])->name('service-provider.store');
 
 // Admin routes
 Route::prefix('admin')->name('admin.')->group(function () {
