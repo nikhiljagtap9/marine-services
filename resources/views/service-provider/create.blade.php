@@ -16,7 +16,7 @@
             <div class="fxt-heading-content">
                <div class="fxt-inner-wrap">
                   <div class="fxt-transformX-R-50 fxt-transition-delay-10">
-                     <a href="#" class="fxt-logo"><img src="assets/img/logo.jpg" alt="Logo"></a>
+                     <a href="#" class="fxt-logo"><img src="assets/img/logo.png" alt="Logo"></a>
                   </div>
                   <div class="fxt-transformX-R-50 fxt-transition-delay-10">
                      <div class="fxt-middle-content">

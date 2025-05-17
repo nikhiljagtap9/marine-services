@@ -92,27 +92,40 @@
 
     $(".next").on('click', function(e) {
         e.preventDefault();
-        current_fs = $(this).parents(".fxt-form-step");
-        next_fs = $(this).parents(".fxt-form-step").next();
 
-        //show the next step
+        let currentStep = $(this).closest(".fxt-form-step"); // Get current step only
+        let inputs = currentStep.find("input, textarea, select"); // Validate only this step
+        let valid = true;
+
+        inputs.each(function() {
+            if ($(this).prop('required') && ($(this).val().trim() === '' || $(this).val() === null)) {
+                $(this).addClass("is-invalid");
+                valid = false;
+            } else {
+                $(this).removeClass("is-invalid");
+            }
+        });
+
+        if (!valid) {
+            alert("Please fill all required fields.");
+            return;
+        }
+
+        // Transition to next step
+        current_fs = currentStep;
+        next_fs = current_fs.next();
+
         next_fs.show();
-        //hide the current step with style
         current_fs.animate({ opacity: 0 }, {
             step: function(now) {
-                // for making step appear animation
-                opacity = 1 - now;
-
-                current_fs.css({
-                    'display': 'none',
-                    'position': 'relative'
-                });
+                let opacity = 1 - now;
+                current_fs.css({ 'display': 'none', 'position': 'relative' });
                 next_fs.css({ 'opacity': opacity });
             },
             duration: 500
         });
-        setProgressBar(++current);
 
+        setProgressBar(++current);
         $('.fxt-current-step').html(current);
     });
 
