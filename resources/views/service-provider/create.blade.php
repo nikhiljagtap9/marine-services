@@ -88,251 +88,22 @@
                               </div>
                            </div>
                         </div>
+                        @if ($errors->any())
+                           <div class="alert alert-danger">
+                              <ul>
+                                    @foreach ($errors->all() as $error)
+                                       <li>{{ $error }}</li>
+                                    @endforeach
+                              </ul>
+                           </div>
+                        @endif
                         <!-- Form -->
-                        <form action="#" method="GET">
-                           <div class="fxt-form-step">
-                              <h2 class="fxt-page-title">Basic Company Information</h2>
-                              <div class="form-group">
-                                 <label class="Mylabel" for="fname">Company Name</label>
-                                 <input id="fname" type="text" class="form-control" name="fname" placeholder="Enter your Company Name here">
-                              </div>
-                              <div class="form-group">
-                                 <label class="Mylabel" for="myfile">Company Logo</label>
-                                 <!-- <label class="Mylabel" for="fname">Company logo</label> -->
-                                 <input id="myfile" type="file" class="form-control file_upload" name="myfile" placeholder="Company Logo here">
-                              </div>
-                              <div class="form-group">
-                                 <label class="Mylabel" for="w3review"> Company Description</label>
-                                 <textarea id="w3review" type="text" class="form-control" name="w3review" placeholder="Company Description"></textarea>
-                              </div>
-   
-                              <div class="form-group">
-                                 <div class="d-flex align-items-center gap-2 mt-5">
-                                    <div class="next fxt-btn-fill">
-                                       Next 
-                                       <i class="fa fa-caret-right" aria-hidden="true"></i>
-                                    </div>
-                                 </div>
-                              </div>
-                           </div>
-                           <div class="fxt-form-step">
-                              <h2 class="fxt-page-title">Contact Information</h2>
-                              <div class="form-group">
-                                 <label class="Mylabel" for="fname">Contact Person Name</label>
-                                 <input id="fname" type="text" class="form-control" name="fname" placeholder="Enter name here">
-                              </div>
-                              <div class="col-xl-4 col-12 leftt link1 adres_fld_1">
-                                 <label class="Mylabel adres_fld_1" for="phonen">Phone Number</label>
-                                 <input id="phonen" type="text" class="form-control" name="phonen" placeholder="Enter number here">
-                              </div>
-                              <div class="col-xl-4 col-12 leftt link1 adres_fld_1 adres_fld_2">
-                                 <label class="Mylabel" for="emailh">Email Address</label>
-                                 <input id="emailh" type="email" class="form-control" name="emailh" placeholder="Enter Email here">
-                              </div>
-                              <div class="col-xl-4 col-12 leftt link1 adres_fld_1">
-                                 <label class="Mylabel" for="Linkd">Country</label>
-                                 <select class="form-control">
-                                    <option>Country 1</option>
-                                    <option>Country 2</option>
-                                    <option>Country 3</option>
-                                 </select>
-                              </div>
-                              <div class="col-xl-4 col-12 leftt link1 adres_fld_1 adres_fld_2">
-                                 <label class="Mylabel" for="Linkd">City</label>
-                                 <select class="form-control">
-                                    <option>City 1</option>
-                                    <option>City 2</option>
-                                    <option>City 3</option>
-                                 </select>
-                              </div>
-                              <div class="form-group">
-                                 <label class="Mylabel" for="Office_adres" rows="9" cols="50">Office Address</label>
-                                 <textarea id="Office_adres" type="text" class="form-control" name="Office_adres" placeholder="Enter adress here"></textarea>
-                              </div>
-                              <!-- <button class="open-btn slc_loctn" onclick="openModal()">Select Location here</button> -->
-                              <!-- Map popup -->
-                              <div class="mapp">
-                                 <div id="mapModal" class="modal" onclick="closeOnClickOutside(event)">
-                                    <div class="modal-content" id="modalBox">
-                                       <span class="close-btn" onclick="closeModal()">&times;</span>
-                                       <div class="map-search">
-                                          <input type="text" id="locationInput" placeholder="Search location...">
-                                       </div>
-                                       <iframe 
-                                          id="mapFrame"
-                                          src="https://www.google.com/maps?q=San+Francisco&output=embed"
-                                          allowfullscreen
-                                          loading="lazy">
-                                       </iframe>
-                                       <!-- ✅ Confirm Button -->
-                                       <button class="confirm-btn popup_confm" onclick="confirmLocation()">Confirm Location</button>
-                                    </div>
-                                 </div>
-                              </div>
-                              <!-- Map popup -->
-                              <div class="form-group">
-                                 <div class="d-flex align-items-center gap-2 mt-5">
-                                    <div class="previous fxt-btn-fill prevs_btn">
-                                       <i class="fa fa-caret-left" aria-hidden="true"></i>
-                                       Previous 
-                                    </div>
-                                    <div class="next fxt-btn-fill">
-                                       Next 
-                                       <i class="fa fa-caret-right" aria-hidden="true"></i>
-                                    </div>
-                                 </div>
-                              </div>
-                           </div>
-                           <div class="fxt-form-step">
-
-                              <div class="form-group">
-                                 <label class="Mylabel" for="portsservices">Ports Where Services Are Provided</label>
-                                 <input id="portsservices" type="text" class="form-control" name="portsservices" placeholder="Enter Ports here">
-                              </div>
-
-                              <div class="form-group">
-                                 <label class="Mylabel" for="servicess">Types of Services Provided</label>
-                                 <select id="servicess">
-                                    <option value="agriculture">Agriculture</option>
-                                    <option value="air-conditioning">Air Conditioning & Refrigeration</option>
-                                    <option value="boilers-hvac">Boilers, Heating & HVAC Systems</option>
-                                    <option value="brokerage">Brokerage</option>
-                                    <option value="bunkering-oil">Bunkering & Oil Supplies</option>
-                                    <option value="cargo-equipment">Cargo Handling Equipment</option>
-                                    <option value="cargo-shippers">Cargo Shippers & Charterers</option>
-                                    <option value="chartering">Chartering Services</option>
-                                    <option value="charts-navigation">Charts & Navigation Equipment</option>
-                                    <option value="chemicals">Chemicals & Chemical Services</option>
-                                    <option value="classification">Classification Societies</option>
-                                    <option value="cleaning">Cleaning Services</option>
-                                    <option value="coast-guard">Coast Guard Services</option>
-                                    <option value="consultancy">Consultancy Services</option>
-                                    <option value="container-sales">Container Sales & Trading</option>
-                                    <option value="crane-hire">Crane Hire / Rental</option>
-                                    <option value="crane-repairs">Crane Repairs</option>
-                                    <option value="crewing">Crewing Services</option>
-                                    <option value="deck-hatch">Deck, Hatch & Mooring Equipment</option>
-                                    <option value="diving">Diving & Underwater Services</option>
-                                    <option value="dredging">Dredging Services</option>
-                                    <option value="drydocks">Drydocks</option>
-                                    <option value="education">Education & Training Services</option>
-                                    <option value="electronics">Electronics & Telecommunications</option>
-                                    <option value="energy">Energy Services</option>
-                                    <option value="engineering">Engine Builders & Engineering</option>
-                                    <option value="environmental">Environmental Services</option>
-                                    <option value="fishing">Fishing & Fishery Services</option>
-                                    <option value="flag-administration">Flag Administration</option>
-                                    <option value="freight">Freight Forwarding & Logistics</option>
-                                    <option value="fresh-water">Fresh Water Supply</option>
-                                    <option value="furniture">Furniture (Internal Ship Furnishings)</option>
-                                    <option value="gangway-repairs">Gangway Repairs</option>
-                                    <option value="generators">Generators</option>
-                                    <option value="grab-rental">Grab Rental</option>
-                                    <option value="grab-repairs">Grab Repairs</option>
-                                    <option value="hold-cleaning">Hold Cleaning / Shore Gang</option>
-                                    <option value="hydrographic">Hydrographic Services</option>
-                                    <option value="it-solutions">Information Technology Solutions</option>
-                                    <option value="insurance">Insurance, Finance & Legal Services</option>
-                                    <option value="ladders">Ladders, Gangways & Access Equipment</option>
-                                    <option value="legal">Legal Services</option>
-                                    <option value="lifting-gear">Lifting Gear & Safety Appliances</option>
-                                    <option value="logistics">Logistics, Transport & Freight</option>
-                                    <option value="main-engine-repairs">Main Engine / Diesel Generator Repairs</option>
-                                    <option value="medical">Medical Services</option>
-                                    <option value="navigation-equipment">Navigation Equipment Supply and Repairs</option>
-                                    <option value="offshore">Offshore Services</option>
-                                    <option value="p-i-clubs">P&I Clubs & Correspondents</option>
-                                    <option value="pilots">Pilots & Pilotage Services</option>
-                                    <option value="port-terminal">Port & Terminal Services</option>
-                                    <option value="port-agents">Port Agents</option>
-                                    <option value="port-authorities">Port Authorities</option>
-                                    <option value="publications">Publications</option>
-                                    <option value="pumps-valves">Pumps and Valves</option>
-                                    <option value="repair-maintenance">Repair & Maintenance Services</option>
-                                    <option value="search-rescue">Search & Rescue Services</option>
-                                    <option value="security">Security & Surveillance Services</option>
-                                    <option value="ship-breakers">Ship Breakers & Demolition</option>
-                                    <option value="shipyards">Shipyards, Ship Builders</option>
-                                    <option value="ship-chandlers">Ship Chandlers / Suppliers</option>
-                                    <option value="ship-owners">Ship Owners, Managers & Operators</option>
-                                    <option value="ship-tracking">Ship Tracking & Monitoring</option>
-                                    <option value="shipping-lines">Shipping Lines & Agents</option>
-                                    <option value="software-tech">Software & Technology Solutions</option>
-                                    <option value="surveyors">Surveyors & Marine Consultants</option>
-                                    <option value="taxi-transportation">Taxi & Transportation Services</option>
-                                    <option value="tourism">Tourism & Hospitality Services</option>
-                                    <option value="towage">Towage, Salvage & Emergency Services</option>
-                                    <option value="underwater-services">Underwater Services (Inspection, Cleaning, Repairs)</option>
-                                    <option value="warehousing">Warehousing & Storage Services</option>
-                                    <option value="waste-disposal">Waste Disposal & Management</option>
-                                    <option value="weather">Weather & Routing Services</option>
-                                    <option value="yacht-builders">Yacht & Pleasure Craft Builders</option>
-                                    <option value="yacht-chartering">Yacht Chartering Services</option>
-                                    <option value="yacht-equipment">Yacht Equipment & Accessories</option>
-                                 </select>
-                              </div>
-
-
-                              <div class="form-group">
-                                 <label class="Mylabel" for="servicess">Types of Sub-Services Provided</label>
-                                 <select id="servicess">
-                                    <option value="agriculture">Sub-Services</option>
-                                    <option value="air-conditioning">Sub-Services</option> 
-                                 </select>
-                              </div>
-
-
-                              
-                              
-                              <div class="clear"></div>
-                              <div class="form-group" id="contactDiv">
-                                 <label class="Mylabel" for="contactNumber">Provide your contact number</label>
-                                 <input id="contactNumber" type="text" class="form-control" name="contactNumber" placeholder="Enter number here">
-                              </div>
-                              <div class="clear"></div>
-                              <div class="form-group">
-                                 <div class="d-flex align-items-center gap-2 mt-5">
-                                    <div class="previous fxt-btn-fill prevs_btn">
-                                       <i class="fa fa-caret-left" aria-hidden="true"></i>
-                                       Previous 
-                                    </div>
-                                    <div class="next fxt-btn-fill">
-                                       Next 
-                                       <i class="fa fa-caret-right" aria-hidden="true"></i>
-                                    </div>
-                                 </div>
-                              </div>
-                           </div>
-                            
-                           <div class="fxt-form-step">
-                              <div class="">
-                                 <h2 class="fxt-page-title">Login Information</h2>
-                                 <div class="form-group">
-                                    <label class="Mylabel" for="User_name">Username</label>
-                                    <input id="User_name" type="text" class="form-control" name="User_name" placeholder="Enter Username">
-                                 </div>
-                                 <div class="form-group">
-                                    <label class="Mylabel" for="pwd">Password</label>
-                                    <input id="pwd" type="password" class="form-control" name="pwd" placeholder="Enter your Password ">
-                                 </div>
-                                 <div class="form-group">
-                                    <label class="Mylabel" for="con_pwd">Confirm Password</label>
-                                    <input id="con_pwd" type="password" class="form-control" name="con_pwd" placeholder="Confirm your Password">
-                                 </div>
-                              </div>
-                              <div class="form-group">
-                                 <div class="d-flex align-items-center gap-2 mt-5">
-                                    <div class="previous fxt-btn-fill prevs_btn">
-                                       <i class="fa fa-caret-left" aria-hidden="true"></i>
-                                       Previous 
-                                    </div>
-                                    <a href="confirm.html" class="fxt-btn-fill">
-                                    SUBMIT 
-                                    <i class="fa fa-caret-right" aria-hidden="true"></i>
-                                    </a>
-                                 </div>
-                              </div>
-                           </div>
+                        <form action="{{ route('service-provider.store') }}" method="POST" enctype="multipart/form-data"> 
+                           @csrf
+                           @include('service-provider.steps.step1')
+                           @include('service-provider.steps.step2')
+                           @include('service-provider.steps.step3')
+                           @include('service-provider.steps.step4')
                         </form>
                      </div>
                   </div>
@@ -374,4 +145,52 @@
            autoSlideInterval = setInterval(autoSlide, 3000);
          }
       </script>
+@endsection
+
+@section('scripts')
+
+<script>
+   // get city
+      $('#country-select').on('change', function() {
+        var countryId = $(this).val();
+
+        if (countryId) {
+            $.ajax({
+                url: '/get-cities/' + countryId,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    $('#city-select').empty().append('<option value="">Select City</option>');
+                    $.each(data, function(key, city) {
+                        $('#city-select').append('<option value="' + city.id + '">' + city.name + '</option>');
+                    });
+                }
+            });
+        } else {
+            $('#city-select').empty().append('<option value="">Select City</option>');
+        }
+    });
+
+     // get Sub category
+      $('#service-type').on('change', function() {
+        var serviceId = $(this).val();
+
+        if (serviceId) {
+            $.ajax({
+                url: '/get-sub-service/' + serviceId,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    $('#sub-service-type').empty().append('<option value="">Select Sub-Services</option>');
+                    $.each(data, function(key, sub_service) {
+                        $('#sub-service-type').append('<option value="' + sub_service.id + '">' + sub_service.name + '</option>');
+                    });
+                }
+            });
+        } else {
+            $('#sub-service-type').empty().append('<option value="">Select Sub-Services</option>');
+        }
+    });
+
+    </script>
 @endsection

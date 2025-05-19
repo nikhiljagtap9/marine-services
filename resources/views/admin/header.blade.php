@@ -72,6 +72,7 @@
                             </a>
                             <ul class="nav-second-level">
                                 <li><a href="{{ route('admin.countries.index') }}">Manage Countries</a></li>
+                                <li><a href="{{ route('admin.cities.index') }}">Manage Cities</a></li> 
                                 <li><a href="{{ route('admin.ports.index') }}">Manage Ports</a></li> 
                                 <li><a href="{{ route('admin.categories.index') }}">Manage Categories</a></li> 
                                 <li><a href="{{ route('admin.sub-categories.index') }}">Manage Sub-Categories</a></li> 

@@ -9,3 +9,4 @@
       <script src="{{ asset('service-provider/assets/js/main.js')}}"></script>
    </body>
 </html>
+@yield('scripts')

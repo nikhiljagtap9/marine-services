@@ -97,17 +97,24 @@
         let inputs = currentStep.find("input, textarea, select"); // Validate only this step
         let valid = true;
 
-        inputs.each(function() {
-            if ($(this).prop('required') && ($(this).val().trim() === '' || $(this).val() === null)) {
-                $(this).addClass("is-invalid");
-                valid = false;
-            } else {
-                $(this).removeClass("is-invalid");
+        inputs.each(function () {
+            if ($(this).prop('required')) {
+                let value = $(this).val();
+
+                // Check for empty string or null
+                if (value === '' || value === null) {
+                    $(this).addClass("is-invalid");
+                    valid = false;
+                } else {
+                    $(this).removeClass("is-invalid");
+                }
             }
         });
 
+
+     
         if (!valid) {
-            alert("Please fill all required fields.");
+          //  alert("Please fill all required fields.");
             return;
         }
 

@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\CountryController;
 use App\Http\Controllers\Admin\PortController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\ServiceProviderDetailController;
 
@@ -52,8 +53,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
- Route::get('/service-provider/create', [ServiceProviderDetailController::class, 'create'])->name('service-provider.create');
+    Route::get('/service-provider/create', [ServiceProviderDetailController::class, 'create'])->name('service-provider.create');
     Route::post('/service-provider/store', [ServiceProviderDetailController::class, 'store'])->name('service-provider.store');
+    Route::get('/service-provider/confirm', [ServiceProviderDetailController::class, 'confirm'])->name('service-provider.confirm');
+    Route::get('/get-cities/{country_id}',[ServiceProviderDetailController::class, 'getCities'])->name('get-cities');
+    Route::get('/get-sub-service/{service_id}',[ServiceProviderDetailController::class, 'getSubService'])->name('get-sub-service');
+    
 
 // Admin routes
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -82,6 +87,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/sub-categories', [SubCategoryController::class, 'index'])->name('sub-categories.index');
         Route::post('/sub-categories', [SubCategoryController::class, 'store'])->name('sub-categories.store');
         Route::get('ajax/sub-categories', [SubCategoryController::class, 'getSubCategories'])->name('sub-categories.list');
+
+        Route::get('/cities', [CityController::class, 'index'])->name('cities.index');
+        Route::post('/cities', [CityController::class, 'store'])->name('cities.store');
+        Route::get('ajax/cities', [CityController::class, 'getCities'])->name('cities.list');
     });
 });
 

@@ -1,14 +1,23 @@
-<div class="fxt-form-step">
+ <div class="fxt-form-step">
 
                               <div class="form-group">
-                                 <label class="Mylabel" for="portsservices">Ports Where Services Are Provided</label>
-                                 <input id="portsservices" type="text" class="form-control" name="portsservices" placeholder="Enter Ports here">
+                                 <label class="Mylabel" for="ports_services">Ports Where Services Are Provided</label>
+                                 <select id="ports_services" name="ports_services" required>
+                                    <option value="">Select Ports</option>
+                                 @foreach($ports as $port )
+                                    <option value="{{$port->id}}">{{$port->name}}</option>
+                                 @endforeach
+                                 </select>
                               </div>
 
                               <div class="form-group">
                                  <label class="Mylabel" for="servicess">Types of Services Provided</label>
-                                 <select id="servicess">
-                                    <option value="agriculture">Agriculture</option>
+                                 <select id="service-type" name="service_type" required>
+                                    <option value="">Select Services</option>
+                                    @foreach($categories as $category )
+                                       <option value="{{$category->id}}">{{$category->name}}</option>
+                                    @endforeach
+                                    <!-- <option value="agriculture">Agriculture</option>
                                     <option value="air-conditioning">Air Conditioning & Refrigeration</option>
                                     <option value="boilers-hvac">Boilers, Heating & HVAC Systems</option>
                                     <option value="brokerage">Brokerage</option>
@@ -83,16 +92,14 @@
                                     <option value="weather">Weather & Routing Services</option>
                                     <option value="yacht-builders">Yacht & Pleasure Craft Builders</option>
                                     <option value="yacht-chartering">Yacht Chartering Services</option>
-                                    <option value="yacht-equipment">Yacht Equipment & Accessories</option>
+                                    <option value="yacht-equipment">Yacht Equipment & Accessories</option> -->
                                  </select>
                               </div>
 
 
                               <div class="form-group">
-                                 <label class="Mylabel" for="servicess">Types of Sub-Services Provided</label>
-                                 <select id="servicess">
-                                    <option value="agriculture">Sub-Services</option>
-                                    <option value="air-conditioning">Sub-Services</option> 
+                                 <label class="Mylabel" for="sub_service_type">Types of Sub-Services Provided</label>
+                                 <select id="sub-service-type" name="sub_service_type" required>
                                  </select>
                               </div>
 
@@ -101,8 +108,8 @@
                               
                               <div class="clear"></div>
                               <div class="form-group" id="contactDiv">
-                                 <label class="Mylabel" for="contactNumber">Provide your contact number</label>
-                                 <input id="contactNumber" type="text" class="form-control" name="contactNumber" placeholder="Enter number here">
+                                 <label class="Mylabel" for="contact_number">Provide your contact number</label>
+                                 <input id="contact_number" type="text" class="form-control" name="contact_number" placeholder="Enter number here">
                               </div>
                               <div class="clear"></div>
                               <div class="form-group">
