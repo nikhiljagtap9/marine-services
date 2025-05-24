@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Subscription;
 
 class User extends Authenticatable
 {
@@ -48,4 +49,25 @@ class User extends Authenticatable
     {
         return $this->user_type === 'admin';  // Assuming 'admin' is the value for admin users
     }
+
+    public function subscription()
+    {
+        return $this->hasOne(Subscription::class);
+    }
+
+    public function contactDetail()
+    {
+        return $this->hasOne(ContactDetail::class);
+    }
+
+    public function socialMediaDetail()
+    {
+        return $this->hasOne(SocialMediaDetail::class);
+    }
+
+    public function companyDetail()
+    {
+        return $this->hasOne(CompanyDetail::class);
+    }
+
 }

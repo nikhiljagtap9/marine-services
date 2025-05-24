@@ -51,6 +51,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/service-provider/membership',[ServiceProviderDetailController::class, 'membership'])->name('service-provider.membership');
+    Route::post('/service-provider-autosave/{section}', [ServiceProviderDetailController::class, 'autoSave']);
+
 });
 
     Route::get('/service-provider/create', [ServiceProviderDetailController::class, 'create'])->name('service-provider.create');
@@ -58,6 +62,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/service-provider/confirm', [ServiceProviderDetailController::class, 'confirm'])->name('service-provider.confirm');
     Route::get('/get-cities/{country_id}',[ServiceProviderDetailController::class, 'getCities'])->name('get-cities');
     Route::get('/get-sub-service/{service_id}',[ServiceProviderDetailController::class, 'getSubService'])->name('get-sub-service');
+    
+    
     
 
 // Admin routes

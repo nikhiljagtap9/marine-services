@@ -200,7 +200,7 @@ Enjoy FREE Silver Plan access until <b> September 15,</b> 2025—your free perio
                               <span class="h3">$</span>
                               <span class="display-4 fw-semibold">99/Year</span>
                            </div>
-                           <a href="https://persausive.com/client/Ugur_Form/membership.html" target="_blank" class="btn d-block mt-4 btn-primary text-nowrap">Get Silver</a>
+                           <a href="{{route('service-provider.membership')}}" target="_blank" class="btn d-block mt-4 btn-primary text-nowrap">Get Silver</a>
                         </th>
                         <th scope="col">
                            <span class="font-caveat fs-3 text-primary">Gold</span>
@@ -208,7 +208,7 @@ Enjoy FREE Silver Plan access until <b> September 15,</b> 2025—your free perio
                               <span class="h3">$</span>
                               <span class="display-4 fw-semibold">149/Year</span>
                            </div>
-                           <a href="https://persausive.com/client/Ugur_Form/membership.html" target="_blank" class="btn d-block mt-4 btn-primary text-nowrap">Get Gold</a>
+                           <a href="{{route('service-provider.membership')}}" target="_blank" class="btn d-block mt-4 btn-primary text-nowrap">Get Gold</a>
                         </th>
                         <th scope="col">
                            <span class="font-caveat fs-3 text-primary">Platinum</span>
@@ -216,7 +216,7 @@ Enjoy FREE Silver Plan access until <b> September 15,</b> 2025—your free perio
                               <span class="h3">$</span>
                               <span class="display-4 fw-semibold">399/Year</span>
                            </div>
-                           <a href="https://persausive.com/client/Ugur_Form/membership.html" target="_blank" class="btn d-block mt-4 btn-primary text-nowrap">Get Platinum</a> 
+                           <a href="{{route('service-provider.membership')}}" target="_blank" class="btn d-block mt-4 btn-primary text-nowrap">Get Platinum</a> 
                         </th>
                      </tr>
                   </thead>

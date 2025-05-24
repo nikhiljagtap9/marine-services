@@ -81,12 +81,14 @@
         
       </a>
 
+      @guest
       <!-- Add Listing -->
       <a href="{{route('service-provider.create')}}" class="btn btn-primary d-none d-sm-flex align-items-center gap-2 rounded-5 bold_listng"
          data-aos="zoom-in" data-aos-delay="1500">
         <i class="bi bi-plus-circle"></i>
         <span class="d-none d-sm-inline-block">Add Listing</span>
       </a>
+      @endguest
 
       <!-- Toggle -->
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"

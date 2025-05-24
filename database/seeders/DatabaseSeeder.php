@@ -29,5 +29,9 @@ class DatabaseSeeder extends Seeder
                 'user_type' => 'admin',
             ]
         );
+
+        $this->call([
+            PlanSeeder::class,
+        ]);
     }
 }

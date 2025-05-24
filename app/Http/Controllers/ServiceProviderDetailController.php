@@ -11,6 +11,13 @@ use App\Models\City;
 use App\Models\Port;
 use App\Models\Category;
 use App\Models\SubCategory;
+use Illuminate\Support\Facades\Auth;
+use App\Models\ContactDetail;
+use App\Models\SocialMediaDetail;
+use App\Models\CompanyDetail;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
+
 
 class ServiceProviderDetailController extends Controller
 {
@@ -82,8 +89,10 @@ class ServiceProviderDetailController extends Controller
         ]);
 
         session(['registration_success' => true]);
-        return redirect()->route('service-provider.confirm');
-    }
+        // Log the user in after registration
+        Auth::login($user);
+            return redirect()->route('service-provider.confirm');
+        }
 
     public function confirm()
     {
@@ -105,6 +114,131 @@ class ServiceProviderDetailController extends Controller
        $subCategories = SubCategory::where('category_id', $service_id)->get();
        return response()->json($subCategories);
     }
+
+    public function membership() {
+
+        $userId = auth()->id();
+
+        $contact = \App\Models\ContactDetail::where('user_id', $userId)->first();
+        $social = \App\Models\SocialMediaDetail::where('user_id', $userId)->first();
+        $company = \App\Models\CompanyDetail::where('user_id', $userId)->first();
+
+        return view('service-provider.membership', compact('contact', 'social', 'company'));
+        
+    }
+
+    // save membership form with auto save
+    public function autoSave(Request $request, $section)
+    {
+        $userId = auth()->id();
+        $data = $request->except('_token');
+
+        // Define validation rules for each section
+        $rules = [];
+
+        switch ($section) {
+            case 'contact':
+                $rules = [
+                    'alternative_email' => 'nullable|email',
+                    'office_telephone' => 'required|regex:/^[0-9]+$/|max:20',
+                    'mobile_number'    => 'required|regex:/^[0-9]+$/|max:20',
+                    'whatsapp_number'  => 'nullable|regex:/^[0-9]+$/|max:20',
+                ];
+                break;
+
+            case 'social':
+                $rules = [
+                    'linkedin' => 'nullable|url',
+                    'instagram' => 'nullable|url',
+                    'twitter' => 'nullable|url',
+                ];
+                break;
+
+            case 'company':
+                $rules = [
+                    'slogan' => 'required|string|max:255',
+                    'about' => 'required|string|max:500',
+                    'brands' => 'nullable|string',
+                    'reference_shipowners' => 'nullable|string',
+
+                    'certificates' => 'nullable|array',
+                    'certificates.*' => 'file|mimes:pdf,jpeg,png,jpg|max:1024',
+
+                    'photos' => 'required|array|min:3',
+                    'photos.*' => 'image|mimes:jpeg,png,jpg|max:1024',
+                ];
+                break;
+
+            default:
+                return response()->json(['status' => 'error', 'message' => 'Invalid section'], 400);
+        }
+
+        // Validate the request
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+            switch ($section) {
+                case 'contact':
+                    ContactDetail::updateOrCreate(['user_id' => $userId], $data);
+                    break;
+
+                case 'social':
+                    SocialMediaDetail::updateOrCreate(['user_id' => $userId], $data);
+                    break;
+
+                case 'company':
+                    // get company details first
+                    $companyDetail = CompanyDetail::where('user_id', $userId)->first();
+                  //  dd($companyDetail->photos);
+                    // Delete old photos if new ones are uploaded
+                    if ($request->hasFile('photos') && $companyDetail && $companyDetail->photos) {
+                        foreach (json_decode($companyDetail->photos) as $oldPhoto) {
+                            Storage::disk('public')->delete($oldPhoto);
+                        }
+                    }
+
+                    // Delete old certificates if new ones are uploaded
+                    if ($request->hasFile('certificates') && $companyDetail && $companyDetail->certificates) {
+                        foreach (json_decode($companyDetail->certificates) as $oldCert) {
+                            Storage::disk('public')->delete($oldCert);
+                        }
+                    }
+
+                    // Save new photos
+                    $photoPaths = [];
+                    if ($request->hasFile('photos')) {
+                        foreach ($request->file('photos') as $photo) {
+                            $photoPaths[] = $photo->store('uploads/photos', 'public');
+                        }
+                    }
+
+                    $certPaths = [];
+                    if ($request->hasFile('certificates')) {
+                        foreach ($request->file('certificates') as $cert) {
+                            $certPaths[] = $cert->store('uploads/certificates', 'public');
+                        }
+                    }
+
+                    // Now merge file paths into data
+                    $data['photos'] = json_encode($photoPaths);
+                    $data['certificates'] = json_encode($certPaths);
+                    
+                    CompanyDetail::updateOrCreate(['user_id' => $userId], $data);
+                    break;
+
+                default:
+                    return response()->json(['status' => 'error', 'message' => 'Invalid section'], 400);
+            }
+
+            return response()->json(['status' => 'success']);
+    }
+
 
 
 }
