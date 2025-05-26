@@ -54,6 +54,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/service-provider/membership',[ServiceProviderDetailController::class, 'membership'])->name('service-provider.membership');
     Route::post('/service-provider-autosave/{section}', [ServiceProviderDetailController::class, 'autoSave']);
+    Route::post('/service-provider-submit-form', [ServiceProviderDetailController::class, 'membershipForm'])->name('service-provider.membershipForm');
 
 });
 

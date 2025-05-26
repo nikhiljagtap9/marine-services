@@ -15,8 +15,10 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\ContactDetail;
 use App\Models\SocialMediaDetail;
 use App\Models\CompanyDetail;
+use App\Models\PortServiceDetail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+
 
 
 class ServiceProviderDetailController extends Controller
@@ -119,13 +121,204 @@ class ServiceProviderDetailController extends Controller
 
         $userId = auth()->id();
 
-        $contact = \App\Models\ContactDetail::where('user_id', $userId)->first();
-        $social = \App\Models\SocialMediaDetail::where('user_id', $userId)->first();
-        $company = \App\Models\CompanyDetail::where('user_id', $userId)->first();
+        $contact = ContactDetail::where('user_id', $userId)->first();
+        $social = SocialMediaDetail::where('user_id', $userId)->first();
+        $company = CompanyDetail::where('user_id', $userId)->first();
+        $countries = Country::all();
+        $ports = Port::all();
+        $categories = Category::all();
+        $subCategories = SubCategory::all();
 
-        return view('service-provider.membership', compact('contact', 'social', 'company'));
+        // Fetch existing service detail records for this user
+        $portServiceDetails = PortServiceDetail::where('user_id', $userId)->get();
+
+         // Group by country_id and port_id as key
+        $groupedServiceDetails = $portServiceDetails->groupBy(function ($item) {
+            return $item->country_id . '_' . $item->port_id;
+        });
+
+        // Organize IDs into a nested array for hidden input mapping
+        $existingIds = [];
+        // foreach ($portServiceDetails as $i => $detail) {
+        //     // You must calculate block & service index based on your logic
+        //     $blockIndex = 0;
+        //     $serviceIndex = $i;
+        //     $existingIds[$blockIndex][$serviceIndex] = $detail->id;
+        // }
+
+        foreach ($groupedServiceDetails as $blockIndex => $serviceGroup) {
+            foreach ($serviceGroup as $serviceIndex => $service) {
+                $existingIds[$blockIndex][$serviceIndex] = $service->id;
+            }
+        }
+
+        // Ensure at least one empty section if no data exists
+        if ($groupedServiceDetails->isEmpty()) {
+            $groupedServiceDetails = collect([
+                '0_0' => [null] // null = placeholder for a single empty service
+            ]);
+        }
+
+        return view('service-provider.membership', compact('contact', 'social', 'company','countries','ports','categories','subCategories','groupedServiceDetails','existingIds'));
         
     }
+
+    // save membership form with direct method
+    public function membershipForm(Request $request)
+    {
+        $userId = auth()->id();
+
+        // get company details first
+        $companyDetail = CompanyDetail::where('user_id', $userId)->first();
+
+        $hasPhotos = $companyDetail && !empty(json_decode($companyDetail->photos, true));
+
+        // Validate all inputs
+        $request->validate([
+            // Contact
+            'alternative_email' => 'nullable|email',
+            'office_telephone' => 'required|regex:/^[0-9]+$/|max:20',
+            'mobile_number'    => 'required|regex:/^[0-9]+$/|max:20',
+            'whatsapp_number'  => 'nullable|regex:/^[0-9]+$/|max:20',
+            'has_emergency_contact' => 'required|boolean',
+            'emergency_contact_number' => 'nullable|required_if:has_emergency_contact,1',
+            
+            // Social
+            'linkedin' => 'nullable|url',
+            'instagram' => 'nullable|url',
+            'twitter' => 'nullable|url',
+
+            // Company
+            'slogan' => 'required|string|max:255',
+            'about' => 'required|string|max:500',
+            'brands' => 'nullable|string',
+            'reference_shipowners' => 'nullable|string',
+
+            'certificates' => 'nullable|array',
+            'certificates.*' => 'file|mimes:pdf,jpeg,png,jpg|max:1024',
+
+            'photos' => [
+                $hasPhotos ? 'nullable' : 'required',
+                'array',
+                'min:3',
+            ],
+            'photos.*' => 'image|mimes:jpeg,png,jpg|max:1024',
+
+            // Port Services
+            'country.*' => 'required|string',
+            'port.*' => 'required|string',
+            'service_category.*.*' => 'required|integer',
+            'sub_services.*.*' => 'nullable|array',
+            'sub_services.*.*.*' => 'integer',
+            'additional_info.*.*' => 'nullable|string',
+        ],[
+            'emergency_contact_number.required_if' => 'Please enter an emergency contact number if you selected Yes.',
+        ]);
+
+        // Save Contact Details
+        ContactDetail::updateOrCreate(
+            ['user_id' => $userId],
+            $request->only(['alternative_email', 'office_telephone', 'mobile_number', 'whatsapp_number','has_emergency_contact','emergency_contact_number'])
+        );
+
+        // Save Social Media
+        SocialMediaDetail::updateOrCreate(
+            ['user_id' => $userId],
+            $request->only(['linkedin', 'instagram', 'twitter'])
+        );
+
+        // Save Company Details (with files)
+        $certPaths = [];
+        if ($request->hasFile('certificates')) {
+
+            // Delete old certificates if they exist
+            if ($companyDetail && $companyDetail->certificates) {
+                foreach (json_decode($companyDetail->certificates) as $oldCert) {
+                    Storage::disk('public')->delete($oldCert);
+                }
+            }
+
+            // Save new ones
+            foreach ($request->file('certificates') as $cert) {
+                $certPaths[] = $cert->store('certificates', 'public');
+            }
+        }else {
+            // Preserve existing photos
+            $certPaths = $companyDetail ? json_decode($companyDetail->certificates, true) : [];
+        }
+
+        $photoPaths = [];
+        if ($request->hasFile('photos')) {
+            // Delete old photos if they exist
+            if ($companyDetail && $companyDetail->photos) {
+                foreach (json_decode($companyDetail->photos) as $oldPhoto) {
+                    Storage::disk('public')->delete($oldPhoto);
+                }
+            }
+             // Save new ones
+            foreach ($request->file('photos') as $photo) {
+                $photoPaths[] = $photo->store('photos', 'public');
+            }
+        }else {
+            // Preserve existing photos
+            $photoPaths = $companyDetail ? json_decode($companyDetail->photos, true) : [];
+        }
+
+        CompanyDetail::updateOrCreate(
+            ['user_id' => $userId],
+            [
+                'slogan' => $request->slogan,
+                'about' => $request->about,
+                'brands' => $request->brands,
+                'reference_shipowners' => $request->reference_shipowners,
+                'certificates' => json_encode($certPaths),
+                'photos' => json_encode($photoPaths),
+            ]
+        );
+
+        // Save Port-Service Details
+        if ($request->has('country') && is_array($request->country)) {
+            foreach ($request->country as $blockIndex => $country) {
+                $port = $request->port[$blockIndex] ?? null;
+                $serviceCategories = $request->service_category[$blockIndex] ?? [];
+
+                foreach ($serviceCategories as $serviceIndex => $categoryId) {
+                    $subServices = isset($request->sub_services[$blockIndex][$serviceIndex])
+                        ? json_encode($request->sub_services[$blockIndex][$serviceIndex])
+                        : json_encode([]);
+
+                    $additionalInfo = $request->additional_info[$blockIndex][$serviceIndex] ?? null;
+                    $detailId = $request->port_service_detail_id[$blockIndex][$serviceIndex] ?? null;
+
+                    if ($detailId) {
+                        PortServiceDetail::where('id', $detailId)
+                            ->where('user_id', $userId)
+                            ->update([
+                                'country_id' => $country,
+                                'port_id' => $port,
+                                'category_id' => $categoryId,
+                                'sub_services' => $subServices,
+                                'additional_info' => $additionalInfo,
+                                'updated_at' => now(),
+                            ]);
+                    } else {
+                        PortServiceDetail::create([
+                            'user_id' => $userId,
+                            'country_id' => $country,
+                            'port_id' => $port,
+                            'category_id' => $categoryId,
+                            'sub_services' => $subServices,
+                            'additional_info' => $additionalInfo,
+                        ]);
+                    }
+                }
+            }
+        }
+
+        return redirect()->back()->with('success', 'Membership form saved successfully!');
+    }
+
+
 
     // save membership form with auto save
     public function autoSave(Request $request, $section)
@@ -155,6 +348,11 @@ class ServiceProviderDetailController extends Controller
                 break;
 
             case 'company':
+                // get company details first
+                $companyDetail = CompanyDetail::where('user_id', $userId)->first();
+
+                $hasPhotos = $companyDetail && !empty(json_decode($companyDetail->photos, true));
+
                 $rules = [
                     'slogan' => 'required|string|max:255',
                     'about' => 'required|string|max:500',
@@ -164,10 +362,21 @@ class ServiceProviderDetailController extends Controller
                     'certificates' => 'nullable|array',
                     'certificates.*' => 'file|mimes:pdf,jpeg,png,jpg|max:1024',
 
-                    'photos' => 'required|array|min:3',
+                    'photos' => ($hasPhotos ? 'nullable' : 'required') .'|array|min:3',
                     'photos.*' => 'image|mimes:jpeg,png,jpg|max:1024',
                 ];
                 break;
+
+            case 'port':
+                $rules = [
+                    'country_id.*' => 'required|string',
+                    'port_id.*' => 'required|string',
+                    'category_id.*.*' => 'required|integer',
+                    'sub_services.*.*' => 'nullable|array',
+                    'sub_services.*.*.*' => 'integer',
+                    'additional_info.*.*' => 'nullable|string',
+                ];
+                break;    
 
             default:
                 return response()->json(['status' => 'error', 'message' => 'Invalid section'], 400);
@@ -193,47 +402,112 @@ class ServiceProviderDetailController extends Controller
                     break;
 
                 case 'company':
-                    // get company details first
+                    // Get company details first
                     $companyDetail = CompanyDetail::where('user_id', $userId)->first();
-                  //  dd($companyDetail->photos);
-                    // Delete old photos if new ones are uploaded
-                    if ($request->hasFile('photos') && $companyDetail && $companyDetail->photos) {
-                        foreach (json_decode($companyDetail->photos) as $oldPhoto) {
-                            Storage::disk('public')->delete($oldPhoto);
-                        }
-                    }
 
-                    // Delete old certificates if new ones are uploaded
-                    if ($request->hasFile('certificates') && $companyDetail && $companyDetail->certificates) {
-                        foreach (json_decode($companyDetail->certificates) as $oldCert) {
-                            Storage::disk('public')->delete($oldCert);
-                        }
-                    }
-
-                    // Save new photos
+                    // Initialize placeholders
                     $photoPaths = [];
+                    $certPaths = [];
+
+                    // Handle photos
                     if ($request->hasFile('photos')) {
+                        // Delete old photos
+                        if ($companyDetail && $companyDetail->photos) {
+                            foreach (json_decode($companyDetail->photos, true) as $oldPhoto) {
+                                Storage::disk('public')->delete($oldPhoto);
+                            }
+                        }
+
+                        // Save new photos
                         foreach ($request->file('photos') as $photo) {
                             $photoPaths[] = $photo->store('uploads/photos', 'public');
                         }
+
+                        $data['photos'] = json_encode($photoPaths); // Update with new photos
+                    } else {
+                        // Keep existing photos
+                        $data['photos'] = $companyDetail->photos ?? json_encode([]);
                     }
 
-                    $certPaths = [];
+                    // Handle certificates
                     if ($request->hasFile('certificates')) {
+                        // Delete old certificates
+                        if ($companyDetail && $companyDetail->certificates) {
+                            foreach (json_decode($companyDetail->certificates, true) as $oldCert) {
+                                Storage::disk('public')->delete($oldCert);
+                            }
+                        }
+
+                        // Save new certificates
                         foreach ($request->file('certificates') as $cert) {
                             $certPaths[] = $cert->store('uploads/certificates', 'public');
                         }
+
+                        $data['certificates'] = json_encode($certPaths); // Update with new certs
+                    } else {
+                        // Keep existing certificates
+                        $data['certificates'] = $companyDetail->certificates ?? json_encode([]);
                     }
 
-                    // Now merge file paths into data
-                    $data['photos'] = json_encode($photoPaths);
-                    $data['certificates'] = json_encode($certPaths);
-                    
+                    // Finally, save or update
                     CompanyDetail::updateOrCreate(['user_id' => $userId], $data);
                     break;
 
-                default:
-                    return response()->json(['status' => 'error', 'message' => 'Invalid section'], 400);
+                case 'port':
+                    foreach ($request->country as $blockIndex => $country) {
+                    $port = $request->port[$blockIndex];
+                    $serviceCategories = $request->service_category[$blockIndex] ?? [];
+
+                    foreach ($serviceCategories as $serviceIndex => $categoryId) {
+                        $subServices = isset($request->sub_services[$blockIndex][$serviceIndex])
+                            ? json_encode($request->sub_services[$blockIndex][$serviceIndex])
+                            : json_encode([]);
+
+                        $additionalInfo = $request->additional_info[$blockIndex][$serviceIndex] ?? null;
+                        $detailId = $request->port_service_detail_id[$blockIndex][$serviceIndex] ?? null;
+                        // Update if record exists, else create
+                        // PortServiceDetail::updateOrCreate(
+                        //     [
+                        //         'user_id' => $userId,
+                        //         'country_id' => $country,
+                        //         'port_id' => $port,
+                        //         'category_id' => $categoryId,                           
+                        //     ],
+                        //     [
+                                
+                        //         'sub_services' => $subServices,
+                        //         'additional_info' => $additionalInfo,
+                        //     ]
+                        // );
+
+                        if ($detailId) {
+                            // Update existing
+                            PortServiceDetail::where('id', $detailId)
+                                ->where('user_id', $userId)
+                                ->update([
+                                    'country_id' => $country,
+                                    'port_id' => $port,
+                                    'category_id' => $categoryId,
+                                    'sub_services' => $subServices,
+                                    'additional_info' => $additionalInfo,
+                                    'updated_at' => now(),
+                                ]);
+                        } else {
+                            // Create new
+                            PortServiceDetail::create([
+                                'user_id' => $userId,
+                                'country_id' => $country,
+                                'port_id' => $port,
+                                'category_id' => $categoryId,
+                                'sub_services' => $subServices,
+                                'additional_info' => $additionalInfo,
+                            ]);
+                        }
+                    }
+                }
+
+                    break;    
+
             }
 
             return response()->json(['status' => 'success']);

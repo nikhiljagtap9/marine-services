@@ -18097,7 +18097,7 @@ margin-bottom: 30px;
             padding: 15px;
             border: 1px solid #ccc;
             border-radius: 6px;
-            background-color: #f9f9f9;
+            background-color: #fff;
         }
 
         .service-block{
@@ -18107,7 +18107,7 @@ margin-bottom: 30px;
 
 .service-block .form-check {
     float: left;
-    background: #fff;
+    background: #f8f8f8;
     margin-right: 7px;
     padding: 6px 8px;
     margin-top: 6px;
@@ -18152,6 +18152,25 @@ margin-bottom: 30px;
   background-color:#0a4081;
 }
 
+.service-block .form-check-input:checked {
+    background-color: #124f98;
+    border-color: #124f98;
+}
+
+.port_drop.port_drop_wdth{
+  float: left;
+  width: 48.5%;
+  margin-bottom: 20px;
+}
+
+.port_sinl_vend{
+  background-color:#f8f8f8;
+  margin-bottom: 30px;
+  padding: 20px 20px;
+  float: left;
+  width: 100%;
+  border-radius: 10px;
+}
 
 .fxt-template-layout35 .fxt-heading-content:after {
     content: "";

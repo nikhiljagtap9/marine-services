@@ -70,4 +70,9 @@ class User extends Authenticatable
         return $this->hasOne(CompanyDetail::class);
     }
 
+    public function portServiceDetail()
+    {
+        return $this->hasMany(PortServiceDetail::class);
+    }
+
 }
