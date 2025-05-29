@@ -144,4 +144,5 @@
 
 </body>
 </html>
+@yield('scripts')
 

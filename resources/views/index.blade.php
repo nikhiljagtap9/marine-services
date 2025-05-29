@@ -39,144 +39,128 @@
       </div>
       <div class="row justify-content-center">
          <div class="col-lg-12">
-            <div class="serch_main  aos-init animate__animated animate__fadeIn" data-wow-offset="200">
-               <div class="serch_drop aos-init"  data-aos="fade-in" data-aos-delay="400" >
-                  <div class="serch_drop_titl">
-                     Select Country
+            <form action="{{ route('product_listing') }}" method="GET">
+               <div class="serch_main  aos-init animate__animated animate__fadeIn" data-wow-offset="200">
+                  <div class="serch_drop aos-init"  data-aos="fade-in" data-aos-delay="400" >
+                     <div class="serch_drop_titl">
+                        Select Country
+                     </div>
+                     <div class="clear"></div>
+                     <div class="svg_right">
+                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1.5"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-world">
+                           <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                           <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+                           <path d="M3.6 9h16.8" />
+                           <path d="M3.6 15h16.8" />
+                           <path d="M11.5 3a17 17 0 0 0 0 18" />
+                           <path d="M12.5 3a17 17 0 0 1 0 18" />
+                        </svg>
+                     </div>
+                     <select class="serch_drop_select" id="country-select" name="country">
+                        <option>Select Country</option>
+                        @foreach($countries as $country)
+                           <option value="{{ $country->id }}">{{ $country->name }}</option>
+                        @endforeach
+                     </select>
                   </div>
-                  <div class="clear"></div>
-                  <div class="svg_right">
-                     <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1.5"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-world">
+                  <div class="serch_drop aos-init" data-aos="fade-in" data-aos-delay="600" >
+                     <div class="serch_drop_titl">
+                        Select Port
+                     </div>
+                     <div class="clear"></div>
+                     <div class="svg_right">
+                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1.5"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-ship">
+                           <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                           <path d="M2 20a2.4 2.4 0 0 0 2 1a2.4 2.4 0 0 0 2 -1a2.4 2.4 0 0 1 2 -1a2.4 2.4 0 0 1 2 1a2.4 2.4 0 0 0 2 1a2.4 2.4 0 0 0 2 -1a2.4 2.4 0 0 1 2 -1a2.4 2.4 0 0 1 2 1a2.4 2.4 0 0 0 2 1a2.4 2.4 0 0 0 2 -1" />
+                           <path d="M4 18l-1 -5h18l-2 4" />
+                           <path d="M5 13v-6h8l4 6" />
+                           <path d="M7 7v-4h-1" />
+                        </svg>
+                     </div>
+                     <select class="serch_drop_select" id="ports_services" name="ports_services">      
+                        <option value="">Select Port</option>
+                     </select>
+                  </div>
+                  <div class="serch_drop aos-init " data-aos="fade-in" data-aos-delay="800" >
+                     <div class="serch_drop_titl">
+                        Select Service Type
+                     </div>
+                     <div class="clear"></div>
+                     <div class="svg_right">
+                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1.5"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-category">
+                           <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                           <path d="M4 4h6v6h-6z" />
+                           <path d="M14 4h6v6h-6z" />
+                           <path d="M4 14h6v6h-6z" />
+                           <path d="M17 17m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
+                        </svg>
+                     </div>
+                     <select class="serch_drop_select" id="service-type" name="service_type">
+                        <option selected="">Select Service Type</option>
+                        @foreach($categories as $category )
+                           <option value="{{$category->id}}">{{$category->name}}</option>
+                        @endforeach
+                     </select>
+                  </div>
+                  <div class="serch_drop aos-init" data-aos="fade-in" data-aos-delay="1000" >
+                     <div class="serch_drop_titl">
+                        Select Sub-Service Type
+                     </div>
+                     <div class="clear"></div>
+                     <div class="svg_right">
+                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1.5"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-category">
+                           <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                           <path d="M4 4h6v6h-6z" />
+                           <path d="M14 4h6v6h-6z" />
+                           <path d="M4 14h6v6h-6z" />
+                           <path d="M17 17m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
+                        </svg>
+                     </div>
+                     <select class="serch_drop_select" id="sub-service-type" name="sub_service_type">
+                        <option selected="">Select Sub-Service Type</option>
+                     </select>
+                  </div>
+                  <div class="serch_drop aos-init" data-aos="fade-in" data-aos-delay="1200" >
+                     <div class="serch_drop_titl">
+                        Rating
+                     </div>
+                     <div class="clear"></div>
+                     <div class="svg_right">
+                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1.25"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-star">
+                           <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                           <path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z" />
+                        </svg>
+                     </div>
+                     <select class="serch_drop_select">
+                        <option selected="">Select Rating</option>
+                        <option value="1">
+                           ★ ★ ★ ★ ★
+                        </option>
+                        <option value="2">
+                           ★ ★ ★ ★ 
+                        </option>
+                        <option value="3">
+                           ★ ★ ★ 
+                        </option>
+                        <option value="3">
+                           ★ ★ 
+                        </option>
+                        <option value="3">
+                           ★ 
+                        </option>
+                     </select>
+                  </div>
+                  <button type="submit" class="search_btn aos-init" data-aos="zoom-in" data-aos-delay="1400" >
+                     <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="#ffffff"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-search">
                         <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
-                        <path d="M3.6 9h16.8" />
-                        <path d="M3.6 15h16.8" />
-                        <path d="M11.5 3a17 17 0 0 0 0 18" />
-                        <path d="M12.5 3a17 17 0 0 1 0 18" />
+                        <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+                        <path d="M21 21l-6 -6" />
                      </svg>
-                  </div>
-                  <select class="serch_drop_select" >
-                     <option>Select Country</option>
-                     <option>Türkiye</option>
-                     <option>UAE</option>
-                     <option>Saudi Arabia</option>
-                     <option>Muscat</option>
-                  </select>
-               </div>
-               <div class="serch_drop aos-init" data-aos="fade-in" data-aos-delay="600" >
-                  <div class="serch_drop_titl">
-                     Select Port
-                  </div>
+                     <div class="sert_text">SEARCH</div>
+                  </button>
                   <div class="clear"></div>
-                  <div class="svg_right">
-                     <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1.5"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-ship">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M2 20a2.4 2.4 0 0 0 2 1a2.4 2.4 0 0 0 2 -1a2.4 2.4 0 0 1 2 -1a2.4 2.4 0 0 1 2 1a2.4 2.4 0 0 0 2 1a2.4 2.4 0 0 0 2 -1a2.4 2.4 0 0 1 2 -1a2.4 2.4 0 0 1 2 1a2.4 2.4 0 0 0 2 1a2.4 2.4 0 0 0 2 -1" />
-                        <path d="M4 18l-1 -5h18l-2 4" />
-                        <path d="M5 13v-6h8l4 6" />
-                        <path d="M7 7v-4h-1" />
-                     </svg>
-                  </div>
-                  <select class="serch_drop_select" >
-                     <option>Select Port</option>
-                     <option>Istanbul</option>
-                     <option>UAE</option>
-                     <option>Saudi Arabia</option>
-                     <option>Muscat</option>
-                  </select>
                </div>
-               <div class="serch_drop aos-init " data-aos="fade-in" data-aos-delay="800" >
-                  <div class="serch_drop_titl">
-                     Select Service Type
-                  </div>
-                  <div class="clear"></div>
-                  <div class="svg_right">
-                     <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1.5"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-category">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M4 4h6v6h-6z" />
-                        <path d="M14 4h6v6h-6z" />
-                        <path d="M4 14h6v6h-6z" />
-                        <path d="M17 17m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
-                     </svg>
-                  </div>
-                  <select class="serch_drop_select">
-                     <option selected="">Select Service Type</option>
-                     <option value="1">cargo handling</option>
-                     <option value="2">Vessel Support</option>
-                     <option value="3">fuel supply</option>
-                     <option value="3">Logistics &amp; Transportation</option>
-                     <option value="3">Safety &amp; Security</option>
-                     <option value="3">Ship Chandling &amp; Crew</option>
-                     <option value="3">repairs </option>
-                     <option value="3">surveys</option>
-                  </select>
-               </div>
-               <div class="serch_drop aos-init" data-aos="fade-in" data-aos-delay="1000" >
-                  <div class="serch_drop_titl">
-                     Select Sub-Service Type
-                  </div>
-                  <div class="clear"></div>
-                  <div class="svg_right">
-                     <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1.5"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-category">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M4 4h6v6h-6z" />
-                        <path d="M14 4h6v6h-6z" />
-                        <path d="M4 14h6v6h-6z" />
-                        <path d="M17 17m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
-                     </svg>
-                  </div>
-                  <select class="serch_drop_select">
-                     <option selected="">Select Sub-Service Type</option>
-                     <option value="1">cargo handling</option>
-                     <option value="2">Vessel Support</option>
-                     <option value="3">fuel supply</option>
-                     <option value="3">Logistics &amp; Transportation</option>
-                     <option value="3">Safety &amp; Security</option>
-                     <option value="3">Ship Chandling &amp; Crew</option>
-                     <option value="3">repairs </option>
-                     <option value="3">surveys</option>
-                  </select>
-               </div>
-               <div class="serch_drop aos-init" data-aos="fade-in" data-aos-delay="1200" >
-                  <div class="serch_drop_titl">
-                     Rating
-                  </div>
-                  <div class="clear"></div>
-                  <div class="svg_right">
-                     <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1.25"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-star">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z" />
-                     </svg>
-                  </div>
-                  <select class="serch_drop_select">
-                     <option selected="">Select Rating</option>
-                     <option value="1">
-                        ★ ★ ★ ★ ★
-                     </option>
-                     <option value="2">
-                        ★ ★ ★ ★ 
-                     </option>
-                     <option value="3">
-                        ★ ★ ★ 
-                     </option>
-                     <option value="3">
-                        ★ ★ 
-                     </option>
-                     <option value="3">
-                        ★ 
-                     </option>
-                  </select>
-               </div>
-               <a href="" class="search_btn aos-init" data-aos="zoom-in" data-aos-delay="1400" >
-                  <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="#ffffff"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-search">
-                     <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                     <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
-                     <path d="M21 21l-6 -6" />
-                  </svg>
-                  <div class="sert_text">SEARCH</div>
-               </a>
-               <div class="clear"></div>
-            </div>
+            </form>
             <div class="clear"></div>
          </div>
 
@@ -862,9 +846,54 @@
       </div>
    </div>
 </div>
-<script>
+
+@endsection
+@section('scripts')
+ <script>
    setTimeout(() => {
      document.getElementById("sub_line").classList.add("active_line");
    }, 2000); // 1 second = 1000 milliseconds
+</script>
+<script>
+      // get port
+      $('#country-select').on('change', function() {
+        var countryId = $(this).val();
+
+        if (countryId) {
+            $.ajax({
+                url: '/get-ports/' + countryId,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    $('#ports_services').empty().append('<option value="">Select Port</option>');
+                    $.each(data, function(key, port) {
+                        $('#ports_services').append('<option value="' + port.id + '">' + port.name + '</option>');
+                    });
+                }
+            });
+        } else {
+            $('#ports_services').empty().append('<option value="">Select Port</option>');
+        }
+      });
+   // get Sub category
+      $('#service-type').on('change', function() {
+        var serviceId = $(this).val();
+
+        if (serviceId) {
+            $.ajax({
+                url: '/get-sub-service/' + serviceId,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    $('#sub-service-type').empty().append('<option value="">Select Sub-Service Type</option>');
+                    $.each(data, function(key, sub_service) {
+                        $('#sub-service-type').append('<option value="' + sub_service.id + '">' + sub_service.name + '</option>');
+                    });
+                }
+            });
+        } else {
+            $('#sub-service-type').empty().append('<option value="">Select Sub-Service Type</option>');
+        }
+    });   
 </script>
 @endsection

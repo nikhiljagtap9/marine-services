@@ -186,38 +186,24 @@ Enjoy FREE Silver Plan access until <b> September 15,</b> 2025—your free perio
                            <div class="fs-4 fw-semibold h6 mb-0 mb-2">Plan & Features</div>
                             
                         </th>
+
+                        @foreach($plans as $plan)
+                           @php
+                              $encryptedPlanId = encrypt($plan->id);
+                           @endphp
                         <th scope="col">
-                           <span class="font-caveat fs-3 text-primary">Basic</span>
+                           <span class="font-caveat fs-3 text-primary">{{ $plan->name }}</span>
                            <div class="d-flex pt-md-3">
                               <span class="h3">$</span>
-                              <span class="display-4 fw-semibold">Free</span>
+                              <span class="display-4 fw-semibold">{{ $plan->price == 0 ? 'Free' : '₹' . $plan->price . '/Year'}}</span>
                            </div>
-                           <a href="https://persausive.com/client/Uger_Ad_Form/" target="_blank" class="btn d-block mt-4 btn-outline-primary text-nowrap">Get Basic</a>
+                           @if($plan->name == 'Basic')
+                              <a href="https://persausive.com/client/Uger_Ad_Form/" target="_blank" class="btn d-block mt-4 btn-outline-primary text-nowrap">Get {{ $plan->name }}</a>
+                           @else
+                              <a href="{{route('service-provider.membership', ['id' => $encryptedPlanId])}}" target="_blank" class="btn d-block mt-4 btn-primary text-nowrap">Get {{ $plan->name }}</a>
+                           @endif   
                         </th>
-                        <th scope="col">
-                           <span class="font-caveat fs-3 text-primary">Silver</span>
-                           <div class="d-flex pt-md-3">
-                              <span class="h3">$</span>
-                              <span class="display-4 fw-semibold">99/Year</span>
-                           </div>
-                           <a href="{{route('service-provider.membership')}}" target="_blank" class="btn d-block mt-4 btn-primary text-nowrap">Get Silver</a>
-                        </th>
-                        <th scope="col">
-                           <span class="font-caveat fs-3 text-primary">Gold</span>
-                           <div class="d-flex pt-md-3">
-                              <span class="h3">$</span>
-                              <span class="display-4 fw-semibold">149/Year</span>
-                           </div>
-                           <a href="{{route('service-provider.membership')}}" target="_blank" class="btn d-block mt-4 btn-primary text-nowrap">Get Gold</a>
-                        </th>
-                        <th scope="col">
-                           <span class="font-caveat fs-3 text-primary">Platinum</span>
-                           <div class="d-flex pt-md-3">
-                              <span class="h3">$</span>
-                              <span class="display-4 fw-semibold">399/Year</span>
-                           </div>
-                           <a href="{{route('service-provider.membership')}}" target="_blank" class="btn d-block mt-4 btn-primary text-nowrap">Get Platinum</a> 
-                        </th>
+                        @endforeach
                      </tr>
                   </thead>
                   <tbody>

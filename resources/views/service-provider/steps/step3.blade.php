@@ -2,11 +2,8 @@
 
                               <div class="form-group">
                                  <label class="Mylabel" for="ports_services">Ports Where Services Are Provided</label>
-                                 <select id="ports_services" name="ports_services" required>
+                                 <select id="ports_services" name="port_id" required>
                                     <option value="">Select Ports</option>
-                                 @foreach($ports as $port )
-                                    <option value="{{$port->id}}">{{$port->name}}</option>
-                                 @endforeach
                                  </select>
                               </div>
 

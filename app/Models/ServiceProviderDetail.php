@@ -37,12 +37,33 @@ class ServiceProviderDetail extends Model
 
     public function service()
     {
-        return $this->belongsTo(Service::class);
+        return $this->belongsTo(Category::class);
     }
 
     public function subService()
     {
-        return $this->belongsTo(SubService::class);
+        return $this->belongsTo(SubCategory::class);
     }
+
+    public function companyDetail()
+    {
+        return $this->hasOne(CompanyDetail::class, 'user_id', 'user_id');
+    }
+
+    public function contactDetail()
+    {
+        return $this->hasOne(ContactDetail::class, 'user_id', 'user_id');
+    }
+
+    public function portServiceDetails()
+    {
+        return $this->hasMany(PortServiceDetail::class, 'user_id', 'user_id');
+    }
+
+    public function socialMediaDetails()
+    {
+        return $this->hasMany(SocialMediaDetail::class, 'user_id', 'user_id');
+    }
+
 }
 

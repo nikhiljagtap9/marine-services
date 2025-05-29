@@ -6,25 +6,25 @@
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <title>Rated Marine Services</title>
       <!-- App favicon -->
-      <link rel="shortcut icon" href="assets/dist/img/favicon.png">
+      <link rel="shortcut icon" href="{{ asset('service-provider/dashboard/assets/dist/img/favicon.png')}}">
       <!-- Global Styles(used by all pages) -->
-      <link href="assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-      <link href="assets/plugins/metisMenu/metisMenu.min.css" rel="stylesheet">
-      <link href="assets/plugins/fontawesome/css/all.min.css" rel="stylesheet">
+      <link href="{{ asset('service-provider/dashboard/assets/plugins/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+      <link href="{{ asset('service-provider/dashboard/assets/plugins/metisMenu/metisMenu.min.css')}}" rel="stylesheet">
+      <link href="{{ asset('service-provider/dashboard/assets/plugins/fontawesome/css/all.min.css')}}" rel="stylesheet">
       <!-- Third party Styles(used by this page) -->
-      <link href="assets/plugins/toastr/toastr.css" rel="stylesheet">
-      <link href="assets/plugins/datatables/dataTables.bootstrap5.min.css" rel="stylesheet">
+      <link href="{{ asset('service-provider/dashboard/assets/plugins/toastr/toastr.css')}}" rel="stylesheet">
+      <link href="{{ asset('service-provider/dashboard/assets/plugins/datatables/dataTables.bootstrap5.min.css')}}" rel="stylesheet">
       <!-- App css -->
-      <link href="assets/dist/css/app.min.css" rel="stylesheet">
+      <link href="{{ asset('service-provider/dashboard/assets/dist/css/app.min.css')}}" rel="stylesheet">
       <!-- Start Your Custom Style Now -->
-      <link href="assets/dist/css/style.css" rel="stylesheet">
+      <link href="{{ asset('service-provider/dashboard/assets/dist/css/style.css')}}" rel="stylesheet">
    </head>
    <body class="fixed sidebar-mini">
       <!-- Start preloader -->
       <div class="page-loader page-loader-active">
          <div class="page-loader-content">
             <div class="page-loader-logo">
-               <img src="assets/images/logo.png" alt="Logo" class="logo_main_loader" >
+               <img src="{{ asset('service-provider/dashboard/assets/images/logo.png')}}" alt="Logo" class="logo_main_loader" >
             </div>
             <div class="page-loader-progress">
                <div class="page-loader-bar"></div>
@@ -38,9 +38,8 @@
          <nav class="sidebar">
             <div class="sidebar-header">
                <a href="index.php" class="sidebar-brand">
-               <!-- <img class="sidebar-brand_icon" src="assets/dist/img/mini-logo.png" alt=""> -->
                <span class="sidebar-brand_text">
-                   <img class="sidebar-brand_icon logo_main_as" src="assets/images/logo.png" alt="">
+                   <img class="sidebar-brand_icon logo_main_as" src="{{ asset('service-provider/dashboard/assets/images/logo.png')}}" alt="">
                </span>
                </a>
             </div>
@@ -160,7 +159,7 @@
                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                               <div class="profile-element d-flex align-items-center flex-shrink-0 p-0 text-start">
                                  <div class="avatar online">
-                                    <img src="assets/dist/img/avatar/01.jpg" class="img-fluid rounded-circle" alt="">
+                                    <img src="{{ asset('service-provider/dashboard/assets/dist/img/avatar/01.jpg')}}" class="img-fluid rounded-circle" alt="">
                                  </div>
                                  <div class="profile-text">
                                     <h6 class="m-0 fw-medium fs-14">Ugur</h6>
@@ -174,7 +173,7 @@
                               </div>
                               <div class="user-header">
                                  <div class="img-user">
-                                    <img src="assets/dist/img/avatar/01.jpg" alt="">
+                                    <img src="{{ asset('service-provider/dashboard/assets/dist/img/avatar/01.jpg')}}" alt="">
                                  </div>
                                  <!-- img-user -->
                                  <h6>Naeem Khan</h6>

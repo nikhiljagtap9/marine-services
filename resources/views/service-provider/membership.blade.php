@@ -22,7 +22,7 @@
                      <div class="theiaStickySidebar" style="padding-top: 1px; padding-bottom: 1px; position: static; transform: none;" bis_skin_checked="1">
                         <div class="mb-4 mb-lg-0" bis_skin_checked="1">
                            <h4 class="fw-semibold fs-3 mb-4">
-                              <div class="platinm_titl">Platinum Plan</div>
+                              <div class="platinm_titl">{{$selectedPlan->name}} Plan</div>
                               <div class="platinm_titl_sub">Experience the Power of Priority.</div>
                            </h4>
                            <div class="clear"></div>
@@ -36,6 +36,7 @@
                                        </div>
                                        <div class="clear"></div>
                                        <div class="col-sm-4" bis_skin_checked="1">
+                                             <input type="hidden" name="plan_id" value="{{ $planId }}">
                                           <div class="" bis_skin_checked="1">
                                              <label class="required fw-medium mb-2">Alternative Email</label>
                                              <input type="text"
@@ -144,6 +145,7 @@
                                              @foreach($groupedServiceDetails as $blockKey => $serviceGroup)
                                                 @php
                                                    [$countryId, $portId] = explode('_', $blockKey);
+                                                   $filteredPorts = $ports->where('country_id', $countryId);
                                                    $blockIndex = $loop->index;
                                                    // If no data, show 2 empty service slots
                                                    $serviceGroup = $serviceGroup ?: [null, null];
@@ -164,7 +166,7 @@
                                                       <label class="required fw-medium mb-2">Select Port 1</label>
                                                       <select class="form-control" name="port[{{ $blockIndex }}]">
                                                          <option value="">Select Port</option>
-                                                         @foreach($ports as $port)
+                                                         @foreach($filteredPorts as $port)
                                                          <option value="{{ $port->id }}" {{ $port->id == $portId ? 'selected' : '' }}>{{ $port->name }}</option>
                                                          @endforeach
                                                       </select>
@@ -294,7 +296,7 @@
                                                    @endforeach
 
                                                    {{-- If only one service category exists, show the second one empty --}}
-                                                   @if(count($serviceGroup) < 2)
+                                                   @if(count($serviceGroup) < 2 && $selectedPlan->allow_category > 1 )
                                                       @php $serviceIndex = 1; @endphp
                                                       <div class="catgry_50 catgry_50_right service-block-item">
                                                          <label class="required fw-medium mb-2">Service Categories 2</label>
@@ -330,9 +332,9 @@
                                                 </div>
                                              @endforeach
                                           </div>
-
-                                          <button type="button" class="btn btn-primary mt-3" id="addMorePortService">+ Add More</button>
-
+                                          @if($selectedPlan->allow_port > 1  )
+                                             <button type="button" class="btn btn-primary mt-3" id="addMorePortService">+ Add More</button>
+                                          @endif
                                        </div>
 
                                        <div class="clear"></div>
@@ -500,22 +502,21 @@
    // new 
    //  Clone and Add Up to 7 Blocks
    let blockIndex = $('.port_sinl_vend').length;
-   let maxBlocks = 7;
+   let maxBlocks = {{ $selectedPlan->allow_port }};
 
    $('#addMorePortService').click(function () {
       if (blockIndex >= maxBlocks) {
-         alert("Maximum 7 blocks allowed.");
+         alert('Maximum ' + maxBlocks + '  blocks allowed.');
          return;
       }
 
       // Clone the first block
       let firstBlock = $('#portServiceBlocksWrapper .port_sinl_vend:first');
       let newBlock = firstBlock.clone();
-
-      // Update all name attributes and IDs
-      newBlock.attr('data-index', blockIndex);
-
+      
       // Reset selects and inputs
+      newBlock.find('.error-text').remove(); // Remove error messages
+      newBlock.attr('data-index', blockIndex);
       newBlock.find('input[type="text"]').val('');
       newBlock.find('select').val('');
       newBlock.find('.subServicesWrapper').hide();
@@ -596,6 +597,35 @@
       }
    });
 
+
+   // get port
+   // Trigger on country change
+    $(document).on('change', 'select[name^="country"]', function () {
+        let $this = $(this);
+        let countryId = $this.val();
+        let blockIndex = $this.closest('.port_sinl_vend').data('index');
+        let portSelect = $('select[name="port[' + blockIndex + ']"]');
+
+        if (countryId) {
+            $.ajax({
+                url: '/get-ports/' + countryId,
+                type: 'GET',
+                data: { country_id: countryId },
+                success: function (response) {
+                    portSelect.empty().append('<option value="">Select Port</option>');
+                    $.each(response, function (key, port) {
+                        portSelect.append('<option value="' + port.id + '">' + port.name + '</option>');
+                    });
+                },
+                error: function () {
+                    alert('Unable to fetch ports. Please try again.');
+                }
+            });
+        } else {
+            portSelect.empty().append('<option value="">Select Port</option>');
+        }
+    });
+
 </script>
 
 
@@ -663,6 +693,7 @@
             },
             success: function(response) {
                alert("Data saved successfully!");
+              // window.location.href = "{{ route('service-provider.index') }}";
             },
            error: function(xhr) {
                let errors = xhr.responseJSON?.errors;
@@ -672,19 +703,28 @@
 
                if (errors) {
                   Object.keys(errors).forEach(function(key) {
-                        // Handle array field errors like photos.0 => photos[]
-                        let baseKey = key.replace(/\.\d+/g, '');
+                        let nameSelector = key;
 
-                        // Try to match both single and array field inputs
-                        let input = $(`[name="${key}"], [name="${baseKey}[]"], [name="${baseKey}"]`);
+                        // Convert dot notation to bracket notation (e.g., service_category.0.0 => service_category[0][0])
+                        nameSelector = key.replace(/\.(\d+)/g, '[$1]');
+
+                        // Match input with bracket notation name
+                        let input = $(`[name="${nameSelector}"]`);
 
                         if (input.length) {
-                           input.last().after(`<div class="error-text text-danger">${errors[key][0]}</div>`);
+                           //input.last().after(`<div class="error-text text-danger">${errors[key][0]}</div>`);
+                            input.last().after(`<div class="error-text text-danger">${errors[key]}</div>`);
+                        } else {
+                           // If field not found, fallback to alert or console
+                           console.warn(`Field not found for: ${key}`);
                         }
                   });
                } else {
                   alert("Something went wrong, please try again.");
                }
+
+           
+
             }
          });
       });

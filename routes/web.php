@@ -9,7 +9,11 @@ use App\Http\Controllers\Admin\PortController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\SubCategoryController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ListingController;
+use App\Http\Controllers\PricingController;
 use App\Http\Controllers\ServiceProviderDetailController;
+use App\Http\Controllers\ServiceProvider\ServiceProviderDashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,17 +26,14 @@ use App\Http\Controllers\ServiceProviderDetailController;
 |
 */
 
-Route::get('/', function () {
-    return view('index');
-});
+Route::get('/', [HomeController::class, 'index'])->name('index');
+Route::get('/product-listing', [ListingController::class, 'index'])->name('product_listing');
 
-Route::get('/product_listing', function () {
-    return view('product_listing');
-})->name('product_listing');
+// Route::get('/product_listing', function () {
+//     return view('product_listing');
+// })->name('product_listing');
 
-Route::get('/pricing', function () {
-    return view('pricing');
-})->name('pricing');
+Route::get('/pricing', [PricingController::class, 'index'])->name('pricing');
 
 Route::get('/about_us', function () {
     return view('about_us');
@@ -62,6 +63,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/service-provider/store', [ServiceProviderDetailController::class, 'store'])->name('service-provider.store');
     Route::get('/service-provider/confirm', [ServiceProviderDetailController::class, 'confirm'])->name('service-provider.confirm');
     Route::get('/get-cities/{country_id}',[ServiceProviderDetailController::class, 'getCities'])->name('get-cities');
+    Route::get('/get-ports/{country_id}',[ServiceProviderDetailController::class, 'getPorts'])->name('get-ports');
     Route::get('/get-sub-service/{service_id}',[ServiceProviderDetailController::class, 'getSubService'])->name('get-sub-service');
     
     
@@ -99,6 +101,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/cities', [CityController::class, 'store'])->name('cities.store');
         Route::get('ajax/cities', [CityController::class, 'getCities'])->name('cities.list');
     });
+});
+
+Route::prefix('service-provider')->middleware(['auth'])->group(function () {
+    Route::get('/index', [ServiceProviderDashboardController::class, 'index'])->name('service-provider.index');
 });
 
 

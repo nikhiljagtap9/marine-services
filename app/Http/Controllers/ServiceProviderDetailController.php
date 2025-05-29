@@ -11,6 +11,7 @@ use App\Models\City;
 use App\Models\Port;
 use App\Models\Category;
 use App\Models\SubCategory;
+use App\Models\Plan;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ContactDetail;
 use App\Models\SocialMediaDetail;
@@ -18,6 +19,8 @@ use App\Models\CompanyDetail;
 use App\Models\PortServiceDetail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Subscription;
+use Carbon\Carbon;
 
 
 
@@ -50,7 +53,7 @@ class ServiceProviderDetailController extends Controller
             'country' => 'required|string|max:100',
             'city' => 'required|string|max:100',
             'office_address' => 'required|string',
-            'ports_services' => 'required|string',
+            'port_id' => 'required|string',
             'service_type' => 'required|string',
             'sub_service_type' => 'required|string',
             'contact_number' => 'nullable|string|max:20',
@@ -84,7 +87,7 @@ class ServiceProviderDetailController extends Controller
             'country' => $request->country,
             'city' => $request->city,
             'office_address' => $request->office_address,
-            'ports_services' => $request->ports_services,
+            'port_id' => $request->port_id,
             'service_type' => $request->service_type,
             'sub_service_type' => $request->sub_service_type,
             'contact_number' => $request->contact_number,
@@ -112,14 +115,20 @@ class ServiceProviderDetailController extends Controller
        return response()->json($cities);
     }
 
+    public function getPorts($country_id) {
+       $ports = Port::where('country_id', $country_id)->get();
+       return response()->json($ports);
+    }
+
     public function getSubService($service_id){
        $subCategories = SubCategory::where('category_id', $service_id)->get();
        return response()->json($subCategories);
     }
 
-    public function membership() {
+    public function membership(Request $request) {
 
         $userId = auth()->id();
+        $planId = $request->id; // get plan id using url
 
         $contact = ContactDetail::where('user_id', $userId)->first();
         $social = SocialMediaDetail::where('user_id', $userId)->first();
@@ -128,6 +137,10 @@ class ServiceProviderDetailController extends Controller
         $ports = Port::all();
         $categories = Category::all();
         $subCategories = SubCategory::all();
+
+        // Now you can use $planId to fetch the selected plan
+        $selectedPlan = Plan::find(decrypt($planId));
+
 
         // Fetch existing service detail records for this user
         $portServiceDetails = PortServiceDetail::where('user_id', $userId)->get();
@@ -159,7 +172,8 @@ class ServiceProviderDetailController extends Controller
             ]);
         }
 
-        return view('service-provider.membership', compact('contact', 'social', 'company','countries','ports','categories','subCategories','groupedServiceDetails','existingIds'));
+        return view('service-provider.membership',
+         compact('contact', 'social', 'company','countries','ports','categories','subCategories','groupedServiceDetails','existingIds','planId','selectedPlan'));
         
     }
 
@@ -167,6 +181,7 @@ class ServiceProviderDetailController extends Controller
     public function membershipForm(Request $request)
     {
         $userId = auth()->id();
+        $planId = decrypt($request->plan_id);
 
         // get company details first
         $companyDetail = CompanyDetail::where('user_id', $userId)->first();
@@ -205,15 +220,55 @@ class ServiceProviderDetailController extends Controller
             'photos.*' => 'image|mimes:jpeg,png,jpg|max:1024',
 
             // Port Services
-            'country.*' => 'required|string',
-            'port.*' => 'required|string',
-            'service_category.*.*' => 'required|integer',
+            'country.0' => 'required|string',
+            'port.0' => 'required|string',
+            'service_category.0.0' => 'required|integer',
+            // All others optional
+            'country.*' => 'nullable|string',
+            'port.*' => 'nullable|string',
+            'service_category.*.*' => 'nullable|integer',
             'sub_services.*.*' => 'nullable|array',
             'sub_services.*.*.*' => 'integer',
             'additional_info.*.*' => 'nullable|string',
         ],[
             'emergency_contact_number.required_if' => 'Please enter an emergency contact number if you selected Yes.',
+            'country.0.required' => 'Please select country.',
+            'port.0.required' => 'Please select port.',
+            'service_category.0.0.required' => 'Please select at least one service category in the first group.',
         ]);
+        
+        //  Custom Conditional Validation Logic (after validate())
+        $allCategories = $request->input('service_category', []);
+        $allCountries = $request->input('country', []);
+        $allPorts = $request->input('port', []);
+        $errors = [];
+
+        foreach ($allCategories as $groupIndex => $categoryGroup) {
+            if ($groupIndex == 0) continue; // Skip the first group — already validated
+
+            $hasAnyCategory = collect($categoryGroup)->filter()->isNotEmpty();
+            
+            if ($hasAnyCategory) {
+                $country = $allCountries[$groupIndex] ?? null;
+                $port = $allPorts[$groupIndex] ?? null;
+
+                if (empty($country)) {
+                    $errors["country.$groupIndex"] = "Please select country.";
+                }
+
+                if (empty($port)) {
+                    $errors["port.$groupIndex"] = "Please select port.";
+                }
+                
+            }
+        }
+
+        if (!empty($errors)) {
+            // Return custom validation errors to the frontend
+            return response()->json(['errors' => $errors], 422);
+        }
+
+
 
         // Save Contact Details
         ContactDetail::updateOrCreate(
@@ -278,17 +333,58 @@ class ServiceProviderDetailController extends Controller
 
         // Save Port-Service Details
         if ($request->has('country') && is_array($request->country)) {
+            $portCategoryCount = []; // Track how many new categories are being added per port
+
+            // Check if user has an active subscription
+            $activeSubscription = Subscription::where('user_id', $userId)
+                ->where('end_date', '>=', now())
+                ->first();
+
             foreach ($request->country as $blockIndex => $country) {
                 $port = $request->port[$blockIndex] ?? null;
                 $serviceCategories = $request->service_category[$blockIndex] ?? [];
 
                 foreach ($serviceCategories as $serviceIndex => $categoryId) {
+
+                    // Skip saving if required fields are missing
+                    if (empty($country) || empty($port) || empty($categoryId)) {
+                        continue;
+                    }
+
+                    // Get ID if it’s an update
+                    $detailId = $request->port_service_detail_id[$blockIndex][$serviceIndex] ?? null;
+
+                    // Count how many existing categories already saved in DB for this port 
+                    // Count current entries only if the subscription is active
+                    $existingCount = 0;
+                    if ($activeSubscription) {
+                        $existingCount = PortServiceDetail::where('user_id', $userId)
+                            ->where('port_id', $port)
+                            ->when($detailId, function ($query) use ($detailId) {
+                                return $query->where('id', '!=', $detailId); // skip updating record
+                            })
+                            ->count();
+                    }
+
+                    // Track how many new ones we're adding in this request
+                    $portCategoryCount[$port] = isset($portCategoryCount[$port])
+                        ? $portCategoryCount[$port] + 1
+                        : 1;
+
+                    // Total count = existing DB + this request
+                    if (($existingCount + $portCategoryCount[$port]) > 15) {
+                        return response()->json([
+                            'errors' => ["port.$blockIndex" => "Only 15 service categories are allowed per port."]
+                        ], 422);
+                    }    
+
                     $subServices = isset($request->sub_services[$blockIndex][$serviceIndex])
                         ? json_encode($request->sub_services[$blockIndex][$serviceIndex])
                         : json_encode([]);
 
                     $additionalInfo = $request->additional_info[$blockIndex][$serviceIndex] ?? null;
-                    $detailId = $request->port_service_detail_id[$blockIndex][$serviceIndex] ?? null;
+                    
+
 
                     if ($detailId) {
                         PortServiceDetail::where('id', $detailId)
@@ -314,6 +410,15 @@ class ServiceProviderDetailController extends Controller
                 }
             }
         }
+
+        Subscription::updateOrCreate(
+            ['user_id' => $userId],
+            [
+                'plan_id' => $planId,
+                'start_date' => Carbon::now(),
+                'end_date' => Carbon::now()->addYear(), // or your logic: months, days etc.
+            ]
+        );
 
         return redirect()->back()->with('success', 'Membership form saved successfully!');
     }

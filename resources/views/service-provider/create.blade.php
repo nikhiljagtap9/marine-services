@@ -169,6 +169,22 @@
         } else {
             $('#city-select').empty().append('<option value="">Select City</option>');
         }
+
+        if (countryId) {
+            $.ajax({
+                url: '/get-ports/' + countryId,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    $('#ports_services').empty().append('<option value="">Select Port</option>');
+                    $.each(data, function(key, port) {
+                        $('#ports_services').append('<option value="' + port.id + '">' + port.name + '</option>');
+                    });
+                }
+            });
+        } else {
+            $('#ports_services').empty().append('<option value="">Select Port</option>');
+        }
     });
 
      // get Sub category
