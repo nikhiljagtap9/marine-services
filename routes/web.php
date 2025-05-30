@@ -14,6 +14,7 @@ use App\Http\Controllers\ListingController;
 use App\Http\Controllers\PricingController;
 use App\Http\Controllers\ServiceProviderDetailController;
 use App\Http\Controllers\ServiceProvider\ServiceProviderDashboardController;
+use App\Http\Controllers\Admin\UserListController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +29,7 @@ use App\Http\Controllers\ServiceProvider\ServiceProviderDashboardController;
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::get('/product-listing', [ListingController::class, 'index'])->name('product_listing');
+Route::get('/product-detail', [ListingController::class, 'detail'])->name('product_detail');
 
 // Route::get('/product_listing', function () {
 //     return view('product_listing');
@@ -100,6 +102,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/cities', [CityController::class, 'index'])->name('cities.index');
         Route::post('/cities', [CityController::class, 'store'])->name('cities.store');
         Route::get('ajax/cities', [CityController::class, 'getCities'])->name('cities.list');
+
+        Route::get('/users', [UserListController::class, 'index'])->name('usres.index');
+        Route::get('/users/{id}', [UserListController::class, 'detail'])->name('users.detail');
+        
     });
 });
 

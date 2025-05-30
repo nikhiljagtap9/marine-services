@@ -72,347 +72,358 @@
 
                                  <div class="clear"></div>
                                  <!-- Social Media Details -->
-                                    <div class="singl_from_wrp singl_from_socil">
-                                       <div class="socl_med_links">
-                                          Social Media Details
-                                       </div>
-                                       <div class="clear"></div>
-                                       <div class="col-sm-4" bis_skin_checked="1">
-                                          <div class="" bis_skin_checked="1">
-                                             <label class="required fw-medium mb-2">LinkedIn</label>
-                                             <input type="text"
-                                                value="{{old('linkedin', $social->linkedin ?? '')}}"
-                                                name="linkedin" class="form-control" placeholder="Enter LinkedIn Link">
-                                          </div>
-                                       </div>
-                                       <div class="col-sm-4" bis_skin_checked="1">
-                                          <div class="" bis_skin_checked="1">
-                                             <label class="required fw-medium mb-2">Instagram</label>
-                                             <input type="text"
-                                                value="{{old('instagram', $social->instagram ?? '')}}"
-                                                name="instagram" class="form-control" placeholder="Enter Instagram">
-                                          </div>
-                                       </div>
-                                       <div class="col-sm-4" bis_skin_checked="1">
-                                          <div class="" bis_skin_checked="1">
-                                             <label class="required fw-medium mb-2">X (Twitter)</label>
-                                             <input type="text"
-                                                value="{{old('twitter', $social->twitter ?? '')}}"
-                                                name="twitter" class="form-control" placeholder="Enter X (Twitter)">
-                                          </div>
+                                 @if($selectedPlan->name != 'Basic')
+                                 <div class="singl_from_wrp singl_from_socil">
+                                    <div class="socl_med_links">
+                                       Social Media Details
+                                    </div>
+                                    <div class="clear"></div>
+                                    <div class="col-sm-4" bis_skin_checked="1">
+                                       <div class="" bis_skin_checked="1">
+                                          <label class="required fw-medium mb-2">LinkedIn</label>
+                                          <input type="text"
+                                             value="{{old('linkedin', $social->linkedin ?? '')}}"
+                                             name="linkedin" class="form-control" placeholder="Enter LinkedIn Link">
                                        </div>
                                     </div>
+                                    <div class="col-sm-4" bis_skin_checked="1">
+                                       <div class="" bis_skin_checked="1">
+                                          <label class="required fw-medium mb-2">Instagram</label>
+                                          <input type="text"
+                                             value="{{old('instagram', $social->instagram ?? '')}}"
+                                             name="instagram" class="form-control" placeholder="Enter Instagram">
+                                       </div>
+                                    </div>
+                                    <div class="col-sm-4" bis_skin_checked="1">
+                                       <div class="" bis_skin_checked="1">
+                                          <label class="required fw-medium mb-2">X (Twitter)</label>
+                                          <input type="text"
+                                             value="{{old('twitter', $social->twitter ?? '')}}"
+                                             name="twitter" class="form-control" placeholder="Enter X (Twitter)">
+                                       </div>
+                                    </div>
+                                 </div>
+                                 @endif
 
                                  <div class="clear"></div>
                                  <!-- Other Details / Ports and Services -->
-                                    <div class="singl_from_wrp">
-                                       <div class="socl_med_links">
-                                          Other Details  
-                                       </div>
-                                       <div class="clear"></div>
-                                       @php
-                                          $hasEmergency = $contact->has_emergency_contact ?? 0;
-                                       @endphp
-                                       <div class="col-sm-4 col-sm-4_40per" bis_skin_checked="1">
-                                          <div class="" bis_skin_checked="1">
-                                             <label class="required fw-medium mb-2 labl_doyuy">Do you have a 24/7<br> emergency contact number? </label>
-                                             <div class="clear"></div>
-                                             <div class="yes_no_inp">
-                                                <label>
-                                                   <input type="radio" name="has_emergency_contact" 
-                                                   value="1" onclick="togglePhoneInput(true)" {{ $hasEmergency == 1 ? 'checked' : '' }} > Yes
-                                                </label>
-                                                <label>
-                                                   <input type="radio" name="has_emergency_contact" 
-                                                   value="0" onclick="togglePhoneInput(false)" {{ $hasEmergency == 0 ? 'checked' : '' }}> No
-                                                </label>
-                                             </div>
-                                             <div  style="{{ $hasEmergency == 1 ? '' : 'display: none;' }}" id="emergency-phone">
-                                                <label class="required fw-medium mb-2">Contact Number</label>
-                                                <input type="text" class="form-control" name="emergency_contact_number"
-                                                      value="{{ $contact->emergency_contact_number ?? '' }}" placeholder="Enter Contact Number">
-                                             </div>
+                                 <div class="singl_from_wrp">
+                                    <div class="socl_med_links">
+                                       Other Details  
+                                    </div>
+                                    <div class="clear"></div>
+                                    @php
+                                       $hasEmergency = $contact->has_emergency_contact ?? 0;
+                                    @endphp
+                                    <div class="col-sm-4 col-sm-4_40per" bis_skin_checked="1">
+                                       <div class="" bis_skin_checked="1">
+                                          <label class="required fw-medium mb-2 labl_doyuy">Do you have a 24/7<br> emergency contact number? </label>
+                                          <div class="clear"></div>
+                                          <div class="yes_no_inp">
+                                             <label>
+                                                <input type="radio" name="has_emergency_contact" 
+                                                value="1" onclick="togglePhoneInput(true)" {{ $hasEmergency == 1 ? 'checked' : '' }} > Yes
+                                             </label>
+                                             <label>
+                                                <input type="radio" name="has_emergency_contact" 
+                                                value="0" onclick="togglePhoneInput(false)" {{ $hasEmergency == 0 ? 'checked' : '' }}> No
+                                             </label>
+                                          </div>
+                                          <div  style="{{ $hasEmergency == 1 ? '' : 'display: none;' }}" id="emergency-phone">
+                                             <label class="required fw-medium mb-2">Contact Number</label>
+                                             <input type="text" class="form-control" name="emergency_contact_number"
+                                                   value="{{ $contact->emergency_contact_number ?? '' }}" placeholder="Enter Contact Number">
                                           </div>
                                        </div>
-                                       <div class="clear"></div>
+                                    </div>
+                                    <div class="clear"></div>
 
-                                       <div class="clear"></div>
-                                       <div class="col-sm-4 ful_100_port">
-                                          <div class="ful_100_port_titl">
-                                             Service Port, Categories and Types
-                                          </div>
-                                          <div id="portServiceBlocksWrapper">
-                                             @foreach($groupedServiceDetails as $blockKey => $serviceGroup)
-                                                @php
-                                                   [$countryId, $portId] = explode('_', $blockKey);
-                                                   $filteredPorts = $ports->where('country_id', $countryId);
-                                                   $blockIndex = $loop->index;
-                                                   // If no data, show 2 empty service slots
-                                                   $serviceGroup = $serviceGroup ?: [null, null];
-                                                @endphp
-                                                <div class="port_sinl_vend" data-index="{{ $blockIndex }}">
-                                                   <div class="port_drop port_drop_wdth">
-                                                      <label class="required fw-medium mb-2">Select Country</label>
-                                                      <select class="form-control" name="country[{{ $blockIndex }}]">
-                                                         <option value="">Select Country</option>
-                                                         @foreach($countries as $country)
-                                                         <option value="{{ $country->id }}" {{ $country->id == $countryId ? 'selected' : '' }}>
-                                                            {{ $country->name }}
-                                                         </option>
+                                    <div class="clear"></div>
+                                    <div class="col-sm-4 ful_100_port">
+                                       <div class="ful_100_port_titl">
+                                          Service Port, Categories and Types
+                                       </div>
+                                       <div id="portServiceBlocksWrapper">
+                                          @foreach($groupedServiceDetails as $blockKey => $serviceGroup)
+                                             @php
+                                                [$countryId, $portId] = explode('_', $blockKey);
+                                                $filteredPorts = $ports->where('country_id', $countryId);
+                                                $blockIndex = $loop->index;
+                                                // If no data, show 2 empty service slots
+                                                $serviceGroup = $serviceGroup ?: [null, null];
+                                             @endphp
+                                             <div class="port_sinl_vend" data-index="{{ $blockIndex }}">
+                                                <div class="port_drop port_drop_wdth">
+                                                   <label class="required fw-medium mb-2">Select Country</label>
+                                                   <select class="form-control" name="country[{{ $blockIndex }}]">
+                                                      <option value="">Select Country</option>
+                                                      @foreach($countries as $country)
+                                                      <option value="{{ $country->id }}" {{ $country->id == $countryId ? 'selected' : '' }}>
+                                                         {{ $country->name }}
+                                                      </option>
+                                                      @endforeach
+                                                   </select>
+                                                </div>
+                                                <div class="catgry_50 catgry_50_right">
+                                                   <label class="required fw-medium mb-2">Select Port 1</label>
+                                                   <select class="form-control" name="port[{{ $blockIndex }}]">
+                                                      <option value="">Select Port</option>
+                                                      @foreach($filteredPorts as $port)
+                                                      <option value="{{ $port->id }}" {{ $port->id == $portId ? 'selected' : '' }}>{{ $port->name }}</option>
+                                                      @endforeach
+                                                   </select>
+                                                </div>
+                                                <div class="clear"></div>
+
+                                                   <!-- {{-- Service Category 1 --}}
+                                                   <div class="catgry_50 service-block-item">
+                                                      <label class="required fw-medium mb-2">Service Categories 1</label>
+                                                      {{-- Hidden input for ID (will be set dynamically if editing existing data) --}}
+                                                      <input type="hidden" name="port_service_detail_id[0][0]" value="{{ $existingIds[0][0] ?? '' }}">
+                                                      <select class="form-control serviceSelect" name="service_category[0][0]">
+                                                         <option value="">Select Service Category</option>
+                                                         @foreach($categories as $category)
+                                                         <option value="{{ $category->id }}">{{ $category->name }}</option>
                                                          @endforeach
                                                       </select>
-                                                   </div>
-                                                   <div class="catgry_50 catgry_50_right">
-                                                      <label class="required fw-medium mb-2">Select Port 1</label>
-                                                      <select class="form-control" name="port[{{ $blockIndex }}]">
-                                                         <option value="">Select Port</option>
-                                                         @foreach($filteredPorts as $port)
-                                                         <option value="{{ $port->id }}" {{ $port->id == $portId ? 'selected' : '' }}>{{ $port->name }}</option>
-                                                         @endforeach
-                                                      </select>
-                                                   </div>
-                                                   <div class="clear"></div>
-
-                                                      <!-- {{-- Service Category 1 --}}
-                                                      <div class="catgry_50 service-block-item">
-                                                         <label class="required fw-medium mb-2">Service Categories 1</label>
-                                                         {{-- Hidden input for ID (will be set dynamically if editing existing data) --}}
-                                                         <input type="hidden" name="port_service_detail_id[0][0]" value="{{ $existingIds[0][0] ?? '' }}">
-                                                         <select class="form-control serviceSelect" name="service_category[0][0]">
-                                                            <option value="">Select Service Category</option>
-                                                            @foreach($categories as $category)
-                                                            <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                                            @endforeach
-                                                         </select>
-                                                         <div id="subServicesWrapper_0_0" class="subServicesWrapper service-block" style="display: none;">
-                                                            <div id="subServicesContainer_0_0" class="subServicesContainer"></div>
-                                                            <div class="clear"></div>
-                                                            <div class="mt-3">
-                                                               <label for="s1_note" class="form-label">Additional Information</label>
-                                                               <div class="" bis_skin_checked="1">
-                                                                  <label class="required fw-medium mb-2">Additional Information</label>
-                                                                  <input type="text" name="additional_info[0][0]" class="form-control" placeholder="Enter Additional Information">
-                                                               </div>
+                                                      <div id="subServicesWrapper_0_0" class="subServicesWrapper service-block" style="display: none;">
+                                                         <div id="subServicesContainer_0_0" class="subServicesContainer"></div>
+                                                         <div class="clear"></div>
+                                                         <div class="mt-3">
+                                                            <label for="s1_note" class="form-label">Additional Information</label>
+                                                            <div class="" bis_skin_checked="1">
+                                                               <label class="required fw-medium mb-2">Additional Information</label>
+                                                               <input type="text" name="additional_info[0][0]" class="form-control" placeholder="Enter Additional Information">
                                                             </div>
                                                          </div>
                                                       </div>
+                                                   </div>
 
-                                                      {{-- Service Category 2 --}}
-                                                      <div class="catgry_50 catgry_50_right service-block-item">
-                                                         <label class="required fw-medium mb-2">Service Categories 2</label>
-                                                         {{-- Hidden input for ID --}}
-                                                         <input type="hidden" name="port_service_detail_id[0][1]" value="{{ $existingIds[0][1] ?? '' }}">
-                                                         <select class="form-control serviceSelect" name="service_category[0][1]">
-                                                            <option value="">Select Service Category</option>
-                                                            @foreach($categories as $category)
-                                                            <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                                            @endforeach
-                                                         </select>
-                                                         <div id="subServicesWrapper_0_1" class="subServicesWrapper service-block" style="display: none;">
-                                                            <div id="subServicesContainer_0_1" class="subServicesContainer"></div>
-                                                            <div class="clear"></div>
-                                                            <div class="mt-3">
-                                                               <label for="s1_note" class="form-label">Additional Information</label>
-                                                               <div class="" bis_skin_checked="1">
-                                                                  <label class="required fw-medium mb-2">Additional Information</label>
-                                                                  <input type="text" name="additional_info[0][1]" class="form-control" placeholder="Enter Additional Information">
-                                                               </div>
+                                                   {{-- Service Category 2 --}}
+                                                   <div class="catgry_50 catgry_50_right service-block-item">
+                                                      <label class="required fw-medium mb-2">Service Categories 2</label>
+                                                      {{-- Hidden input for ID --}}
+                                                      <input type="hidden" name="port_service_detail_id[0][1]" value="{{ $existingIds[0][1] ?? '' }}">
+                                                      <select class="form-control serviceSelect" name="service_category[0][1]">
+                                                         <option value="">Select Service Category</option>
+                                                         @foreach($categories as $category)
+                                                         <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                                         @endforeach
+                                                      </select>
+                                                      <div id="subServicesWrapper_0_1" class="subServicesWrapper service-block" style="display: none;">
+                                                         <div id="subServicesContainer_0_1" class="subServicesContainer"></div>
+                                                         <div class="clear"></div>
+                                                         <div class="mt-3">
+                                                            <label for="s1_note" class="form-label">Additional Information</label>
+                                                            <div class="" bis_skin_checked="1">
+                                                               <label class="required fw-medium mb-2">Additional Information</label>
+                                                               <input type="text" name="additional_info[0][1]" class="form-control" placeholder="Enter Additional Information">
                                                             </div>
                                                          </div>
-                                                      </div> -->
-                                                  
-
-                                                    @foreach($serviceGroup as $serviceIndex => $detail)
-                                                      @php
-                                                         $blockIndex = $loop->parent->index; // from outer foreach ($groupedServiceDetails)
-                                                         $detail = $detail ?? null;
-                                                         $categoryId = $detail->category_id ?? '';
-                                                         $selectedSubs = $detail ? json_decode($detail->sub_services, true) : [];
-                                                         $additionalInfo = $detail->additional_info ?? '';
-                                                         $detailId = $detail->id ?? '';
-                                                         $categorySubCategories = $subCategories->where('category_id', $categoryId);
-                                                      @endphp
-
-                                                      {{-- Service Category {{ $serviceIndex + 1 }} --}}
-                                                      <div class="catgry_50 {{ $serviceIndex % 2 == 1 ? 'catgry_50_right' : '' }} service-block-item">
-                                                         <label class="required fw-medium mb-2">Service Categories {{ $serviceIndex + 1 }}</label>
-
-                                                         {{-- Hidden input for ID --}}
-                                                         <input type="hidden" name="port_service_detail_id[{{ $blockIndex }}][{{ $serviceIndex }}]" value="{{ $detailId }}">
-
-                                                         {{-- Service category dropdown --}}
-                                                         <select class="form-control serviceSelect"
-                                                                  name="service_category[{{ $blockIndex }}][{{ $serviceIndex }}]">
-                                                               <option value="">Select Service Category</option>
-                                                               @foreach($categories as $category)
-                                                                  <option value="{{ $category->id }}"
-                                                                     {{ $categoryId == $category->id ? 'selected' : '' }}>
-                                                                     {{ $category->name }}
-                                                                  </option>
-                                                               @endforeach
-                                                         </select>
-                                             
-                                                         {{-- Sub Services Wrapper --}}
-                                                         <div id="subServicesWrapper_{{ $blockIndex }}_{{ $serviceIndex }}"
-                                                               class="subServicesWrapper service-block"
-                                                               style="display: {{ count($selectedSubs) ? 'block' : 'none' }};">
-                                                               
-                                                               {{-- Sub services container --}}
-                                                               <div id="subServicesContainer_{{ $blockIndex }}_{{ $serviceIndex }}" class="subServicesContainer">
-                                                                  @foreach($categorySubCategories as $sub)
-
-                                                                           <div class="form-check">
-                                                                              <input type="checkbox"
-                                                                                    class="form-check-input"
-                                                                                    id="subcat_{{ $blockIndex }}_{{ $serviceIndex }}_{{ $sub->id }}"
-                                                                                    name="sub_services[{{ $blockIndex }}][{{ $serviceIndex }}][]"
-                                                                                    value="{{ $sub->id }}"
-                                                                                    {{ in_array($sub->id, $selectedSubs ?? []) ? 'checked' : '' }}>
-                                                                              <label class="form-check-label" for="subcat_{{ $blockIndex }}_{{ $serviceIndex }}_{{ $sub->id }}">
-                                                                                 {{ $sub->name }}
-                                                                              </label>
-                                                                           </div>
-                                                                     
-                                                                  @endforeach
-                                                               </div>
-
-
-                                                               <div class="clear"></div>
-
-                                                               {{-- Additional Information --}}
-                                                               <div class="mt-3">
-                                                                  <label class="form-label">Additional Information</label>
-                                                                  <div>
-                                                                     <label class="required fw-medium mb-2">Additional Information</label>
-                                                                     <input type="text"
-                                                                              name="additional_info[{{ $blockIndex }}][{{ $serviceIndex }}]"
-                                                                              class="form-control"
-                                                                              placeholder="Enter Additional Information"
-                                                                              value="{{ $additionalInfo }}">
-                                                                  </div>
-                                                               </div>
-                                                         </div>
                                                       </div>
-                                                   @endforeach
+                                                   </div> -->
+                                                
 
-                                                   {{-- If only one service category exists, show the second one empty --}}
-                                                   @if(count($serviceGroup) < 2 && $selectedPlan->allow_category > 1 )
-                                                      @php $serviceIndex = 1; @endphp
-                                                      <div class="catgry_50 catgry_50_right service-block-item">
-                                                         <label class="required fw-medium mb-2">Service Categories 2</label>
-                                                         <input type="hidden" name="port_service_detail_id[{{ $blockIndex }}][{{ $serviceIndex }}]" value="">
-                                                         <select class="form-control serviceSelect"
+                                                   @foreach($serviceGroup as $serviceIndex => $detail)
+                                                   @php
+                                                      $blockIndex = $loop->parent->index; // from outer foreach ($groupedServiceDetails)
+                                                      $categoryId = $detail->category_id ?? '';
+                                                     // $selectedSubs = $detail ? json_decode($detail->sub_services, true) : [];
+                                                      $selectedSubs = [];
+
+                                                      if ($detail && isset($detail->sub_services)) {
+                                                            $selectedSubs = is_string($detail->sub_services)
+                                                               ? json_decode($detail->sub_services, true)
+                                                               : (is_array($detail->sub_services) ? $detail->sub_services : []);
+                                                      }
+                                                      $additionalInfo = $detail->additional_info ?? '';
+                                                      $detailId = $detail->id ?? '';
+                                                      $categorySubCategories = $subCategories->where('category_id', $categoryId);
+                                                   @endphp
+
+                                                   {{-- Service Category {{ $serviceIndex + 1 }} --}}
+                                                   <div class="catgry_50 {{ $serviceIndex % 2 == 1 ? 'catgry_50_right' : '' }} service-block-item">
+                                                      <label class="required fw-medium mb-2">Service Categories {{ $serviceIndex + 1 }}</label>
+
+                                                      {{-- Hidden input for ID --}}
+                                                      <input type="hidden" name="port_service_detail_id[{{ $blockIndex }}][{{ $serviceIndex }}]" value="{{ $detailId }}">
+
+                                                      {{-- Service category dropdown --}}
+                                                      <select class="form-control serviceSelect"
                                                                name="service_category[{{ $blockIndex }}][{{ $serviceIndex }}]">
                                                             <option value="">Select Service Category</option>
                                                             @foreach($categories as $category)
-                                                               <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                                               <option value="{{ $category->id }}"
+                                                                  {{ $categoryId == $category->id ? 'selected' : '' }}>
+                                                                  {{ $category->name }}
+                                                               </option>
                                                             @endforeach
-                                                         </select>
-
-                                                         <div id="subServicesWrapper_{{ $blockIndex }}_{{ $serviceIndex }}"
+                                                      </select>
+                                          
+                                                      {{-- Sub Services Wrapper --}}
+                                                      <div id="subServicesWrapper_{{ $blockIndex }}_{{ $serviceIndex }}"
                                                             class="subServicesWrapper service-block"
-                                                            style="display: none;">
-                                                            <div id="subServicesContainer_{{ $blockIndex }}_{{ $serviceIndex }}" class="subServicesContainer">
+                                                            style="display: {{ count($selectedSubs) ? 'block' : 'none' }};">
                                                             
+                                                            {{-- Sub services container --}}
+                                                            <div id="subServicesContainer_{{ $blockIndex }}_{{ $serviceIndex }}" class="subServicesContainer">
+                                                               @foreach($categorySubCategories as $sub)
+
+                                                                        <div class="form-check">
+                                                                           <input type="checkbox"
+                                                                                 class="form-check-input"
+                                                                                 id="subcat_{{ $blockIndex }}_{{ $serviceIndex }}_{{ $sub->id }}"
+                                                                                 name="sub_services[{{ $blockIndex }}][{{ $serviceIndex }}][]"
+                                                                                 value="{{ $sub->id }}"
+                                                                                 {{ in_array($sub->id, $selectedSubs ?? []) ? 'checked' : '' }}>
+                                                                           <label class="form-check-label" for="subcat_{{ $blockIndex }}_{{ $serviceIndex }}_{{ $sub->id }}">
+                                                                              {{ $sub->name }}
+                                                                           </label>
+                                                                        </div>
+                                                                  
+                                                               @endforeach
                                                             </div>
+
+
                                                             <div class="clear"></div>
+
+                                                            {{-- Additional Information --}}
                                                             <div class="mt-3">
                                                                <label class="form-label">Additional Information</label>
                                                                <div>
-                                                                     <label class="required fw-medium mb-2">Additional Information</label>
-                                                                     <input type="text"
+                                                                  <label class="required fw-medium mb-2">Additional Information</label>
+                                                                  <input type="text"
                                                                            name="additional_info[{{ $blockIndex }}][{{ $serviceIndex }}]"
                                                                            class="form-control"
-                                                                           placeholder="Enter Additional Information">
+                                                                           placeholder="Enter Additional Information"
+                                                                           value="{{ $additionalInfo }}">
                                                                </div>
+                                                            </div>
+                                                      </div>
+                                                   </div>
+                                                @endforeach
+
+                                                {{-- If only one service category exists, show the second one empty --}}
+                                                @if(count($serviceGroup) < 2 && $selectedPlan->allow_category > 1 )
+                                                   @php $serviceIndex = 1; @endphp
+                                                   <div class="catgry_50 catgry_50_right service-block-item">
+                                                      <label class="required fw-medium mb-2">Service Categories 2</label>
+                                                      <input type="hidden" name="port_service_detail_id[{{ $blockIndex }}][{{ $serviceIndex }}]" value="">
+                                                      <select class="form-control serviceSelect"
+                                                            name="service_category[{{ $blockIndex }}][{{ $serviceIndex }}]">
+                                                         <option value="">Select Service Category</option>
+                                                         @foreach($categories as $category)
+                                                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                                         @endforeach
+                                                      </select>
+
+                                                      <div id="subServicesWrapper_{{ $blockIndex }}_{{ $serviceIndex }}"
+                                                         class="subServicesWrapper service-block"
+                                                         style="display: none;">
+                                                         <div id="subServicesContainer_{{ $blockIndex }}_{{ $serviceIndex }}" class="subServicesContainer">
+                                                         
+                                                         </div>
+                                                         <div class="clear"></div>
+                                                         <div class="mt-3">
+                                                            <label class="form-label">Additional Information</label>
+                                                            <div>
+                                                                  <label class="required fw-medium mb-2">Additional Information</label>
+                                                                  <input type="text"
+                                                                        name="additional_info[{{ $blockIndex }}][{{ $serviceIndex }}]"
+                                                                        class="form-control"
+                                                                        placeholder="Enter Additional Information">
                                                             </div>
                                                          </div>
                                                       </div>
-                                                   @endif 
-                                                </div>
-                                             @endforeach
-                                          </div>
-                                          @if($selectedPlan->allow_port > 1  )
-                                             <button type="button" class="btn btn-primary mt-3" id="addMorePortService">+ Add More</button>
-                                          @endif
+                                                   </div>
+                                                @endif 
+                                             </div>
+                                          @endforeach
                                        </div>
-
-                                       <div class="clear"></div>
+                                       @if($selectedPlan->allow_port > 1  )
+                                          <button type="button" class="btn btn-primary mt-3" id="addMorePortService">+ Add More</button>
+                                       @endif
                                     </div>
+
+                                    <div class="clear"></div>
+                                 </div>
                                  <div class="clear"></div>
                                  <!-- Company Details -->
-                                    <div class="singl_from_wrp singl_from_socil_2">
-                                       <div class="socl_med_links">
-                                          Company Details
-                                       </div>
-                                       <div class="clear"></div>
-                                       <div class="col-sm-4 cols_30" bis_skin_checked="1">
-                                          <div class="" bis_skin_checked="1">
-                                             <label class="required fw-medium mb-2">Company Slogan / Short Description</label>
-                                             <textarea class="form-control"
-                                                name="slogan" rows="3" placeholder="A brief tagline or a short description of your company">{{old('slogan', $company->slogan ?? '')}}</textarea>
-                                          </div>
-                                       </div>
-                                       <div class="col-sm-4 cols_30" bis_skin_checked="1">
-                                          <div class="" bis_skin_checked="1">
-                                             <label class="required fw-medium mb-2">About Your Company</label>
-                                             <textarea class="form-control"
-                                                name="about" rows="3" placeholder="Please tell us about your company's history, experience, mission, and vision">{{old('about', $company->about ?? '')}}</textarea>
-                                          </div>
-                                       </div>
-                                       <div class="col-sm-4 cols_30" bis_skin_checked="1">
-                                          <div class="" bis_skin_checked="1">
-                                             <label class="required fw-medium mb-2">Service Brands</label>
-                                             <textarea class="form-control"
-                                                name="brands" rows="3" placeholder="Please list the machinery types, brand names, or any specific equipment you supply or work with.">{{old('brands', $company->brands ?? '')}}</textarea>
-                                          </div>
-                                       </div>
-                                       <div class="col-sm-4" bis_skin_checked="1">
-                                          <div class="" bis_skin_checked="1">
-                                             <label class="required fw-medium mb-2">Certificates</label>
-                                             <input type="file" name="certificates[]" multiple class="form-control" placeholder="Enter Instagram">
-                                          </div>
-                                          @if(!empty($company->certificates))
-                                          @php
-                                          $certs = json_decode($company->certificates, true);
-                                          @endphp
-                                          <ul>
-                                             @foreach($certs as $cert)
-                                             <li>
-                                                <a href="{{ asset('storage/' . $cert) }}" target="_blank">View Certificate</a>
-                                             </li>
-                                             @endforeach
-                                          </ul>
-                                          @endif
-
-                                       </div>
-                                       <div class="col-sm-4" bis_skin_checked="1">
-                                          <div class="" bis_skin_checked="1">
-                                             <label class="required fw-medium mb-2">Photos</label>
-                                             <input type="file" name="photos[]" multiple class="form-control" placeholder="Enter X (Twitter)">
-                                          </div>
-                                          @if(!empty($company->photos))
-                                          @php
-                                          $photos = json_decode($company->photos, true);
-                                          @endphp
-                                          <div class="row">
-                                             @foreach($photos as $photo)
-                                             <div class="col-md-3">
-                                                <img src="{{ asset('storage/' . $photo) }}" class="img-thumbnail mb-2" width="100" />
-                                             </div>
-                                             @endforeach
-                                          </div>
-                                          @endif
-                                       </div>
-
-                                       <div class="col-sm-4" bis_skin_checked="1">
-                                          <div class="" bis_skin_checked="1">
-                                             <label class="required fw-medium mb-2">Reference Shipowners </label>
-                                             <textarea class="form-control" name="reference_shipowners" rows="3" placeholder="Enter Reference Shipowners"></textarea>
-                                          </div>
+                                 @if($selectedPlan->name != 'Basic')
+                                 <div class="singl_from_wrp singl_from_socil_2">
+                                    <div class="socl_med_links">
+                                       Company Details
+                                    </div>
+                                    <div class="clear"></div>
+                                    <div class="col-sm-4 cols_30" bis_skin_checked="1">
+                                       <div class="" bis_skin_checked="1">
+                                          <label class="required fw-medium mb-2">Company Slogan / Short Description</label>
+                                          <textarea class="form-control"
+                                             name="slogan" rows="3" placeholder="A brief tagline or a short description of your company">{{old('slogan', $company->slogan ?? '')}}</textarea>
                                        </div>
                                     </div>
+                                    <div class="col-sm-4 cols_30" bis_skin_checked="1">
+                                       <div class="" bis_skin_checked="1">
+                                          <label class="required fw-medium mb-2">About Your Company</label>
+                                          <textarea class="form-control"
+                                             name="about" rows="3" placeholder="Please tell us about your company's history, experience, mission, and vision">{{old('about', $company->about ?? '')}}</textarea>
+                                       </div>
+                                    </div>
+                                    <div class="col-sm-4 cols_30" bis_skin_checked="1">
+                                       <div class="" bis_skin_checked="1">
+                                          <label class="required fw-medium mb-2">Service Brands</label>
+                                          <textarea class="form-control"
+                                             name="brands" rows="3" placeholder="Please list the machinery types, brand names, or any specific equipment you supply or work with.">{{old('brands', $company->brands ?? '')}}</textarea>
+                                       </div>
+                                    </div>
+                                    <div class="col-sm-4" bis_skin_checked="1">
+                                       <div class="" bis_skin_checked="1">
+                                          <label class="required fw-medium mb-2">Certificates</label>
+                                          <input type="file" name="certificates[]" multiple class="form-control" placeholder="Enter Instagram">
+                                       </div>
+                                       @if(!empty($company->certificates))
+                                       @php
+                                       $certs = json_decode($company->certificates, true);
+                                       @endphp
+                                       <ul>
+                                          @foreach($certs as $cert)
+                                          <li>
+                                             <a href="{{ asset('storage/' . $cert) }}" target="_blank">View Certificate</a>
+                                          </li>
+                                          @endforeach
+                                       </ul>
+                                       @endif
+
+                                    </div>
+                                    <div class="col-sm-4" bis_skin_checked="1">
+                                       <div class="" bis_skin_checked="1">
+                                          <label class="required fw-medium mb-2">Photos</label>
+                                          <input type="file" name="photos[]" multiple class="form-control" placeholder="Enter X (Twitter)">
+                                       </div>
+                                       @if(!empty($company->photos))
+                                       @php
+                                       $photos = json_decode($company->photos, true);
+                                       @endphp
+                                       <div class="row">
+                                          @foreach($photos as $photo)
+                                          <div class="col-md-3">
+                                             <img src="{{ asset('storage/' . $photo) }}" class="img-thumbnail mb-2" width="100" />
+                                          </div>
+                                          @endforeach
+                                       </div>
+                                       @endif
+                                    </div>
+
+                                    <div class="col-sm-4" bis_skin_checked="1">
+                                       <div class="" bis_skin_checked="1">
+                                          <label class="required fw-medium mb-2">Reference Shipowners </label>
+                                          <textarea class="form-control" name="reference_shipowners" rows="3" placeholder="Enter Reference Shipowners"></textarea>
+                                       </div>
+                                    </div>
+                                 </div>
+                                 @endif
                               </div>
+                           <div id="responseMessage" class="alert d-none"></div>   
                            <div class="col-sm-12 text-end" bis_skin_checked="1">
                               <button type="submit" class="btn btn-primary submit_btn" fdprocessedid="43gnio">
                                  Submit
@@ -679,6 +690,9 @@
        
       $('#masterForm').on('submit', function(e) {
          e.preventDefault();
+
+         // Clear previous errors
+         $('.error-text').remove();
          
          let formData = new FormData(this);
 
@@ -692,14 +706,14 @@
             'X-CSRF-TOKEN': '{{ csrf_token() }}'
             },
             success: function(response) {
-               alert("Data saved successfully!");
+               $('#responseMessage')
+                .removeClass('d-none alert-danger')
+                .addClass('alert-success')
+                .text('Data saved successfully!');
               // window.location.href = "{{ route('service-provider.index') }}";
             },
            error: function(xhr) {
                let errors = xhr.responseJSON?.errors;
-
-               // Clear previous errors
-               $('.error-text').remove();
 
                if (errors) {
                   Object.keys(errors).forEach(function(key) {
@@ -719,8 +733,15 @@
                            console.warn(`Field not found for: ${key}`);
                         }
                   });
+                   $('#responseMessage')
+                    .removeClass('d-none alert-success')
+                    .addClass('alert-danger')
+                    .text('Please correct the highlighted errors.');
                } else {
-                  alert("Something went wrong, please try again.");
+                    $('#responseMessage')
+                    .removeClass('d-none alert-success')
+                    .addClass('alert-danger')
+                    .text('Something went wrong. Please try again.');
                }
 
            

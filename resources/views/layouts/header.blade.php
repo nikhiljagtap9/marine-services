@@ -60,12 +60,12 @@
 
       @auth
           <!-- Logout -->
-          <a href="{{ route('logout') }}"
+          <a href="javascript:void(0);"
             class="btn-user position-relative d-flex align-items-center justify-content-center p-0"
             data-aos="fade-left" data-aos-delay="1200"
             data-bs-toggle="tooltip" data-bs-placement="bottom" title="Logout"
             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-              <i class="fa fa-sign-out"></i>
+            <i class="fa fa-sign-out"></i>
           </a>
 
           <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

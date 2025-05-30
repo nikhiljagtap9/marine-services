@@ -62,7 +62,12 @@ class ServiceProviderDetail extends Model
 
     public function socialMediaDetails()
     {
-        return $this->hasMany(SocialMediaDetail::class, 'user_id', 'user_id');
+        return $this->hasOne(SocialMediaDetail::class, 'user_id', 'user_id');
+    }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class, 'user_id', 'user_id');
     }
 
 }

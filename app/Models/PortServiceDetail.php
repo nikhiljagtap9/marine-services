@@ -19,4 +19,19 @@ class PortServiceDetail extends Model
     {
         return SubCategory::whereIn('id', $this->sub_services ?? [])->get();
     }
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
+    }
+
+    public function port()
+    {
+        return $this->belongsTo(Port::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 }

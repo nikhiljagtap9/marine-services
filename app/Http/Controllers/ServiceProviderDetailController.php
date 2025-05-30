@@ -38,6 +38,10 @@ class ServiceProviderDetailController extends Controller
      // Store submitted data
     public function store(Request $request)
     {
+
+        // $latlong = $this->getLatLngFromAddress($request);
+
+        // dd($latlong);
         
         $request->validate([
              // User credentials
@@ -75,6 +79,8 @@ class ServiceProviderDetailController extends Controller
             $logoPath = $request->file('company_logo')->store('logos', 'public');
         }
 
+        
+
          // 3. Save service provider details
         ServiceProviderDetail::create([
             'user_id' => $user->id,
@@ -97,7 +103,7 @@ class ServiceProviderDetailController extends Controller
         // Log the user in after registration
         Auth::login($user);
             return redirect()->route('service-provider.confirm');
-        }
+    }
 
     public function confirm()
     {
@@ -109,6 +115,40 @@ class ServiceProviderDetailController extends Controller
 
         return view('service-provider.confirm');
     }
+
+    public function getLatLngFromAddress(Request $request)
+    {
+        $address = $request->input('office_address');
+
+        // Prepare and encode the address
+        $encodedAddress = urlencode($address);
+
+        // Nominatim API endpoint (OpenStreetMap)
+        $url = "https://nominatim.openstreetmap.org/search?q={$encodedAddress}&format=json&limit=1";
+
+       //    dd($url);
+
+        // Set a user-agent header (required by Nominatim)
+        $context = stream_context_create([
+            'http' => [
+                'header' => "User-Agent: LaravelApp/1.0\r\n"
+            ]
+        ]);
+
+        // Get and decode the response
+        $responseJson = file_get_contents($url, false, $context);
+        $data = json_decode($responseJson, true);
+
+        if (!empty($data)) {
+            return response()->json([
+                'latitude' => $data[0]['lat'],
+                'longitude' => $data[0]['lon'],
+            ]);
+        } else {
+            return response()->json(['error' => 'Unable to get coordinates.'], 400);
+        }
+    }
+
 
     public function getCities($country_id) {
        $cities = City::where('country_id', $country_id)->get();
@@ -182,6 +222,8 @@ class ServiceProviderDetailController extends Controller
     {
         $userId = auth()->id();
         $planId = decrypt($request->plan_id);
+        $plan = Plan::find($planId); // Assuming you have a Plan model
+        $isBasic = strtolower($plan->id ?? '') === '1'; // or use $plan->id === 1;
 
         // get company details first
         $companyDetail = CompanyDetail::where('user_id', $userId)->first();
@@ -204,8 +246,8 @@ class ServiceProviderDetailController extends Controller
             'twitter' => 'nullable|url',
 
             // Company
-            'slogan' => 'required|string|max:255',
-            'about' => 'required|string|max:500',
+            'slogan' => $isBasic ? 'nullable|string|max:255' : 'required|string|max:255',
+            'about' => $isBasic ? 'nullable|string|max:500' : 'required|string|max:500',
             'brands' => 'nullable|string',
             'reference_shipowners' => 'nullable|string',
 
@@ -213,7 +255,7 @@ class ServiceProviderDetailController extends Controller
             'certificates.*' => 'file|mimes:pdf,jpeg,png,jpg|max:1024',
 
             'photos' => [
-                $hasPhotos ? 'nullable' : 'required',
+                $isBasic || $hasPhotos ? 'nullable' : 'required',
                 'array',
                 'min:3',
             ],
@@ -378,9 +420,7 @@ class ServiceProviderDetailController extends Controller
                         ], 422);
                     }    
 
-                    $subServices = isset($request->sub_services[$blockIndex][$serviceIndex])
-                        ? json_encode($request->sub_services[$blockIndex][$serviceIndex])
-                        : json_encode([]);
+                    $subServices = $request->sub_services[$blockIndex][$serviceIndex] ?? [];
 
                     $additionalInfo = $request->additional_info[$blockIndex][$serviceIndex] ?? null;
                     
