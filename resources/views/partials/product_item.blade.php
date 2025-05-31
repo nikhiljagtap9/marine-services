@@ -72,7 +72,7 @@
             <div class="clear"></div>
             <img src="{{ !empty($logo) ? asset('storage/' . $logo) : asset('assets/images/dummy_logo.jpg') }}" class="logo_ship" alt="Company Logo">
             <div class="catgry_wrp">
-                @foreach($provider->portServiceDetails as $portService)
+                <!-- @foreach($provider->portServiceDetails as $portService)
                     @foreach($portService->subServiceModels() as $sub)
                     <div class="singl_cat">
                             <i class="fa fa-ship" aria-hidden="true"></i>
@@ -80,7 +80,18 @@
                             <div class="clear"></div>
                     </div>
                     @endforeach
+                @endforeach -->
+                <!-- unique() collection method inside the Blade template. -->
+                @foreach($provider->portServiceDetails->unique('category_id') as $portService)
+                    <div class="singl_cat">
+                        <i class="fa fa-ship" aria-hidden="true"></i>
+                        <div class="singl_name">
+                            {{ $portService->category->name ?? 'N/A' }}
+                        </div>
+                        <div class="clear"></div>
+                    </div>
                 @endforeach
+
                 <div class="clear"></div>
             </div>
             <div class="clear"></div>

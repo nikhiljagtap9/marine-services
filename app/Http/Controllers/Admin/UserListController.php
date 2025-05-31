@@ -5,15 +5,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\ServiceProviderDetail;
 use App\Models\Plan;
-use App\Models\ContactDetail;
-use App\Models\SocialMediaDetail;
-use App\Models\CompanyDetail;
-use App\Models\Country;
-use App\Models\Port;
-use App\Models\Category;
-use App\Models\SubCategory;
-use App\Models\PortServiceDetail;
 use Carbon\Carbon;
+use App\Models\Subscription;
 
 
 
@@ -45,71 +38,27 @@ class UserListController extends Controller
         })
         ->get();
 
+        // Attach the active subscription (filtered in model method)
+        foreach ($providers as $provider) {
+            $provider->active_subscription = $provider->user->getActiveSubscriptionForPlan($planId);
+        }
+
         return view('admin.users.index', compact('providers', 'planId', 'plan'));
     }
 
-    public function detail($userId)
+   public function detail($subscriptionId)
     {
+        $subscription = Subscription::with('user', 'plan')->findOrFail($subscriptionId);
+
         $provider = ServiceProviderDetail::with([
             'companyDetail',
             'contactDetail',
-            'portServiceDetails',
-            'socialMediaDetails',
-            'user.subscriptions.plan',
             'portServiceDetails.country',
             'portServiceDetails.port',
-            'portServiceDetails.category'
-        ])->where('user_id', $userId)->firstOrFail();    
-     //   dd($provider);
-        return view('admin.users.detail', compact('provider'));
+            'portServiceDetails.category',
+            'socialMediaDetails'
+        ])->where('user_id', $subscription->user_id)->firstOrFail();
+
+        return view('admin.users.detail', compact('provider', 'subscription'));
     }
-
-    //  public function detail1($id) {
-
-    //     $userId = auth()->id();
-    //     $planId = $id; // get plan id using url
-
-    //     $contact = ContactDetail::where('user_id', $userId)->first();
-    //     $social = SocialMediaDetail::where('user_id', $userId)->first();
-    //     $company = CompanyDetail::where('user_id', $userId)->first();
-    //     $serviceProviderDetail = ServiceProviderDetail::where('user_id', $userId)->first();
-    //     $countries = Country::all();
-    //     $ports = Port::all();
-    //     $categories = Category::all();
-    //     $subCategories = SubCategory::all();
-
-    //     // Now you can use $planId to fetch the selected plan
-    //     $selectedPlan = Plan::find($planId);
-
-
-    //     // Fetch existing service detail records for this user
-    //     $portServiceDetails = PortServiceDetail::where('user_id', $userId)->get();
-
-    //      // Group by country_id and port_id as key
-    //     $groupedServiceDetails = $portServiceDetails->groupBy(function ($item) {
-    //         return $item->country_id . '_' . $item->port_id;
-    //     });
-
-    //     // Organize IDs into a nested array for hidden input mapping
-    //     $existingIds = [];
-
-    //     foreach ($groupedServiceDetails as $blockIndex => $serviceGroup) {
-    //         foreach ($serviceGroup as $serviceIndex => $service) {
-    //             $existingIds[$blockIndex][$serviceIndex] = $service->id;
-    //         }
-    //     }
-
-    //     // Ensure at least one empty section if no data exists
-    //     if ($groupedServiceDetails->isEmpty()) {
-    //         $groupedServiceDetails = collect([
-    //             '0_0' => [null] // null = placeholder for a single empty service
-    //         ]);
-    //     }
-    //     dd($social);
-    //     return view('admin.users.detail',
-    //      compact('contact', 'social', 'company','countries',
-    //      'ports','categories','subCategories','groupedServiceDetails',
-    //      'existingIds','planId','selectedPlan','serviceProviderDetail'));
-        
-    // }
 }

@@ -104,7 +104,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('ajax/cities', [CityController::class, 'getCities'])->name('cities.list');
 
         Route::get('/users', [UserListController::class, 'index'])->name('usres.index');
-        Route::get('/users/{id}', [UserListController::class, 'detail'])->name('users.detail');
+        Route::get('/users/detail/{subscriptionId}', [UserListController::class, 'detail'])->name('users.detail');
         
     });
 });

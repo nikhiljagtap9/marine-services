@@ -1,4 +1,3 @@
-
 @extends('admin.main')
 
 @section('content')
@@ -42,7 +41,7 @@
                                  <td>{{ $provider->contact_person_name ?? 'N/A' }}</td>
                                  <td>{{ $provider->phone ?? 'N/A' }}</td>
                                  <td>
-                                    <a href="{{ route('admin.users.detail', $provider->user->id) }}" class="btn btn-sm btn-primary" target="_blank">
+                                    <a href="{{ route('admin.users.detail', $provider->active_subscription->id) }}" class="btn btn-sm btn-primary" target="_blank">
                                        View
                                     </a>
                                  </td>

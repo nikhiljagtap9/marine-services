@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Subscription;
+use Illuminate\Support\Carbon;
 
 class User extends Authenticatable
 {
@@ -78,6 +79,16 @@ class User extends Authenticatable
     public function subscriptions()
     {
         return $this->hasMany(Subscription::class);
+    }
+    public function getActiveSubscriptionForPlan($planId)
+    {
+        $today = Carbon::today();
+
+        return $this->subscriptions
+            ->where('plan_id', $planId)
+            ->where('end_date', '>=', $today)
+            ->sortByDesc('end_date')
+            ->first();
     }
 
 

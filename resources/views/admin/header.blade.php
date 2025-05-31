@@ -6,25 +6,25 @@
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <title>Rated Marine Services</title>
       <!-- App favicon -->
-      <link rel="shortcut icon" href="assets/dist/img/favicon.png">
+      <link rel="shortcut icon" href="{{ asset('/admin/assets/dist/img/favicon.png')}}">
       <!-- Global Styles(used by all pages) -->
-      <link href="assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-      <link href="assets/plugins/metisMenu/metisMenu.min.css" rel="stylesheet">
-      <link href="assets/plugins/fontawesome/css/all.min.css" rel="stylesheet">
+      <link href="{{ asset('admin/assets/plugins/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+      <link href="{{ asset('admin/assets/plugins/metisMenu/metisMenu.min.css')}}" rel="stylesheet">
+      <link href="{{ asset('admin/assets/plugins/fontawesome/css/all.min.css')}}" rel="stylesheet">
       <!-- Third party Styles(used by this page) -->
-      <link href="assets/plugins/toastr/toastr.css" rel="stylesheet">
-      <link href="assets/plugins/datatables/dataTables.bootstrap5.min.css" rel="stylesheet">
+      <link href="{{ asset('admin/assets/plugins/toastr/toastr.css')}}" rel="stylesheet">
+      <link href="{{ asset('admin/assets/plugins/datatables/dataTables.bootstrap5.min.css')}}" rel="stylesheet">
       <!-- App css -->
-      <link href="assets/dist/css/app.min.css" rel="stylesheet">
+      <link href="{{ asset('admin/assets/dist/css/app.min.css')}}" rel="stylesheet">
       <!-- Start Your Custom Style Now -->
-      <link href="assets/dist/css/style.css" rel="stylesheet">
+      <link href="{{ asset('admin/assets/dist/css/style.css')}}" rel="stylesheet">
    </head>
    <body class="fixed sidebar-mini">
       <!-- Start preloader -->
-      <div class="page-loader page-loader-active">
+      <div class="page-loader {{ request()->is('admin/users/detail/*') ? '' : 'page-loader-active' }}">
          <div class="page-loader-content">
             <div class="page-loader-logo">
-               <img src="assets/images/logo.png" alt="Logo" class="logo_main_loader" >
+               <img src="{{ asset('admin/assets/images/logo.png')}}" alt="Logo" class="logo_main_loader" >
             </div>
             <div class="page-loader-progress">
                <div class="page-loader-bar"></div>
@@ -40,7 +40,7 @@
                <a href="{{route('admin.dashboard')}}" class="sidebar-brand">
                <!-- <img class="sidebar-brand_icon" src="assets/dist/img/mini-logo.png" alt=""> -->
                <span class="sidebar-brand_text">
-                   <img class="sidebar-brand_icon logo_main_as" src="assets/images/logo.png" alt="">
+                   <img class="sidebar-brand_icon logo_main_as" src="{{ asset('admin/assets/images/logo.png')}}" alt="">
                </span>
                </a>
             </div>
@@ -80,26 +80,31 @@
                      </li>   
                      
                      <li class="{{ request()->routeIs('admin.usres.*') ? 'mm-active' : '' }}">
-                        <a class="has-arrow material-ripple" href="#">
-                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-plus" viewBox="0 0 16 16">
-                                 <path d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5" />
-                                 <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5z" />
-                           </svg>
-                           <span class="ms-2">Users</span>
-                        </a>
-                        <ul class="nav-second-level">
-                           <li>
-                                 <a href="#">Service Provider</a>
-                                 <ul class="nav-second-level">
-                                    <li><a href="{{ route('admin.usres.index', ['plan' => '1']) }}">Basic Plan</a></li>  
-                                    <li><a href="{{ route('admin.usres.index', ['plan' => '2']) }}">Silver Plan</a></li>
-                                    <li><a href="{{ route('admin.usres.index', ['plan' => '3']) }}">Gold Plan</a></li>
-                                    <li><a href="{{ route('admin.usres.index', ['plan' => '4']) }}">Platinum Plan</a></li> 
-                                 </ul>
-                           </li>
-                           <li><a href="{{ route('admin.usres.index', ['type' => 'client']) }}">Client</a></li> 
-                        </ul>
-                     </li>
+                            <a class="has-arrow material-ripple" href="#">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-nested" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M4.5 11.5A.5.5 0 0 1 5 11h10a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5m-2-4A.5.5 0 0 1 3 7h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m-2-4A.5.5 0 0 1 1 3h10a.5.5 0 0 1 0 1H1a.5.5 0 0 1-.5-.5" />
+                                </svg>
+                                <span class="ms-2">Users</span>
+                            </a>
+                            <ul class="nav-second-level">                            
+                               <li class="{{ request()->has('plan') ? 'mm-active' : '' }}">
+                                    <a class="has-arrow" href="#" aria-expanded="false">Service Provider</a>
+                                    <ul class="nav-third-level {{ request()->has('plan') ? 'mm-show' : '' }}">
+                                       <li><a href="{{ route('admin.usres.index', ['plan' => '1']) }}">Basic Plan</a></li>  
+                                       <li><a href="{{ route('admin.usres.index', ['plan' => '2']) }}">Silver Plan</a></li>
+                                       <li><a href="{{ route('admin.usres.index', ['plan' => '3']) }}">Gold Plan</a></li>
+                                       <li><a href="{{ route('admin.usres.index', ['plan' => '4']) }}">Platinum Plan</a></li>
+                                       <!-- <li>
+                                          <a class="has-arrow" href="#" aria-expanded="false">Level - 3</a>
+                                          <ul class="nav-fourth-level">
+                                             <li><a href="#">Menu - 4(1)</a></li>
+                                          </ul>
+                                       </li> -->
+                                    </ul>
+                                </li>
+                                 <li><a href="#">Client</a></li>
+                            </ul>
+                        </li>
   
                   </ul>
                </nav>
@@ -155,7 +160,7 @@
                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                               <div class="profile-element d-flex align-items-center flex-shrink-0 p-0 text-start">
                                  <div class="avatar online">
-                                    <img src="assets/dist/img/avatar/01.jpg" class="img-fluid rounded-circle" alt="">
+                                    <img src="{{ asset('admin/assets/dist/img/avatar/01.jpg')}}" class="img-fluid rounded-circle" alt="">
                                  </div>
                                  <div class="profile-text">
                                     <h6 class="m-0 fw-medium fs-14">Ugur</h6>
@@ -169,7 +174,7 @@
                               </div>
                               <div class="user-header">
                                  <div class="img-user">
-                                    <img src="assets/dist/img/avatar/01.jpg" alt="">
+                                    <img src="{{ asset('admin/assets/dist/img/avatar/01.jpg')}}" alt="">
                                  </div>
                                  <!-- img-user -->
                                  <h6>Naeem Khan</h6>

@@ -130,11 +130,11 @@
     text-align: center;
 }
 
-.page-loader.page-loader-active {
+ .page-loader.page-loader-active {
     pointer-events: all;
     height: 100%;
-    border-radius: 0
-}
+    border-radius: 0; 
+} 
 
 /* ----------------------------------------------------------------
     - Sidebar
@@ -3916,8 +3916,7 @@ table.dataTable thead>tr>th.sorting:before, table.dataTable thead>tr>th.sorting_
  .ad_clas {
     float: right;
     background: #083a76;
-    /* padding: 9px 30px; */
-    padding: 7px 28px;
+    padding: 9px 30px;
     font-size: 22px;
     text-transform: uppercase;
     font-weight: 600;
