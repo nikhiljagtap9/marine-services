@@ -12,7 +12,7 @@
     <div class="hotel-item product-item" data-lat="18.5404" data-lng="73.8527">
         <div class="card rounded-3 border-0 shadow-sm w-100 flex-fill overflow-hidden card-hover flex-fill w-100 card-hover-bg">
         <!-- Card Image Wrap with Slider -->
-        <a href="{{route('detail')}}" target="_blank" class="card-img-wrap card-image-hover overflow-hidden dark-overlay">
+        <a href="{{ route('detail', $provider->active_subscription->id) }}" target="_blank" class="card-img-wrap card-image-hover overflow-hidden dark-overlay">
             <!-- Bootstrap Carousel -->
             <div id="hotelCarousel{{ $provider->id }}" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
@@ -50,9 +50,9 @@
             </div>
         </div>
         <div class="d-flex flex-column h-100 position-relative p-3">
-            <a href="{{route('detail')}}" target="_blank" class="view_list">View</a>
+            <a href="{{ route('detail', $provider->active_subscription->id) }}" target="_blank" class="view_list">View</a>
             <h4 class="fs-18 fw-semibold mb-0">
-                <a href="{{route('detail')}}" target="_blank">{{ $provider->company_name }}</a>
+                <a href="{{ route('detail', $provider->active_subscription->id) }}" target="_blank">{{ $provider->company_name }}</a>
             </h4>
             <div class="rating_sastar">
                 <span class="str_count" >4.2</span>

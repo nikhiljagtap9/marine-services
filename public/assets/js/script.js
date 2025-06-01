@@ -12,10 +12,10 @@
         $(".ak_pop").removeClass("show_pop");
     });
 
-     $(".close-btn").click(function(){
-        $(".last_li_hide_new").addClass("last_li_hide_new_hide");
-        $(".comn_cont").addClass("comn_cont_show");
-    });
+    // $(".close-btn").click(function(){
+    //     $(".last_li_hide_new").addClass("last_li_hide_new_hide");
+    //     $(".comn_cont").addClass("comn_cont_show");
+    // });
 
      $(".cont_1").click(function(){
         $(".cont_1").addClass("cont_hide"); 

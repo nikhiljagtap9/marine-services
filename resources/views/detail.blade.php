@@ -20,36 +20,27 @@
    <div class="container">
       <div class="justify-content-between row align-items-center g-4">
          <div class="col-lg col-xxl-8">
-            <h1 class="h2 page-header-title fw-semibold">Cosco Shipping Lines</h1>
+            <h1 class="h2 page-header-title fw-semibold">{{ ucwords($provider->company_name ?? 'N/A') }}</h1>
             <div class="catgry_wrp">
-               <div class="singl_cat">
-                  <i class="fa fa-ship" aria-hidden="true"></i>
-                  <div class="singl_name">
-                     Fuel Supply
+               @php
+                  $allSubServiceIds = collect($provider->portServiceDetails)
+                     ->pluck('sub_services')        // Pluck all sub_services arrays
+                     ->flatten()                    // Flatten nested arrays
+                     ->unique()                     // Keep unique IDs
+                     ->values();                    // Reindex
+                                                   
+                  $subServiceNames = \App\Models\SubCategory::whereIn('id', $allSubServiceIds)->pluck('name')->toArray();
+               @endphp
+              
+               @foreach($subServiceNames as $name)
+                  <div class="singl_cat">
+                     <i class="fa fa-ship" aria-hidden="true"></i>
+                     <div class="singl_name">
+                       {{ $name }}
+                     </div>
+                     <div class="clear"></div>
                   </div>
-                  <div class="clear"></div>
-               </div>
-               <div class="singl_cat">
-                  <i class="fa fa-ship" aria-hidden="true"></i>
-                  <div class="singl_name">
-                     Repairs 
-                  </div>
-                  <div class="clear"></div>
-               </div>
-               <div class="singl_cat">
-                  <i class="fa fa-ship" aria-hidden="true"></i>
-                  <div class="singl_name">
-                     Vessel Support 
-                  </div>
-                  <div class="clear"></div>
-               </div>
-               <div class="singl_cat">
-                  <i class="fa fa-ship" aria-hidden="true"></i>
-                  <div class="singl_name">
-                     surveys 
-                  </div>
-                  <div class="clear"></div>
-               </div>
+               @endforeach
                <div class="clear"></div>
             </div>
             <div class="clear"></div>
@@ -59,40 +50,37 @@
             </div>
             <div class="clear"></div>
             <ul class="list-inline list-separator d-flex align-items-center mb-2">
+
                <li class="list-inline-item">
                   <a href="" class="cont_num comn_num comn_num_con">
                      <i class="fa fa-phone" aria-hidden="true"></i>
-                     <div class="data_li">+123 456 7890</div>
+                     <div class="data_li">{{ $provider->phone ?? 'N/A' }}</div>
                      <div class="clear"></div>
                   </a>
                </li>
                <li class="list-inline-item">
                   <a href="" class="cont_num comn_num">
                      <i class="fa fa-whatsapp" aria-hidden="true"></i>
-                     <div class="data_li">+123 456 7890</div>
+                     <div class="data_li">{{ $provider->contactDetail->whatsapp_number ?? 'N/A' }}</div>
                      <div class="clear"></div>
                   </a>
                </li>
                <li class="list-inline-item">
                   <a href="" class="cont_num comn_num email_con">
                      <i class="fa fa-envelope" aria-hidden="true"></i>
-                     <div class="data_li">info@gmail.com</div>
+                     <div class="data_li">{{ $provider->user->email ?? 'N/A' }}</div>
                      <div class="clear"></div>
                   </a>
                </li>
                <li class="list-inline-item">
                   <a href="" class="cont_num comn_num loctn_mail">
                      <i class="fa fa-map-marker" aria-hidden="true"></i>
-                     <div class="data_li">View Location</div>
+                     <div class="data_li">{{ $provider->office_address ?? 'N/A' }}</div>
                      <div class="clear"></div>
                   </a>
                </li>
-               <!-- <li class="last_li_hide" >
-                  <div class="">
-                      <i class="fa fa-lock" aria-hidden="true"></i>
-                  Click to view contact details.
-                  </div>
-                  </li> -->
+
+               @guest
                <li class="last_li_hide_new" >
                   <div class="">
                      <i class="fa fa-lock" aria-hidden="true"></i>
@@ -123,10 +111,11 @@
                      View Location
                   </div>
                </li>
+               @endguest
             </ul>
             <div class="clear"></div>
             <ul class="fs-14 fw-medium list-inline list-separator mb-0 text-muted">
-               <li class="list-inline-item">Posted 7 hours ago</li>
+               <li class="list-inline-item"> Posted {{ $subscription->created_at->diffForHumans() }}</li>
             </ul>
             <div class="clear"></div>
          </div>
@@ -156,38 +145,53 @@
 
 <div class="detl_left_panl">
 <div class="container">
+  @if(!empty($provider->companyDetail->photos))
+    @php
+        $photos = json_decode($provider->companyDetail->photos, true);
+        $mainPhoto = $photos[0] ?? null;
+        $sidePhotos = array_slice($photos, 1, 2); // Show next two photos
+    @endphp
+
    <div class="rounded-4 overflow-hidden">
       <div class="row gx-2 zoom-gallery">
-         <div class="col-md-8">
-            <a class="d-block position-relative" href="{{ asset('assets/images/listing-details/gallery/08.jpg')}}">
-               <img class="img-fluid w-100" src="{{ asset('assets/images/listing-details/gallery/08.jpg')}}" alt="Image Description">
-               <div class="position-absolute bottom-0 end-0 mb-3 me-3">
-                  <span class="align-items-center btn btn-light btn-sm d-flex d-md-none fw-semibold gap-2">
-                  <i class="fa-solid fa-expand"></i>
-                  <span> View photos</span>
-                  </span>
-               </div>
-            </a>
-         </div>
-         <div class="col-md-4 d-none d-md-inline-block">
-            <a class="d-block mb-2" href="{{ asset('assets/images/listing-details/gallery/09.jpg')}}">
-            <img class="img-fluid w-100" src="{{ asset('assets/images/listing-details/gallery/09.jpg')}}" alt="Image Description">
-            </a>
-            <a class="d-block position-relative" href="{{ asset('assets/images/listing-details/gallery/10.jpg')}}">
-               <img class="img-fluid w-100" src="{{ asset('assets/images/listing-details/gallery/10.jpg')}}" alt="Image Description">
-               <div class="position-absolute bottom-0 end-0 mb-3 me-3">
-                  <span class="align-items-center btn btn-light btn-sm d-md-inline-flex d-none fw-semibold gap-2">
-                  <i class="fa-solid fa-expand"></i>
-                  <span> View photos</span>
-                  </span>
-               </div>
-            </a>
-         </div>
+            {{-- Main Photo (Large left column) --}}
+            <div class="col-md-8">
+               @if($mainPhoto)
+                  <a class="d-block position-relative" href="{{ asset('storage/' . $mainPhoto) }}">
+                        <img class="img-fluid w-100" src="{{ asset('storage/' . $mainPhoto) }}" alt="Main Photo">
+                        <div class="position-absolute bottom-0 end-0 mb-3 me-3">
+                           <span class="align-items-center btn btn-light btn-sm d-flex d-md-none fw-semibold gap-2">
+                              <i class="fa-solid fa-expand"></i>
+                              <span> View photos</span>
+                           </span>
+                        </div>
+                  </a>
+               @endif
+            </div>
+
+            {{-- Side Photos (Right small column) --}}
+            <div class="col-md-4 d-none d-md-inline-block">
+               @foreach($sidePhotos as $photo)
+                  <a class="d-block mb-2 position-relative" href="{{ asset('storage/' . $photo) }}">
+                        <img class="img-fluid w-100" src="{{ asset('storage/' . $photo) }}" alt="Side Photo">
+                        @if ($loop->last)
+                        <div class="position-absolute bottom-0 end-0 mb-3 me-3">
+                           <span class="align-items-center btn btn-light btn-sm d-md-inline-flex d-none fw-semibold gap-2">
+                              <i class="fa-solid fa-expand"></i>
+                              <span> View photos</span>
+                           </span>
+                        </div>
+                        @endif
+                  </a>
+               @endforeach
+            </div>
       </div>
    </div>
+   @endif
+
    <div class="d-flex justify-content-end mt-2">
       <span class="small text-dark fw-semibold">Published:</span>
-      <span class="small ms-1 text-muted">November 21, 2025</span>
+      <span class="small ms-1 text-muted"> {{ $subscription->created_at->format('F d, Y') }}</span>
    </div>
 </div>
  
@@ -197,7 +201,7 @@
          <div class="col-lg-12 content">
             <div class="mb-4">
                <h4 class="fw-semibold fs-3 mb-4">About Us </h4>
-               <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.</p> 
+               <p>{{ $provider->companyDetail->about ?? 'N/A' }}</p> 
             </div>
 
             <div class="mb-4">
@@ -207,7 +211,7 @@
 
             <div class="mb-4">
                <h4 class="fw-semibold fs-3 mb-4">Service Brands </h4>
-               <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.</p> 
+               <p>{{ $provider->companyDetail->brands ?? 'N/A' }}</p> 
             </div>
            
             <hr class="my-5">
@@ -217,30 +221,25 @@
                </h4>
                <div class="clear"></div>
                <div class="certfc_docmnt">
-                  <div class="certfc_docmnt_singl">
-                     <img src="{{ asset('assets/images/certifct.jpg')}}">
-                     <div class="certfc_docmnt_titl">
-                        Certificate Title
+                 @if(!empty($provider->companyDetail->certificates))
+                     @php
+                        $certs = json_decode($provider->companyDetail->certificates, true);
+                     @endphp
+
+                     <div class="d-flex flex-wrap gap-3">
+                        @foreach($certs as $index => $cert)
+                              <div class="certfc_docmnt_singl text-center">
+                                 <a href="{{ asset('storage/' . $cert) }}" target="_blank">
+                                    <img src="{{ asset('assets/images/certifct.jpg') }}" alt="Certificate" class="img-fluid">
+                                 </a>
+                                 <div class="certfc_docmnt_titl">
+                                    Certificate {{ $index + 1 }}
+                                 </div>
+                              </div>
+                        @endforeach
                      </div>
-                  </div>
-                  <div class="certfc_docmnt_singl">
-                     <img src="{{ asset('assets/images/certifct.jpg')}}">
-                     <div class="certfc_docmnt_titl">
-                        Certificate Title
-                     </div>
-                  </div>
-                  <div class="certfc_docmnt_singl">
-                     <img src="{{ asset('assets/images/certifct.jpg')}}">
-                     <div class="certfc_docmnt_titl">
-                        Certificate Title
-                     </div>
-                  </div>
-                  <div class="certfc_docmnt_singl">
-                     <img src="{{ asset('assets/images/certifct.jpg')}}">
-                     <div class="certfc_docmnt_titl">
-                        Certificate Title
-                     </div>
-                  </div>
+                  @endif
+
                </div>
                <div class="clear"></div>
             </div>
@@ -730,28 +729,15 @@ We also encourage users to upload a photo of the service received, if possible
             Please Log In <br> To View Contact Details.
          </div>
          <div class="login_btns">
-            <a  class="login_pop" onclick="closePopup()" >Login</a>
-            <a  class="reg_pop" onclick="closePopup()" >Register</a>
+            <a class="login_pop" href="{{ route('login', ['redirect' => request()->fullUrl()]) }}">Login</a>
+            <a class="reg_pop" href="{{ route('register', ['redirect' => request()->fullUrl()]) }}">Register</a>
             <div class="clear"></div>
          </div>
       </div>
       <button class="close-btn" onclick="closePopup()">
-      <i class="fa fa-times" aria-hidden="true"></i>
+         <i class="fa fa-times" aria-hidden="true"></i>
       </button>
    </div>
 </div>
 <!-- POPUP_SCRIPT 603 -->
-<script>
-   // Show popup on page load
-   /* window.onload = function() {
-       document.getElementById("popup").classList.add("show");
-       document.getElementById("overlay").classList.add("show");
-   };
-   
-   // Close popup function
-   function closePopup() {
-       document.getElementById("popup").classList.remove("show");
-       document.getElementById("overlay").classList.remove("show");
-   }*/
-</script> 
 @endsection

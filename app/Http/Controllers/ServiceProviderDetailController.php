@@ -165,7 +165,7 @@ class ServiceProviderDetailController extends Controller
        return response()->json($subCategories);
     }
 
-    public function membership(Request $request) {
+    public function membershipBk(Request $request) {
 
         $userId = auth()->id();
         $planId = $request->id; // get plan id using url
@@ -218,7 +218,7 @@ class ServiceProviderDetailController extends Controller
     }
 
     // save membership form with direct method
-    public function membershipForm(Request $request)
+    public function membershipFormBk(Request $request)
     {
         $userId = auth()->id();
         $planId = decrypt($request->plan_id);
@@ -462,6 +462,335 @@ class ServiceProviderDetailController extends Controller
 
         return redirect()->back()->with('success', 'Membership form saved successfully!');
     }
+
+    public function membership(Request $request) {
+
+        $userId = auth()->id();
+        $planId = $request->id; // get plan id using url
+        $decryptPlanId = decrypt($request->id);
+
+        $contact = ContactDetail::where('user_id', $userId)->first();
+        $social = SocialMediaDetail::where('user_id', $userId)->first();
+        $company = CompanyDetail::where('user_id', $userId)->first();
+        $countries = Country::all();
+        $ports = Port::all();
+        $categories = Category::all();
+        $subCategories = SubCategory::all();
+
+        // Now you can use $planId to fetch the selected plan
+        $selectedPlan = Plan::find($decryptPlanId);
+
+        // Fetch subscription ID for user & selected plan
+        $subscription = Subscription::where('user_id', $userId)
+        ->where('plan_id', $decryptPlanId)
+        ->first();
+
+        $subscriptionId = $subscription->id ?? null;
+
+        // Fetch port service details only for this subscription
+        $portServiceDetails = collect(); // default empty
+
+        if ($subscriptionId) {
+            $portServiceDetails = PortServiceDetail::where('user_id', $userId)
+                ->where('subscription_id', $subscriptionId)
+                ->get();
+        }
+
+         // Group by country_id and port_id as key
+        $groupedServiceDetails = $portServiceDetails->groupBy(function ($item) {
+            return $item->country_id . '_' . $item->port_id;
+        });
+
+        // Organize IDs into a nested array for hidden input mapping
+        $existingIds = [];
+        foreach ($groupedServiceDetails as $blockIndex => $serviceGroup) {
+            foreach ($serviceGroup as $serviceIndex => $service) {
+                $existingIds[$blockIndex][$serviceIndex] = $service->id;
+            }
+        }
+
+        // Add one empty group if nothing exists
+        if ($groupedServiceDetails->isEmpty()) {
+            $groupedServiceDetails = collect([
+                '0_0' => [null]
+            ]);
+        }
+
+
+        return view('service-provider.membership', compact(
+            'contact',
+            'social',
+            'company',
+            'countries',
+            'ports',
+            'categories',
+            'subCategories',
+            'groupedServiceDetails',
+            'existingIds',
+            'planId',
+            'selectedPlan'
+        ));
+        
+    }
+
+    public function membershipForm(Request $request)
+    {
+        $userId = auth()->id();
+        $planId = decrypt($request->plan_id);
+        $plan = Plan::find($planId); // Assuming you have a Plan model
+        $isBasic = strtolower($plan->id ?? '') === '1'; // or use $plan->id === 1;
+
+        // get company details first
+        $companyDetail = CompanyDetail::where('user_id', $userId)->first();
+
+        $hasPhotos = $companyDetail && !empty(json_decode($companyDetail->photos, true));
+
+        // Validate all inputs
+        $request->validate([
+            // Contact
+            'alternative_email' => 'nullable|email',
+            'office_telephone' => 'required|regex:/^[0-9]+$/|max:20',
+            'mobile_number'    => 'required|regex:/^[0-9]+$/|max:20',
+            'whatsapp_number'  => 'nullable|regex:/^[0-9]+$/|max:20',
+            'has_emergency_contact' => 'required|boolean',
+            'emergency_contact_number' => 'nullable|required_if:has_emergency_contact,1',
+            
+            // Social
+            'linkedin' => 'nullable|url',
+            'instagram' => 'nullable|url',
+            'twitter' => 'nullable|url',
+
+            // Company
+            'slogan' => $isBasic ? 'nullable|string|max:255' : 'required|string|max:255',
+            'about' => $isBasic ? 'nullable|string|max:500' : 'required|string|max:500',
+            'brands' => 'nullable|string',
+            'reference_shipowners' => 'nullable|string',
+
+            'certificates' => 'nullable|array',
+            'certificates.*' => 'file|mimes:pdf,jpeg,png,jpg|max:1024',
+
+            'photos' => [
+                $isBasic || $hasPhotos ? 'nullable' : 'required',
+                'array',
+                'min:3',
+            ],
+            'photos.*' => 'image|mimes:jpeg,png,jpg|max:1024',
+
+            // Port Services
+            'country.0' => 'required|string',
+            'port.0' => 'required|string',
+            'service_category.0.0' => 'required|integer',
+            // All others optional
+            'country.*' => 'nullable|string',
+            'port.*' => 'nullable|string',
+            'service_category.*.*' => 'nullable|integer',
+            'sub_services.*.*' => 'nullable|array',
+            'sub_services.*.*.*' => 'integer',
+            'additional_info.*.*' => 'nullable|string',
+        ],[
+            'emergency_contact_number.required_if' => 'Please enter an emergency contact number if you selected Yes.',
+            'country.0.required' => 'Please select country.',
+            'port.0.required' => 'Please select port.',
+            'service_category.0.0.required' => 'Please select at least one service category in the first group.',
+        ]);
+        
+        //  Custom Conditional Validation Logic (after validate())
+        $allCategories = $request->input('service_category', []);
+        $allCountries = $request->input('country', []);
+        $allPorts = $request->input('port', []);
+        $errors = [];
+
+        foreach ($allCategories as $groupIndex => $categoryGroup) {
+            if ($groupIndex == 0) continue; // Skip the first group — already validated
+
+            $hasAnyCategory = collect($categoryGroup)->filter()->isNotEmpty();
+            
+            if ($hasAnyCategory) {
+                $country = $allCountries[$groupIndex] ?? null;
+                $port = $allPorts[$groupIndex] ?? null;
+
+                if (empty($country)) {
+                    $errors["country.$groupIndex"] = "Please select country.";
+                }
+
+                if (empty($port)) {
+                    $errors["port.$groupIndex"] = "Please select port.";
+                }
+                
+            }
+        }
+
+        if (!empty($errors)) {
+            // Return custom validation errors to the frontend
+            return response()->json(['errors' => $errors], 422);
+        }
+
+        //************** */ Save or update subscription table  FIRST ****************************************/
+        // Try to find an existing active subscription for the same plan against user id
+        $activeSubscription = Subscription::where('user_id', $userId)
+            ->where('plan_id', $planId)
+            ->where('end_date', '>', Carbon::now())
+            ->latest('created_at')
+            ->first();
+
+        if ($activeSubscription) {
+            $subscriptionId = $activeSubscription->id; // Use existing active subscription
+        } else {
+            // No active subscription found, create a new one
+            $newSubscription = Subscription::create([
+                'user_id' => $userId,
+                'plan_id' => $planId,
+                'start_date' => Carbon::now(),
+                'end_date' => Carbon::now()->addYear(),
+            ]);
+            $subscriptionId = $newSubscription->id;
+        }
+        //*******************************************/
+
+        // Save Contact Details
+        ContactDetail::updateOrCreate(
+            ['user_id' => $userId],
+            $request->only(['alternative_email', 'office_telephone', 'mobile_number', 'whatsapp_number','has_emergency_contact','emergency_contact_number'])
+        );
+
+        // Save Social Media
+        SocialMediaDetail::updateOrCreate(
+            ['user_id' => $userId],
+            $request->only(['linkedin', 'instagram', 'twitter'])
+        );
+
+        // Save Company Details (with files)
+        $certPaths = [];
+        if ($request->hasFile('certificates')) {
+
+            // Delete old certificates if they exist
+            if ($companyDetail && $companyDetail->certificates) {
+                foreach (json_decode($companyDetail->certificates) as $oldCert) {
+                    Storage::disk('public')->delete($oldCert);
+                }
+            }
+
+            // Save new ones
+            foreach ($request->file('certificates') as $cert) {
+                $certPaths[] = $cert->store('certificates', 'public');
+            }
+        }else {
+            // Preserve existing photos
+            $certPaths = $companyDetail ? json_decode($companyDetail->certificates, true) : [];
+        }
+
+        $photoPaths = [];
+        if ($request->hasFile('photos')) {
+            // Delete old photos if they exist
+            if ($companyDetail && $companyDetail->photos) {
+                foreach (json_decode($companyDetail->photos) as $oldPhoto) {
+                    Storage::disk('public')->delete($oldPhoto);
+                }
+            }
+             // Save new ones
+            foreach ($request->file('photos') as $photo) {
+                $photoPaths[] = $photo->store('photos', 'public');
+            }
+        }else {
+            // Preserve existing photos
+            $photoPaths = $companyDetail ? json_decode($companyDetail->photos, true) : [];
+        }
+
+        CompanyDetail::updateOrCreate(
+            ['user_id' => $userId],
+            [
+                'slogan' => $request->slogan,
+                'about' => $request->about,
+                'brands' => $request->brands,
+                'reference_shipowners' => $request->reference_shipowners,
+                'certificates' => json_encode($certPaths),
+                'photos' => json_encode($photoPaths),
+            ]
+        );
+
+        // Save Port-Service Details
+        if ($request->has('country') && is_array($request->country)) {
+            $portCategoryCount = []; // Track how many new categories are being added per port
+
+            // Check if user has an active subscription
+            $activeSubscription = Subscription::where('user_id', $userId)
+                ->where('end_date', '>=', now())
+                ->first();
+
+            foreach ($request->country as $blockIndex => $country) {
+                $port = $request->port[$blockIndex] ?? null;
+                $serviceCategories = $request->service_category[$blockIndex] ?? [];
+
+                foreach ($serviceCategories as $serviceIndex => $categoryId) {
+
+                    // Skip saving if required fields are missing
+                    if (empty($country) || empty($port) || empty($categoryId)) {
+                        continue;
+                    }
+
+                    // Get ID if it’s an update
+                    $detailId = $request->port_service_detail_id[$blockIndex][$serviceIndex] ?? null;
+
+                    // Count how many existing categories already saved in DB for this port 
+                    // Count current entries only if the subscription is active
+                    $existingCount = 0;
+                    if ($activeSubscription) {
+                        $existingCount = PortServiceDetail::where('user_id', $userId)
+                            ->where('port_id', $port)
+                            ->when($detailId, function ($query) use ($detailId) {
+                                return $query->where('id', '!=', $detailId); // skip updating record
+                            })
+                            ->count();
+                    }
+
+                    // Track how many new ones we're adding in this request
+                    $portCategoryCount[$port] = isset($portCategoryCount[$port])
+                        ? $portCategoryCount[$port] + 1
+                        : 1;
+
+                    // Total count = existing DB + this request
+                    if (($existingCount + $portCategoryCount[$port]) > 15) {
+                        return response()->json([
+                            'errors' => ["port.$blockIndex" => "Only 15 service categories are allowed per port."]
+                        ], 422);
+                    }    
+
+                    $subServices = $request->sub_services[$blockIndex][$serviceIndex] ?? [];
+
+                    $additionalInfo = $request->additional_info[$blockIndex][$serviceIndex] ?? null;
+                    
+
+
+                    if ($detailId) {
+                        PortServiceDetail::where('id', $detailId)
+                            ->where('user_id', $userId)
+                            ->update([
+                                'country_id' => $country,
+                                'port_id' => $port,
+                                'category_id' => $categoryId,
+                                'sub_services' => $subServices,
+                                'additional_info' => $additionalInfo,
+                                'subscription_id' => $subscriptionId,
+                                'updated_at' => now(),
+                            ]);
+                    } else {
+                        PortServiceDetail::create([
+                            'user_id' => $userId,
+                            'country_id' => $country,
+                            'port_id' => $port,
+                            'category_id' => $categoryId,
+                            'sub_services' => $subServices,
+                            'additional_info' => $additionalInfo,
+                            'subscription_id' => $subscriptionId,
+                        ]);
+                    }
+                }
+            }
+        }
+
+        return redirect()->back()->with('success', 'Membership form saved successfully!');
+    }
+
 
 
 

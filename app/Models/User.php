@@ -80,6 +80,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Subscription::class);
     }
+
+    // getActiveSubscriptionForPlan only used in UserListController for Admin
+    // get data using Plan Id
     public function getActiveSubscriptionForPlan($planId)
     {
         $today = Carbon::today();
@@ -90,6 +93,16 @@ class User extends Authenticatable
             ->sortByDesc('end_date')
             ->first();
     }
+
+    // getActiveSubscription only used in ListingController for listing page front
+    public function getActiveSubscription()
+    {
+        return $this->subscriptions()
+            ->whereDate('end_date', '>=', Carbon::today())
+            ->latest('created_at')
+            ->first();
+    }
+
 
 
 }

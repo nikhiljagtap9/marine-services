@@ -29,22 +29,13 @@ use App\Http\Controllers\Admin\UserListController;
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::get('/product-listing', [ListingController::class, 'index'])->name('product_listing');
-Route::get('/product-detail', [ListingController::class, 'detail'])->name('product_detail');
-
-// Route::get('/product_listing', function () {
-//     return view('product_listing');
-// })->name('product_listing');
+Route::get('/detail/{subscriptionId}', [ListingController::class, 'detail'])->name('detail');
 
 Route::get('/pricing', [PricingController::class, 'index'])->name('pricing');
 
 Route::get('/about_us', function () {
     return view('about_us');
 })->name('about_us');
-
-Route::get('/detail', function () {
-    return view('detail');
-})->name('detail');
-
 
 Route::get('/dashboard', function () {
     return view('dashboard');

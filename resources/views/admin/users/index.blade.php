@@ -58,56 +58,13 @@
       </div>
    </div>
 </div>
+@endsection
+@section('scripts')
+   <script>
 
-<div class="popup-overlay popmain" id="popup">
-   <div class="popup-content">
-      <button class="close-btn" onclick="closePopup()">×</button>
-      <h2>Add Category</h2>
-       <form id="categoryForm">
-         @csrf
-         <div class="col-sm-6" bis_skin_checked="1">
-            <!-- start form group -->
-            <div class="" bis_skin_checked="1">
-               <label class="fw-medium mb-2">Category Name</label>
-               <input type="text" name="name"  class="form-control" placeholder="Enter Category Name">
-               <span class="text-danger" id="name-error"></span> 
-            </div>
-            <!-- end /. form group -->
-            <div class="clear"></div>
-         </div>
-         <div class="clear"></div>
-         <button type="submit" class="ad_clas">
-            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-plus">
-               <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-               <path d="M12 5l0 14" />
-               <path d="M5 12l14 0" />
-            </svg>
-                  Add
-            </button>
-      </form>
-   </div>
-</div>
+   $(document).ready(function () {
+         $('#planTable').DataTable();
+   });
 
-  
-    
-    <script>
-        function openPopup() {
-     document.getElementById("popup").style.display = "block";
-   }
-   
-   function closePopup() {
-     document.getElementById("popup").style.display = "none";
-   }
-        
-    </script>
-    @endsection
-
-    @section('scripts')
-        <script>
-
-         $(document).ready(function () {
-             $('#planTable').DataTable();
-        });
-   
-      </script>
-    @endsection
+</script>
+@endsection

@@ -36,6 +36,7 @@
                @csrf
                 <!-- Start Form Group -->
                <div class="form-group mb-4">
+                  <input type="hidden" name="redirect" value="{{ request('redirect') }}">
                     <label class="required">Enter Email</label>
                     <input type="email" name="email" id="email"  class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}">
                     @error('email')

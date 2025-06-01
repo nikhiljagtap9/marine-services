@@ -9,5 +9,5 @@ class SocialMediaDetail extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id','linkedin','instagram','twitter'];
+    protected $fillable = ['user_id','subscription_id','linkedin','instagram','twitter'];
 }

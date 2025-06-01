@@ -711,6 +711,10 @@
                 .addClass('alert-success')
                 .text('Data saved successfully!');
               // window.location.href = "{{ route('service-provider.index') }}";
+              // Reload page after 2 seconds
+                  setTimeout(function() {
+                     location.reload();
+                  }, 2000);
             },
            error: function(xhr) {
                let errors = xhr.responseJSON?.errors;

@@ -29,6 +29,12 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        // add custom code get last url 
+        // add hidden field in login page
+        if ($request->filled('redirect') && filter_var($request->redirect, FILTER_VALIDATE_URL)) {
+            return redirect($request->redirect);
+        }
+
         return redirect()->intended(RouteServiceProvider::HOME);
     }
 
