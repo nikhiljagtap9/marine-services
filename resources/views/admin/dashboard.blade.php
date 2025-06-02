@@ -24,7 +24,7 @@
                      <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-world"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M3.6 9h16.8" /><path d="M3.6 15h16.8" /><path d="M11.5 3a17 17 0 0 0 0 18" /><path d="M12.5 3a17 17 0 0 1 0 18" /></svg>
                   </div>
                </div>
-               <h1 class="price"><span class="counter">45</span><span class="fs-13 ms-1 text-muted"></span></h1>
+               <h1 class="price"><span class="counter">{{ $totalCountries }}</span><span class="fs-13 ms-1 text-muted"></span></h1>
             </div>
             <div class="col-sm-3 total-box-left">
                <div class="align-items-center d-flex justify-content-between mb-4">
@@ -33,7 +33,7 @@
                      <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-ship"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M2 20a2.4 2.4 0 0 0 2 1a2.4 2.4 0 0 0 2 -1a2.4 2.4 0 0 1 2 -1a2.4 2.4 0 0 1 2 1a2.4 2.4 0 0 0 2 1a2.4 2.4 0 0 0 2 -1a2.4 2.4 0 0 1 2 -1a2.4 2.4 0 0 1 2 1a2.4 2.4 0 0 0 2 1a2.4 2.4 0 0 0 2 -1" /><path d="M4 18l-1 -5h18l-2 4" /><path d="M5 13v-6h8l4 6" /><path d="M7 7v-4h-1" /></svg>
                   </div>
                </div>
-               <h1 class="price counter">132</h1>
+               <h1 class="price counter">{{ $totalPorts }}</h1>
             </div>
             <div class="col-sm-3 total-box__right">
                <div class="align-items-center d-flex justify-content-between mb-4">
@@ -45,7 +45,7 @@
                      </svg>
                   </div>
                </div>
-               <h1 class="price counter">34</h1>
+               <h1 class="price counter">{{ $totalCategories }}</h1>
             </div>
 
             <div class="col-sm-3 total-box__right">
@@ -58,7 +58,7 @@
                      </svg>
                   </div>
                </div>
-               <h1 class="price counter">14</h1>
+               <h1 class="price counter">{{ $totalSubCategories }}</h1>
             </div>
 
 
@@ -79,26 +79,13 @@
                      </tr>
                   </thead>
                   <tbody>
+                     @foreach($ports as $port)
                      <tr>
-                        <th>01</th>
-                        <td>ABC Port</td>
-                        <td>India</td>
+                        <th>{{$port->id}}</th>
+                        <td>{{$port->name}}</td>
+                        <td>{{$port->country->name}}</td>
                      </tr>
-                     <tr>
-                        <th>01</th>
-                        <td>ABC Port</td>
-                        <td>India</td>
-                     </tr>
-                     <tr>
-                        <th>01</th>
-                        <td>ABC Port</td>
-                        <td>India</td>
-                     </tr>
-                     <tr>
-                        <th>01</th>
-                        <td>ABC Port</td>
-                        <td>India</td>
-                     </tr>
+                     @endforeach
                   </tbody>
                </table>
             </div>

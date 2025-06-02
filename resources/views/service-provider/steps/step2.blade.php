@@ -28,10 +28,19 @@
                                  </select>    
                               </div>
 
-                              <div class="form-group">
+                              <!-- <div class="form-group">
                                  <label class="Mylabel" for="office_address" rows="9" cols="50">Office Address</label>
                                  <textarea id="office_address" type="text" class="form-control" name="office_address" placeholder="Enter adress here" required>{{ old('office_address') }}</textarea>
+                              </div> -->
+                              <div class="form-group">
+                                 <label class="Mylabel" for="office_address">Office Address</label>
+                                 <input id="office_address" name="office_address" class="form-control" placeholder="Start typing address..." />
+                                 <input type="hidden" id="lat" name="lat">
+                                 <input type="hidden" id="lng" name="lng">
+                                 <div id="selected_address" class="text-muted mt-2" style="font-size: 14px;"></div>
                               </div>
+                             
+
                               <!-- <button class="open-btn slc_loctn" onclick="openModal()">Select Location here</button> -->
                               <!-- Map popup -->
                               <div class="mapp">

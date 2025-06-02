@@ -7,6 +7,9 @@
       <script src="{{ asset('service-provider/assets/js/validator.min.js')}}"></script>
       <!-- Custom Js -->
       <script src="{{ asset('service-provider/assets/js/main.js')}}"></script>
+
+      <!-- Google Maps JavaScript API (replace YOUR_API_KEY with your actual key) -->
+      
    </body>
 </html>
 @yield('scripts')

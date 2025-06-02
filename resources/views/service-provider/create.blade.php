@@ -149,6 +149,25 @@
 
 @section('scripts')
 
+ <!-- Google Autocomplete Script -->
+<script src="https://maps.googleapis.com/maps/api/js?key={{ $googleMapsKey }}&libraries=places"></script>
+<script>
+    function initAutocomplete() {
+      const input = document.getElementById('office_address');
+      const autocomplete = new google.maps.places.Autocomplete(input);
+      autocomplete.addListener('place_changed', () => {
+         const place = autocomplete.getPlace();
+         const lat = place.geometry.location.lat();
+         const lng = place.geometry.location.lng();
+         const formatted = place.formatted_address;
+
+         document.getElementById('lat').value = lat;
+         document.getElementById('lng').value = lng;
+      });
+    }
+    google.maps.event.addDomListener(window, 'load', initAutocomplete);
+</script>
+
 <script>
    // get city
       $('#country-select').on('change', function() {
@@ -208,5 +227,7 @@
         }
     });
 
-    </script>
+</script>
+
+
 @endsection

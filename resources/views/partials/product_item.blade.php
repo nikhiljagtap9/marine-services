@@ -1,3 +1,15 @@
+@php
+    if (!function_exists('randomNearby')) {
+        function randomNearby($coordinate, $range = 0.02) {
+            return $coordinate + ((mt_rand() / mt_getrandmax()) * $range * 2 - $range);
+        }
+    }
+    $mainPortDetails = $products->first()?->portServiceDetails->first();
+    $mainPortLat = $mainPortDetails?->port?->lat ?? null;
+    $mainPortLng = $mainPortDetails?->port?->lng ?? null;
+@endphp
+<div id="map-container" data-lat="{{ $mainPortLat }}" data-lng="{{ $mainPortLng }}"></div>
+
 @foreach($products as $provider)
     @php
         $photos = json_decode($provider->companyDetail->photos ?? '[]', true);
@@ -8,8 +20,19 @@
         if ($provider && $provider->phone) {
             $masked = substr($provider->phone, 0, 6) . '• • • •';
         } 
+        // Get the first port from portServiceDetails
+        $portDetails = $provider->portServiceDetails->first();
+
+        $portLat = $portDetails?->port?->lat ?? null;
+        $portLng = $portDetails?->port?->lng ?? null;
+
+
+        $randomLat = $portLat ? randomNearby($portLat) : null;
+        $randomLng = $portLng ? randomNearby($portLng) : null;
+
     @endphp
-    <div class="hotel-item product-item" data-lat="18.5404" data-lng="73.8527">
+
+    <div class="hotel-item product-item" data-lat="{{ $randomLat }}" data-lng="{{ $randomLng }}">
         <div class="card rounded-3 border-0 shadow-sm w-100 flex-fill overflow-hidden card-hover flex-fill w-100 card-hover-bg">
         <!-- Card Image Wrap with Slider -->
         <a href="{{ route('detail', $provider->active_subscription->id) }}" target="_blank" class="card-img-wrap card-image-hover overflow-hidden dark-overlay">

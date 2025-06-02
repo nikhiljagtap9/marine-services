@@ -4,6 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Country;
+use App\Models\Port;
+use App\Models\Category;
+use App\Models\SubCategory;
 
 class AdminDashboardController extends Controller
 {
@@ -24,7 +28,19 @@ class AdminDashboardController extends Controller
             return redirect()->route('admin.login');
         }
 
-        return view('admin.dashboard');
+        $totalCountries = Country::count();
+        $totalPorts = Port::count();
+        $totalCategories = Category::count();
+        $totalSubCategories = SubCategory::count();
+        $ports = Port::with('country')->get();
+
+        return view('admin.dashboard',compact(
+            'totalCountries',
+            'totalPorts',
+            'totalCategories',
+            'totalSubCategories',
+            'ports'
+        ));
     }
 }
 

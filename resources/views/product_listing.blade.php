@@ -209,14 +209,18 @@
    Submit Quote
    </a>
 </div>
-
 @endsection
 @section('scripts')
 <!-- <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script> -->
 <script src="{{ asset('assets/js/map.js')}}"></script>
 <script type="text/javascript"></script>
 <script>
-   const map = L.map('map').setView([18.5204, 73.8567], 13);
+   // Use blade echo to inject PHP variables into JS
+    // Passing PHP variables into JS variables
+    const mapContainer = document.getElementById('map-container');
+    const lat = parseFloat(mapContainer.getAttribute('data-lat'));
+    const lng = parseFloat(mapContainer.getAttribute('data-lng'));
+   const map = L.map('map').setView([lat, lng], 13);
    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
    
    const hotelItems = document.querySelectorAll('.hotel-item');

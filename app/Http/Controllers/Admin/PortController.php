@@ -13,7 +13,8 @@ class PortController extends Controller
     {
         $ports = Port::with('country')->get();
         $countries = Country::all();
-        return view('admin.ports.index', compact('ports','countries'));
+        $googleMapsKey = config('services.google_maps.key');
+        return view('admin.ports.index', compact('ports','countries','googleMapsKey'));
     }
 
     public function store(Request $request)

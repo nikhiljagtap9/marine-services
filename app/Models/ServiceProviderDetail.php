@@ -20,6 +20,8 @@ class ServiceProviderDetail extends Model
         'country',
         'city',
         'office_address',
+        'lat', 
+        'lng',
         'port_id',
         'service_type',
         'sub_service_type',

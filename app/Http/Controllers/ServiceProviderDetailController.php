@@ -32,17 +32,13 @@ class ServiceProviderDetailController extends Controller
         $countries = Country::all();
         $ports = Port::with('country')->get();
         $categories = Category::all();
-        return view('service-provider.create',compact('countries','ports','categories'));
+        $googleMapsKey = config('services.google_maps.key');
+        return view('service-provider.create',compact('countries','ports','categories','googleMapsKey'));
     }
 
      // Store submitted data
     public function store(Request $request)
-    {
-
-        // $latlong = $this->getLatLngFromAddress($request);
-
-        // dd($latlong);
-        
+    {   
         $request->validate([
              // User credentials
             'email' => 'required|email|unique:users,email',
@@ -93,6 +89,8 @@ class ServiceProviderDetailController extends Controller
             'country' => $request->country,
             'city' => $request->city,
             'office_address' => $request->office_address,
+            'lat' => $request->lat,
+            'lng' => $request->lng,
             'port_id' => $request->port_id,
             'service_type' => $request->service_type,
             'sub_service_type' => $request->sub_service_type,

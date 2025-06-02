@@ -26,10 +26,7 @@
       <!-- Page Scripts(used by all page) -->
       <script src="{{ asset('admin/assets/dist/js/app.min.js')}}"></script>
       <!-- Page Active Scripts(used by this page) -->
-      <script src="{{ asset('admin/assets/dist/js/dashboard.js')}}"></script>
-
-    
-      
+      <script src="{{ asset('admin/assets/dist/js/dashboard.js')}}"></script> 
    </body>
 </html>
 @yield('scripts')

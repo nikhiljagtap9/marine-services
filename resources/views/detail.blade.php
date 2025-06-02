@@ -22,25 +22,17 @@
          <div class="col-lg col-xxl-8">
             <h1 class="h2 page-header-title fw-semibold">{{ ucwords($provider->company_name ?? 'N/A') }}</h1>
             <div class="catgry_wrp">
-               @php
-                  $allSubServiceIds = collect($provider->portServiceDetails)
-                     ->pluck('sub_services')        // Pluck all sub_services arrays
-                     ->flatten()                    // Flatten nested arrays
-                     ->unique()                     // Keep unique IDs
-                     ->values();                    // Reindex
-                                                   
-                  $subServiceNames = \App\Models\SubCategory::whereIn('id', $allSubServiceIds)->pluck('name')->toArray();
-               @endphp
               
-               @foreach($subServiceNames as $name)
+               @foreach ($provider->portServiceDetails->unique('category_id') as $portService)
                   <div class="singl_cat">
                      <i class="fa fa-ship" aria-hidden="true"></i>
                      <div class="singl_name">
-                       {{ $name }}
+                        {{ $portService->category->name ?? 'N/A' }}
                      </div>
                      <div class="clear"></div>
                   </div>
                @endforeach
+              
                <div class="clear"></div>
             </div>
             <div class="clear"></div>
@@ -73,7 +65,7 @@
                   </a>
                </li>
                <li class="list-inline-item">
-                  <a href="" class="cont_num comn_num loctn_mail">
+                  <a href="https://www.google.com/maps?q={{ $provider->lat }},{{ $provider->lng }}" target="_blank" class="cont_num comn_num loctn_mail">
                      <i class="fa fa-map-marker" aria-hidden="true"></i>
                      <div class="data_li">{{ $provider->office_address ?? 'N/A' }}</div>
                      <div class="clear"></div>
@@ -206,7 +198,45 @@
 
             <div class="mb-4">
                <h4 class="fw-semibold fs-3 mb-4">Service categories & Types </h4>
-               <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.</p> 
+               <div class="d-flex mb-4 border-bottom pb-4" bis_skin_checked="1">
+                  
+                  @php
+                  // Group portServiceDetails by category_id
+                  $groupedServices = $provider->portServiceDetails->groupBy('category_id');
+                  @endphp
+
+                  @foreach ($groupedServices as $categoryId => $services)
+                     @php
+                        $categoryName = optional($services->first()->category)->name ?? 'N/A';
+
+                        // Collect all sub-services for this category group
+                        $subServiceIds = $services->pluck('sub_services')->flatten()->unique()->filter();
+
+                        // Fetch sub-service names
+                        $subServiceNames = \App\Models\SubCategory::whereIn('id', $subServiceIds)->pluck('name');
+                     @endphp                 
+               
+                     <div class="flex-grow-1 ms-3" bis_skin_checked="1">
+                        <div class="comment-header d-flex flex-wrap gap-2 mb-3" bis_skin_checked="1">
+                           <div bis_skin_checked="1">
+                              <div class="singl_cat">
+                                 <i class="fa fa-ship" aria-hidden="true"></i>
+                                 <div class="singl_name">
+                                 {{ ucFirst($categoryName) }}
+                                 </div>
+                                 <div class="clear"></div>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="fs-15" bis_skin_checked="1"> 
+                              @foreach ($subServiceNames as $subName)
+                                 <li>{{ ucFirst($subName) }}</li>
+                              @endforeach
+                        </div>
+                     </div>
+                  @endforeach
+               </div>
+              
             </div>
 
             <div class="mb-4">

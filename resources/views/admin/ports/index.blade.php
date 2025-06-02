@@ -82,6 +82,15 @@
             <!-- end /. form group -->
             <div class="clear"></div>
          </div>
+          <div class="col-sm-12">
+            <div class="" bis_skin_checked="1">
+               <label class="fw-medium mb-2">Port Address</label>
+               <input id="port_address" name="port_address" class="form-control" placeholder="Start typing address..." />
+               <input type="hidden" id="lat" name="lat">
+               <input type="hidden" id="lng" name="lng">
+               <div id="selected_address" class="text-muted mt-2" style="font-size: 14px;"></div>
+            </div>
+         </div>
          <div class="clear"></div>
          <button type="submit" class="ad_clas">
             <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-plus">
@@ -163,5 +172,22 @@
             });
         });
    
+      </script>
+      <script src="https://maps.googleapis.com/maps/api/js?key={{ $googleMapsKey }}&libraries=places"></script>
+      <script>
+         function initAutocomplete() {
+            const input = document.getElementById('port_address');
+            const autocomplete = new google.maps.places.Autocomplete(input);
+            autocomplete.addListener('place_changed', () => {
+               const place = autocomplete.getPlace();
+               const lat = place.geometry.location.lat();
+               const lng = place.geometry.location.lng();
+               const formatted = place.formatted_address;
+
+               document.getElementById('lat').value = lat;
+               document.getElementById('lng').value = lng;
+            });
+         }
+         google.maps.event.addDomListener(window, 'load', initAutocomplete);
       </script>
     @endsection
