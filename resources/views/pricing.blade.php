@@ -183,10 +183,8 @@ Enjoy FREE Silver Plan access until <b> September 15,</b> 2025—your free perio
                   <thead>
                      <tr>
                         <th scope="col">
-                           <div class="fs-4 fw-semibold h6 mb-0 mb-2">Plan & Features</div>
-                            
+                           <div class="fs-4 fw-semibold h6 mb-0 mb-2">Plan & Features</div>                          
                         </th>
-
                         @foreach($plans as $plan)
                            @php
                               $encryptedPlanId = encrypt($plan->id);
@@ -197,12 +195,12 @@ Enjoy FREE Silver Plan access until <b> September 15,</b> 2025—your free perio
                               <span class="h3">$</span>
                               <span class="display-4 fw-semibold">{{ $plan->price == 0 ? 'Free' : '₹' . $plan->price . '/Year'}}</span>
                            </div>
-                           <a href="{{route('service-provider.membership', ['id' => $encryptedPlanId])}}" target="_blank" class="btn d-block mt-4 btn-primary text-nowrap">Get {{ $plan->name }}</a>
-                           <!-- @if($plan->name == 'Basic')
-                              <a href="https://persausive.com/client/Uger_Ad_Form/" target="_blank" class="btn d-block mt-4 btn-outline-primary text-nowrap">Get {{ $plan->name }}</a>
+                           <!-- <a href="{{route('service-provider.membership', ['id' => $encryptedPlanId])}}" target="_blank" class="btn d-block mt-4 btn-primary text-nowrap">Get {{ $plan->name }}</a> -->
+                           @if($plan->name == 'Basic' || $plan->name == 'Silver')
+                              <a href="{{route('service-provider.membership', ['id' => $encryptedPlanId])}}" target="_blank" class="btn d-block mt-4 btn-primary text-nowrap">Get {{ $plan->name }}</a>  
                            @else
-                              <a href="{{route('service-provider.membership', ['id' => $encryptedPlanId])}}" target="_blank" class="btn d-block mt-4 btn-primary text-nowrap">Get {{ $plan->name }}</a>
-                           @endif    -->
+                              <a href="#" class="btn d-block mt-4 btn-primary text-nowrap">Get After Launch</a>
+                           @endif   
                         </th>
                         @endforeach
                      </tr>

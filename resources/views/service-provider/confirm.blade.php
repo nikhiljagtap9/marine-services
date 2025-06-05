@@ -11,7 +11,7 @@
 
                         Your business registration was successful. <br> Your details will be displayed on our platform soon.<br> Feel free to contact us for any assistance!
                     </p>
-                    <a href="{{route('pricing')}}" class="fxt-btn-ghost">Subscribe Now</a>
+                    <a href="{{route('pricing')}}" class="fxt-btn-ghost">Choose a Plan</a>
                 </div>
             </div>
         </div>

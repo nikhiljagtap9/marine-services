@@ -13,11 +13,12 @@ class ListingController extends Controller
 {
     public function index(Request $request)
     {
-        $countries = Country::all();
-        $categories = Category::all();
+        $countries = Country::orderBy('name')->get();
+        $categories = Category::orderBy('name')->get();
         $today = Carbon::today(); // Current date
 
-        $hasFilters = $request->filled(['country', 'ports_services', 'service_type', 'sub_service_type']);
+        // this is compulsory fields for search engine
+        $hasFilters = $request->filled(['country', 'ports_services']);
 
         $query = ServiceProviderDetail::with([
             'companyDetail',
@@ -44,11 +45,23 @@ class ListingController extends Controller
         ->whereHas('socialMediaDetails');
 
         if ($hasFilters) {
-        $query->whereHas('portServiceDetails', function ($q) use ($request) {
-            $q->where('country_id', $request->country)
-              ->where('port_id', $request->ports_services)
-              ->where('category_id', $request->service_type);
-        });
+            $query->whereHas('portServiceDetails', function ($q) use ($request) {
+                if ($request->filled('country')) {
+                    $q->where('country_id', $request->country);
+                }
+
+                if ($request->filled('ports_services')) {
+                    $q->where('port_id', $request->ports_services);
+                }
+
+                if ($request->filled('service_type')) {
+                    $q->where('category_id', $request->service_type);
+                }
+
+                if ($request->filled('sub_service_type')) {
+                    $q->whereJsonContains('sub_services', (string) $request->sub_service_type);
+                }
+            });
         } else {
             $query->orderByDesc('id'); // Or use 'created_at' if needed
         }
@@ -99,11 +112,28 @@ class ListingController extends Controller
         
         // Apply filters if any
         if ($hasFilters) {     
+            // $query->whereHas('portServiceDetails', function ($q) use ($request) {
+            //     $q->where('country_id', $request->country)
+            //     ->where('port_id', $request->ports_services)
+            //     ->where('category_id', $request->service_type)
+            //     ->whereJsonContains('sub_services', (string) $request->sub_service_type);
+            // });
             $query->whereHas('portServiceDetails', function ($q) use ($request) {
-                $q->where('country_id', $request->country)
-                ->where('port_id', $request->ports_services)
-                ->where('category_id', $request->service_type)
-                ->whereJsonContains('sub_services', (string) $request->sub_service_type);
+                    if ($request->filled('country')) {
+                        $q->where('country_id', $request->country);
+                    }
+
+                    if ($request->filled('ports_services')) {
+                        $q->where('port_id', $request->ports_services);
+                    }
+
+                    if ($request->filled('service_type')) {
+                        $q->where('category_id', $request->service_type);
+                    }
+
+                    if ($request->filled('sub_service_type')) {
+                        $q->whereJsonContains('sub_services', (string) $request->sub_service_type);
+                    }
             });
             return $query->get();    // return all matching filtered results
         } else {

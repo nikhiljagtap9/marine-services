@@ -10,8 +10,8 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $countries = Country::all();
-        $categories = Category::all();
+        $countries = Country::orderBy('name')->get();
+        $categories = Category::orderBy('name')->get();
         return view('index',compact('countries','categories'));
     }
 }

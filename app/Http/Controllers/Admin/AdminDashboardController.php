@@ -32,7 +32,7 @@ class AdminDashboardController extends Controller
         $totalPorts = Port::count();
         $totalCategories = Category::count();
         $totalSubCategories = SubCategory::count();
-        $ports = Port::with('country')->get();
+        $ports = Port::with('country')->orderBy('name')->get();
 
         return view('admin.dashboard',compact(
             'totalCountries',

@@ -37,6 +37,19 @@ Route::get('/about_us', function () {
     return view('about_us');
 })->name('about_us');
 
+Route::get('/privacy', function () {
+    return view('privacy');
+})->name('privacy');
+
+Route::get('/consent', function () {
+    return view('consent');
+})->name('consent');
+
+Route::get('t&c', function () {
+    return view('t&c');
+})->name('t&c');
+
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

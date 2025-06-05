@@ -76,7 +76,7 @@
                   </svg>
                </div>
                <select class="serch_drop_select" id="service-type" name="service_type">
-                  <option selected="">Select Service Type</option>
+                  <option value="">Select Service Type</option>
                   @foreach($categories as $category )
                      <option value="{{ $category->id }}" {{ request('service_type') == $category->id ? 'selected' : '' }}>
                         {{ $category->name }}
@@ -102,7 +102,7 @@
                   </svg>
                </div>
                <select class="serch_drop_select" id="sub-service-type" name="sub_service_type">
-                  <option selected="">Select Sub-Service Type</option>
+                  <option value="">Select Sub-Service Type</option>
                </select>
             </div>
 

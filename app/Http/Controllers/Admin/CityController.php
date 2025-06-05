@@ -12,7 +12,7 @@ class CityController extends Controller
     public function index()
     {
         $cities = City::with('country')->get();
-        $countries = Country::all();
+        $countries = Country::orderBy('name')->get();
         return view('admin.cities.index', compact('cities','countries'));
     }
 

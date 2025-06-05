@@ -33,19 +33,8 @@
                         </div>
                         <div class="indx_slide">
                            <div class="slider">
-                              <button class="arrow left">&#10094;</button>
+                              <!-- <button class="arrow left">&#10094;</button> -->
                               <div class="slides" id="slides">
-                                 <div class="slide">
-                                    <div class="laun_titl">
-                                       ⏳ Launch Offer Until September 15, 2025
-                                    </div>
-                                    <div class="laun_titl_text">
-                                       Join before September 15, 2025 to take advantage of our special launch pricing.
-                                       You can even lock in this discounted rate for up to 2 more years by paying in advance.
-                                       Smart move, right?
-                                    </div>
-                                    <div class="clear"></div>
-                                 </div>
                                  <div class="slide">
                                     <div class="laun_titl">
                                        🧊 What Happens If You Miss the Cut?
@@ -59,7 +48,7 @@
                                     </div>
                                  </div>
                               </div>
-                              <button class="arrow right">&#10095;</button>
+                              <!-- <button class="arrow right">&#10095;</button> -->
                            </div>
                         </div>
                         <div class="clear"></div>
@@ -111,43 +100,44 @@
             </div>
          </div>
       </section>
-      <!-- jquery-->
-      <script>
-         const slides = document.getElementById('slides');
-         const slideCount = slides.children.length;
-         let index = 0;
-         
-         function updateSlider() {
-           slides.style.transform = 'translateX(' + (-index * 100) + '%)';
-         }
-         
-         document.querySelector('.arrow.left').addEventListener('click', () => {
-           index = (index - 1 + slideCount) % slideCount;
-           updateSlider();
-           resetAutoSlide();
-         });
-         
-         document.querySelector('.arrow.right').addEventListener('click', () => {
-           index = (index + 1) % slideCount;
-           updateSlider();
-           resetAutoSlide();
-         });
-         
-         function autoSlide() {
-           index = (index + 1) % slideCount;
-           updateSlider();
-         }
-         
-         let autoSlideInterval = setInterval(autoSlide, 3000);
-         
-         function resetAutoSlide() {
-           clearInterval(autoSlideInterval);
-           autoSlideInterval = setInterval(autoSlide, 3000);
-         }
-      </script>
 @endsection
 
 @section('scripts')
+
+ <!-- jquery-->
+<script>
+   const slides = document.getElementById('slides');
+   const slideCount = slides.children.length;
+   let index = 0;
+   
+   function updateSlider() {
+      slides.style.transform = 'translateX(' + (-index * 100) + '%)';
+   }
+   
+   document.querySelector('.arrow.left').addEventListener('click', () => {
+      index = (index - 1 + slideCount) % slideCount;
+      updateSlider();
+      resetAutoSlide();
+   });
+   
+   document.querySelector('.arrow.right').addEventListener('click', () => {
+      index = (index + 1) % slideCount;
+      updateSlider();
+      resetAutoSlide();
+   });
+   
+   function autoSlide() {
+      index = (index + 1) % slideCount;
+      updateSlider();
+   }
+   
+   let autoSlideInterval = setInterval(autoSlide, 3000);
+   
+   function resetAutoSlide() {
+      clearInterval(autoSlideInterval);
+      autoSlideInterval = setInterval(autoSlide, 3000);
+   }
+</script>
 
  <!-- Google Autocomplete Script -->
 <script src="https://maps.googleapis.com/maps/api/js?key={{ $googleMapsKey }}&libraries=places"></script>

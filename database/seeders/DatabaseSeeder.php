@@ -30,8 +30,34 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+        // User 1
+        User::firstOrCreate(
+            ['email' => 'operations@speedclaim.net'],
+            [
+                'name' => 'Admin',
+                'email_verified_at' => now(),
+                'password' => Hash::make('123456'),
+                'user_type' => 'admin',
+            ]
+        );
+
+        // User 2
+        User::firstOrCreate(
+            ['email' => 'rohit@persausive.com'],
+            [
+                'name' => 'Admin',
+                'email_verified_at' => now(),
+                'password' => Hash::make('123123'),
+                'user_type' => 'admin',
+            ]
+        );
+
         $this->call([
+            CountrySeeder::class,
             PlanSeeder::class,
+            PortSeeder::class,
+            CategorySeeder::class,
+            SubCategorySeeder::class,
         ]);
     }
 }

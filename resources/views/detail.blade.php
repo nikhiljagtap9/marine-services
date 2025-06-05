@@ -67,7 +67,8 @@
                <li class="list-inline-item">
                   <a href="https://www.google.com/maps?q={{ $provider->lat }},{{ $provider->lng }}" target="_blank" class="cont_num comn_num loctn_mail">
                      <i class="fa fa-map-marker" aria-hidden="true"></i>
-                     <div class="data_li">{{ $provider->office_address ?? 'N/A' }}</div>
+                     <!-- <div class="data_li">{{ $provider->office_address ?? 'N/A' }}</div> -->
+                     <div class="data_li" title="{{ $provider->office_address }}">{{ \Illuminate\Support\Str::limit($provider->office_address, 20) }}</div>
                      <div class="clear"></div>
                   </a>
                </li>
@@ -103,7 +104,7 @@
                      View Location
                   </div>
                </li>
-               @endguest
+              @endguest
             </ul>
             <div class="clear"></div>
             <ul class="fs-14 fw-medium list-inline list-separator mb-0 text-muted">
@@ -260,10 +261,10 @@
                         @foreach($certs as $index => $cert)
                               <div class="certfc_docmnt_singl text-center">
                                  <a href="{{ asset('storage/' . $cert) }}" target="_blank">
-                                    <img src="{{ asset('assets/images/certifct.jpg') }}" alt="Certificate" class="img-fluid">
+                                    <img src="{{ asset('storage/' . $cert) }}" alt="Certificate" class="img-fluid">
                                  </a>
                                  <div class="certfc_docmnt_titl">
-                                    Certificate {{ $index + 1 }}
+                                    <!-- Certificate {{ $index + 1 }} -->
                                  </div>
                               </div>
                         @endforeach
@@ -771,3 +772,13 @@ We also encourage users to upload a photo of the service received, if possible
 </div>
 <!-- POPUP_SCRIPT 603 -->
 @endsection
+<!-- @section('script')
+   @auth
+   <script>
+      $(document).ready(function () {
+         $(".last_li_hide_new").addClass("last_li_hide_new_hide");
+         $(".comn_cont").addClass("comn_cont_show");
+      });
+   </script>
+   @endauth
+@endsection -->

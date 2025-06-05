@@ -68,7 +68,7 @@
          <div class="col-lg-auto">
             <!-- start footer nav -->
             <ul class="list-unstyled list-separator mb-2 footer-nav">
-               <li class="list-inline-item"><a href="#">Privacy</a></li>
+               <li class="list-inline-item"><a href="{{route('privacy')}}">Privacy</a></li>
                <li class="list-inline-item"><a href="#">Sitemap</a></li>
                <li class="list-inline-item"><a href="#">Cookies</a></li>
             </ul>

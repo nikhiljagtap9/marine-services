@@ -342,6 +342,7 @@
                                        </div>
                                        @if($selectedPlan->allow_port > 1  )
                                           <button type="button" class="btn btn-primary mt-3" id="addMorePortService">+ Add More</button>
+                                          <div id="portServiceError" class="text-danger mt-2"></div>
                                        @endif
                                     </div>
 
@@ -379,7 +380,7 @@
                                     <div class="col-sm-4" bis_skin_checked="1">
                                        <div class="" bis_skin_checked="1">
                                           <label class="required fw-medium mb-2">Certificates</label>
-                                          <input type="file" name="certificates[]" multiple class="form-control" placeholder="Enter Instagram">
+                                          <input type="file" name="certificates[]" multiple class="form-control" >
                                        </div>
                                        @if(!empty($company->certificates))
                                        @php
@@ -398,7 +399,7 @@
                                     <div class="col-sm-4" bis_skin_checked="1">
                                        <div class="" bis_skin_checked="1">
                                           <label class="required fw-medium mb-2">Photos</label>
-                                          <input type="file" name="photos[]" multiple class="form-control" placeholder="Enter X (Twitter)">
+                                          <input type="file" name="photos[]" multiple class="form-control" >
                                        </div>
                                        @if(!empty($company->photos))
                                        @php
@@ -517,9 +518,12 @@
 
    $('#addMorePortService').click(function () {
       if (blockIndex >= maxBlocks) {
-         alert('Maximum ' + maxBlocks + '  blocks allowed.');
+         $('#portServiceError').text('Maximum of ' + maxBlocks + ' blocks are allowed.');
          return;
       }
+
+      // Clear any previous error message
+      $('#portServiceError').text('');
 
       // Clone the first block
       let firstBlock = $('#portServiceBlocksWrapper .port_sinl_vend:first');

@@ -26,11 +26,14 @@
                 <table id="planTable" class="display table table-borderless text-nowrap">
                     <thead>
                         <tr>
-                            <th>Sr</th>
-                            <th>Campany Name</th>
-                            <th>Person Name</th>
-                            <th>Phone</th>
-                            <th></th>
+                           <th>Sr</th>
+                           <th>Campany Name</th>
+                           <th>Person Name</th>
+                           <th>Phone</th>
+                           <th>Ports</th>
+                           <th>Categories</th>
+                           <th>Countries</th>
+                           <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -40,6 +43,26 @@
                                  <td>{{ $provider->company_name ?? 'N/A' }}</td>
                                  <td>{{ $provider->contact_person_name ?? 'N/A' }}</td>
                                  <td>{{ $provider->phone ?? 'N/A' }}</td>
+                                 {{-- Ports --}}
+            <td>
+                @foreach($provider->portServiceDetails->unique('port_id') as $detail)
+                    {{ $detail->port->name ?? 'N/A' }}<br>
+                @endforeach
+            </td>
+
+            {{-- Categories --}}
+            <td>
+                @foreach($provider->portServiceDetails->unique('category_id') as $detail)
+                    {{ $detail->category->name ?? 'N/A' }}<br>
+                @endforeach
+            </td>
+
+            {{-- Countries --}}
+            <td>
+                @foreach($provider->portServiceDetails->unique('country_id') as $detail)
+                    {{ $detail->country->name ?? 'N/A' }}<br>
+                @endforeach
+            </td>
                                  <td>
                                     <a href="{{ route('admin.users.detail', $provider->active_subscription->id) }}" class="btn btn-sm btn-primary" target="_blank">
                                        View

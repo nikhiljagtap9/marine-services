@@ -29,9 +29,9 @@ class ServiceProviderDetailController extends Controller
     // Show the create form
     public function create()
     {
-        $countries = Country::all();
-        $ports = Port::with('country')->get();
-        $categories = Category::all();
+        $countries = Country::orderBy('name')->get();
+        $ports = Port::with('country')->orderBy('name')->get();
+        $categories = Category::orderBy('name')->get();
         $googleMapsKey = config('services.google_maps.key');
         return view('service-provider.create',compact('countries','ports','categories','googleMapsKey'));
     }
@@ -149,17 +149,17 @@ class ServiceProviderDetailController extends Controller
 
 
     public function getCities($country_id) {
-       $cities = City::where('country_id', $country_id)->get();
+       $cities = City::where('country_id', $country_id)->orderBy('name')->get();
        return response()->json($cities);
     }
 
     public function getPorts($country_id) {
-       $ports = Port::where('country_id', $country_id)->get();
+       $ports = Port::where('country_id', $country_id)->orderBy('name')->get();
        return response()->json($ports);
     }
 
     public function getSubService($service_id){
-       $subCategories = SubCategory::where('category_id', $service_id)->get();
+       $subCategories = SubCategory::where('category_id', $service_id)->orderBy('name')->get();
        return response()->json($subCategories);
     }
 
@@ -171,9 +171,9 @@ class ServiceProviderDetailController extends Controller
         $contact = ContactDetail::where('user_id', $userId)->first();
         $social = SocialMediaDetail::where('user_id', $userId)->first();
         $company = CompanyDetail::where('user_id', $userId)->first();
-        $countries = Country::all();
-        $ports = Port::all();
-        $categories = Category::all();
+        $countries = Country::orderBy('name')->get();
+        $ports = Port::orderBy('name')->get();
+        $categories = Category::orderBy('name')->get();
         $subCategories = SubCategory::all();
 
         // Now you can use $planId to fetch the selected plan
@@ -470,10 +470,10 @@ class ServiceProviderDetailController extends Controller
         $contact = ContactDetail::where('user_id', $userId)->first();
         $social = SocialMediaDetail::where('user_id', $userId)->first();
         $company = CompanyDetail::where('user_id', $userId)->first();
-        $countries = Country::all();
-        $ports = Port::all();
-        $categories = Category::all();
-        $subCategories = SubCategory::all();
+        $countries = Country::orderBy('name')->get();
+        $ports = Port::orderBy('name')->get();
+        $categories = Category::orderBy('name')->get();
+        $subCategories = SubCategory::orderBy('name')->get();
 
         // Now you can use $planId to fetch the selected plan
         $selectedPlan = Plan::find($decryptPlanId);
@@ -635,12 +635,27 @@ class ServiceProviderDetailController extends Controller
             $subscriptionId = $activeSubscription->id; // Use existing active subscription
         } else {
             // No active subscription found, create a new one
+            $startDate = Carbon::now();
+            $octFirst = Carbon::create($startDate->year, 10, 1);
+            if ($planId == 2 && $startDate->lt($octFirst)) {
+                // If plan is 2 and current date is before Oct 1, set end date to Oct 1
+                $endDate = $startDate->lt($octFirst) ? $octFirst : $startDate->copy()->addYear();
+            } else {
+                $endDate = $startDate->copy()->addYear();
+            }
+
             $newSubscription = Subscription::create([
                 'user_id' => $userId,
                 'plan_id' => $planId,
-                'start_date' => Carbon::now(),
-                'end_date' => Carbon::now()->addYear(),
+                'start_date' => $startDate,
+                'end_date' => $endDate,
             ]);
+            // $newSubscription = Subscription::create([
+            //     'user_id' => $userId,
+            //     'plan_id' => $planId,
+            //     'start_date' => Carbon::now(),
+            //     'end_date' => Carbon::now()->addYear(),
+            // ]);
             $subscriptionId = $newSubscription->id;
         }
         //*******************************************/
