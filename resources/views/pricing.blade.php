@@ -13,6 +13,10 @@
    .footer-dark.main-footer .container.pt-4{
    display: none;
    }
+
+   .section_4_1_1 {
+       background-image: linear-gradient(#ffd881, #f8c12f);
+   }
 </style>
 <link rel="stylesheet" href="{{ asset('assets/css/internal_page.css')}}">
 </div>
@@ -43,19 +47,17 @@
       </div>
       <div class="clear"></div>
       <div class="sectn_4_al">
-         <div class="section section_4_1">
+        
+          <div class="section section_4_1 section_4_1_1">
             <div class="sec_4_icon">
-               <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-star">
-                  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                  <path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z" />
-               </svg>
+               <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-gift"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 8m0 1a1 1 0 0 1 1 -1h16a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-16a1 1 0 0 1 -1 -1z" /><path d="M12 8l0 13" /><path d="M19 12v7a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-7" /><path d="M7.5 8a2.5 2.5 0 0 1 0 -5a4.8 8 0 0 1 4.5 5a4.8 8 0 0 1 4.5 -5a2.5 2.5 0 0 1 0 5" /></svg>
             </div>
             <div class="sect_4_titl">
-               FREE Silver Plan until Sept 15, 2025
+               Silver Plan <br> FREE Until 1 Sept 2025!
             </div>
             <div class="sect_4_titl_sub">
-               No credit card. No commitment.
-Enjoy FREE Silver Plan access until <b> September 15,</b> 2025—your free period ends on that date, no matter when you join.
+               Register anytime before 1 Sept and enjoy free access starting 1 July. <br>
+               The earlier you register, the longer your free access will last.
 
             </div>
             <div class="clear"></div>
