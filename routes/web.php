@@ -27,7 +27,14 @@ use App\Http\Controllers\Admin\UserListController;
 |
 */
 
-Route::get('/', [HomeController::class, 'index'])->name('index');
+
+// ❌ Block all other web routes
+// Block all other web routes not listed above
+Route::any('/', function () {
+    abort(403, 'Access Denied');
+})->where('any', '.*');
+
+//Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::get('/product-listing', [ListingController::class, 'index'])->name('product_listing');
 Route::get('/detail/{subscriptionId}', [ListingController::class, 'detail'])->name('detail');
 

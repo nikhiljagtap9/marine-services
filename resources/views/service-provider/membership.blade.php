@@ -730,15 +730,25 @@
                         // Convert dot notation to bracket notation (e.g., service_category.0.0 => service_category[0][0])
                         nameSelector = key.replace(/\.(\d+)/g, '[$1]');
 
-                        // Match input with bracket notation name
-                        let input = $(`[name="${nameSelector}"]`);
-
-                        if (input.length) {
-                           //input.last().after(`<div class="error-text text-danger">${errors[key][0]}</div>`);
-                            input.last().after(`<div class="error-text text-danger">${errors[key]}</div>`);
+                        // Special case for photos.* errors: target input[name="photos[]"]
+                        if (key.startsWith('photos')) {
+                           // file input with name photos[]
+                           let input = $(`[name="photos[]"]`);
+                           if (input.length) {
+                              input.last().after(`<div class="error-text text-danger">${errors[key][0] || errors[key]}</div>`);
+                           }
                         } else {
-                           // If field not found, fallback to alert or console
-                           console.warn(`Field not found for: ${key}`);
+
+                           // Match input with bracket notation name
+                           let input = $(`[name="${nameSelector}"]`);
+
+                           if (input.length) {
+                              //input.last().after(`<div class="error-text text-danger">${errors[key][0]}</div>`);
+                              input.last().after(`<div class="error-text text-danger">${errors[key]}</div>`);
+                           } else {
+                              // If field not found, fallback to alert or console
+                              console.warn(`Field not found for: ${key}`);
+                           }
                         }
                   });
                    $('#responseMessage')
