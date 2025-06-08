@@ -15,6 +15,8 @@ use App\Http\Controllers\PricingController;
 use App\Http\Controllers\ServiceProviderDetailController;
 use App\Http\Controllers\ServiceProvider\ServiceProviderDashboardController;
 use App\Http\Controllers\Admin\UserListController;
+use App\Http\Controllers\ServiceProvider\EnquiryController;
+use App\Http\Controllers\ServiceProvider\QuoteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,15 +30,15 @@ use App\Http\Controllers\Admin\UserListController;
 */
 
 
-// ❌ Block all other web routes
-// Block all other web routes not listed above
-Route::any('/', function () {
-    abort(403, 'Access Denied');
-})->where('any', '.*');
+// Block all other web routes
+// Route::any('/', function () {
+//     abort(403, 'Access Denied');
+// })->where('any', '.*');
 
-//Route::get('/', [HomeController::class, 'index'])->name('index');
+Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::get('/product-listing', [ListingController::class, 'index'])->name('product_listing');
 Route::get('/detail/{subscriptionId}', [ListingController::class, 'detail'])->name('detail');
+Route::post('/enquiry-store', [ListingController::class, 'enquiryStore'])->name('enquiry.store');
 
 Route::get('/pricing', [PricingController::class, 'index'])->name('pricing');
 
@@ -122,6 +124,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 Route::prefix('service-provider')->middleware(['auth'])->group(function () {
     Route::get('/index', [ServiceProviderDashboardController::class, 'index'])->name('service-provider.index');
+    Route::get('/enquiries', [EnquiryController::class, 'enquiriesByServiceUser'])->name('enquiry.index');
+    Route::post('/quotes/store', [QuoteController::class, 'store'])->name('quotes.store');
+    Route::get('/quotes', [QuoteController::class, 'quotesByServiceUser'])->name('quotes.list');
 });
 
 

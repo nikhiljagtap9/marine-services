@@ -108,24 +108,21 @@
     <!-- Navbar Items -->
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav m-auto mb-2 mb-lg-0" data-aos="fade-down" data-aos-delay="200">
+        <li class="nav-item" data-aos="fade-up" data-aos-delay="550">
+          <a class="nav-link actv_home" href="{{ url('/') }}">Home</a>
+        </li> 
+         <li class="nav-item" data-aos="fade-up" data-aos-delay="600">
+          <a class="nav-link actv_expl" href="{{route('product_listing')}}">Explore</a>
+        </li> 
          <li class="nav-item" data-aos="fade-up" data-aos-delay="700">
           <a class="nav-link actv_pric actv_home" href="{{route('pricing')}}">Pricing</a>
         </li>
-        <!-- <li class="nav-item" data-aos="fade-up" data-aos-delay="550">
-          <a class="nav-link actv_home" href="{{ url('/') }}">Home</a>
-        </li> -->
-        <!-- <li class="nav-item" data-aos="fade-up" data-aos-delay="600">
-          <a class="nav-link actv_expl" href="{{route('product_listing')}}">Explore</a>
-        </li> -->
-        <!-- <li class="nav-item" data-aos="fade-up" data-aos-delay="700">
-          <a class="nav-link actv_pric actv_home" href="{{route('pricing')}}">Pricing</a>
-        </li> -->
-        <!-- <li class="nav-item" data-aos="fade-up" data-aos-delay="800">
+         <li class="nav-item" data-aos="fade-up" data-aos-delay="800">
           <a class="nav-link about_activ" href="{{route('about_us')}}">About Us</a>
         </li>
         <li class="nav-item" data-aos="fade-up" data-aos-delay="900">
           <a class="nav-link" href="#">Contact Us</a>
-        </li> -->
+        </li> 
       </ul>
 
       <!-- Add Listing Button (Mobile) -->

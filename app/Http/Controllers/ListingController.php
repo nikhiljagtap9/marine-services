@@ -8,6 +8,7 @@ use App\Models\ServiceProviderDetail;
 use App\Models\Country;
 use App\Models\Category;
 use App\Models\Subscription;
+use App\Models\Enquiry;
 
 class ListingController extends Controller
 {
@@ -156,5 +157,32 @@ class ListingController extends Controller
         ])->where('user_id', $subscription->user_id)->firstOrFail();
 
         return view('detail', compact('provider', 'subscription'));
+    }
+
+    public function enquiryStore(Request $request)
+    {
+        $request->validate([
+            'company_name' => 'required|string|max:255',
+            'your_name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'comment' => 'required|string',
+            'photo' => 'nullable|image|max:1024',
+            'subscription_id' => 'required|exists:subscriptions,id',
+            'service_user_id' => 'required|exists:users,id',
+        ]);
+
+        $photoPath = $request->file('photo')?->store('uploads/enquiries', 'public');
+
+        Enquiry::create([
+            'service_user_id' => $request->service_user_id,
+            'subscription_id' => $request->subscription_id,
+            'company_name' => $request->company_name,
+            'your_name' => $request->your_name,
+            'email' => $request->email,
+            'comment' => $request->comment,
+            'photo' => $photoPath,
+        ]);
+
+        return redirect()->back()->with('success', 'Enquiry submitted successfully.')->withFragment('enquiryForm');
     }
 }

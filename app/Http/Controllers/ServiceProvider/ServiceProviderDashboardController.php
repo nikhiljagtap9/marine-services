@@ -4,12 +4,34 @@ namespace App\Http\Controllers\ServiceProvider;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\ServiceProviderDetail;
 
 class ServiceProviderDashboardController extends Controller
 {
+   
     public function index()
     {
-        return view('service-provider.dashboard.index'); 
+        $user = Auth::user();
+
+        // Check if the logged-in user is a service provider
+        if ($user && $user->user_type === 'service_provider') {
+            
+            // Get additional service provider details (if needed)
+            $providerDetail = ServiceProviderDetail::with([
+                'companyDetail',
+                'contactDetail',
+                'portServiceDetails.country',
+                'portServiceDetails.port',
+                'portServiceDetails.category',
+                'socialMediaDetails'
+            ])->where('user_id', $user->id)->first();
+
+            return view('service-provider.dashboard.index', compact('user', 'providerDetail'));
+        }
+
+        // Not a service provider
+        abort(403, 'Unauthorized access');
     }
 
 }

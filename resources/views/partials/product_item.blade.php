@@ -134,12 +134,29 @@
                 </a>
             </div>
         </div>
-        <div class="reqs_qut">
+        <!-- <div class="reqs_qut">
             <label for="quoteOption">
                 <i class="fa fa-file-text-o" aria-hidden="true"></i>
                 <div class="req_text">Request a Quote</div>
             </label>
             <input type="checkbox" name="quoteSelection" id="quoteOption" class="reqs_cls" value="quote">
+        </div> -->
+
+
+        <div class="reqs_qut">
+            <label for="quoteOption{{ $provider->id }}">
+                <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                <div class="req_text">Request a Quote</div>
+            </label>
+            <input type="checkbox" class="reqs_cls quoteOption" data-id="{{ $provider->id }}" name="selected_providers[]" value="{{ $provider->id }}">
+            <!-- Hidden inputs tied to this checkbox -->
+            <input type="hidden" name="quotes[{{ $provider->id }}][user_id]" value="{{ $provider->user_id }}">
+            <input type="hidden" name="quotes[{{ $provider->id }}][company_name]" value="{{ $provider->company_name }}">
+            @php
+                $categoryIds = $provider->portServiceDetails->pluck('category_id')->unique()->filter()->implode(',');
+            @endphp
+            <input type="hidden" name="quotes[{{ $provider->id }}][category_id]" value="{{ $categoryIds }}">
+
         </div>
         <div class="clear"></div>
         </div>

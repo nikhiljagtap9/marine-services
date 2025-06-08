@@ -3,6 +3,9 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Auth;
+use App\Models\ServiceProviderDetail;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +22,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        View::composer('*', function ($view) {
+            $user = Auth::user();
+
+            if ($user) {
+                $view->with('user', $user);
+
+                if ($user->user_type === 'service_provider') {
+                    $providerDetail = ServiceProviderDetail::where('user_id', $user->id)->first();
+                    $view->with('providerDetail', $providerDetail);
+                }
+            }
+        });
     }
 }

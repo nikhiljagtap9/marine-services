@@ -51,7 +51,7 @@ class ServiceProviderDetailController extends Controller
             'contact_person_name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
             'country' => 'required|string|max:100',
-            'city' => 'required|string|max:100',
+            'city' => 'nullable|string|max:100',
             'office_address' => 'required|string',
             'port_id' => 'required|string',
             'service_type' => 'required|string',

@@ -526,10 +526,10 @@
                </div>
             </div>
             <hr class="my-5">
-            <div class="mb-4 mb-lg-0" bis_skin_checked="1">
-               <h4 class="fw-semibold fs-3 mb-4">Leave a <span class="font-caveat text-primary">Rating & Comment</span></h4>
+            <div class="mb-4 mb-lg-0" bis_skin_checked="1" id="enquiryForm">
+               <h4 class="fw-semibold fs-3 mb-4">Leave a <span class="font-caveat text-primary">Enquiry & Comment</span></h4>
                <div class="rating_star_a">
-                  <div class="ad_rting_titl required ">Add Rating</div>
+                  <div class="ad_rting_titl required ">Add Enquiry</div>
                   <i class="fa fa-star-o" aria-hidden="true"></i>
                   <i class="fa fa-star-o" aria-hidden="true"></i>
                   <i class="fa fa-star-o" aria-hidden="true"></i>
@@ -538,69 +538,70 @@
                   <div class="clear"></div>
                </div>
                <div class="clear"></div>
-               <form class="row g-4">
+               @if(session('success'))
+                  <div class="alert alert-success">
+                     {{ session('success') }}
+                  </div>
+               @endif
+               <form  class="row g-4" action="{{ route('enquiry.store') }}" method="POST" enctype="multipart/form-data">
+                  @csrf
                   <div class="col-sm-12" bis_skin_checked="1">
+                     
                      <!-- start form group -->
                      <div class="" bis_skin_checked="1">
+                        <!-- Hidden inputs for subscription_id and user_id -->
+                        <input type="hidden" name="subscription_id" value="{{ $subscription->id }}">
+                        <input type="hidden" name="service_user_id" value="{{ $subscription->user_id }}">
                         <label class="required fw-medium mb-2">Company Name</label>
-                        <input type="text" class="form-control" placeholder="Enter Company Name" required="">
+                        <input type="text" name="company_name" class="form-control @error('company_name') is-invalid @enderror" placeholder="Enter Company Name">
+                        @error('company_name')
+                                <div class="invalid-feedback text-start">{{ $message }}</div>
+                        @enderror
                      </div>
                      <!-- end /. form group -->
                   </div>
 
-                  
-
-
-                   
                   <div class="col-sm-6" bis_skin_checked="1">
                      <!-- start form group -->
                      <div class="" bis_skin_checked="1">
                         <label class="required fw-medium mb-2">Your Name</label>
-                        <input type="text" class="form-control" placeholder="Enter Your Name" >
+                        <input type="text" name="your_name" class="form-control @error('your_name') is-invalid @enderror" placeholder="Enter Your Name" >
+                        @error('your_name')
+                                <div class="invalid-feedback text-start">{{ $message }}</div>
+                        @enderror
                      </div>
                      <!-- end /. form group -->
                   </div>
-
 
                   <div class="col-sm-6" bis_skin_checked="1">
                      <!-- start form group -->
                      <div class="" bis_skin_checked="1">
                         <label class="required fw-medium mb-2">Company Email Address</label>
-                        <input type="text" class="form-control" placeholder="Enter Company Email Address" required="">
+                        <input type="text" name="email" class="form-control @error('email') is-invalid @enderror" placeholder="Enter Company Email Address">
+                        @error('email')
+                                <div class="invalid-feedback text-start">{{ $message }}</div>
+                        @enderror
                      </div>
                      <!-- end /. form group -->
                   </div>
-                   
-
 
                   <div class="col-sm-12" bis_skin_checked="1">
                      <!-- start form group -->
                      <div class="" bis_skin_checked="1">
                         <label class="required fw-medium mb-2">Comment</label>
-                        <textarea class="form-control" rows="7" placeholder="Tell us what we can help you with!"></textarea>
+                        <textarea class="form-control @error('comment') is-invalid @enderror" name="comment" rows="7" placeholder="Tell us what we can help you with!"></textarea>
+                        @error('comment')
+                                <div class="invalid-feedback text-start">{{ $message }}</div>
+                        @enderror
                      </div>
                      <!-- end /. form group -->
                   </div>
-
-
-
-
-
-                  <div class="col-sm-6" bis_skin_checked="1">
-                     <!-- start form group -->
-                     <div class="" bis_skin_checked="1">
-                        <label class="required fw-medium mb-2">Upload Invoice</label>
-                        <input type="file" class="form-control" placeholder="" >
-                     </div>
-                     <!-- end /. form group -->
-                  </div>
-
 
                   <div class="col-sm-6" bis_skin_checked="1">
                      <!-- start form group -->
                      <div class="" bis_skin_checked="1">
                         <label class=" fw-medium mb-2">Upload Photo</label>
-                        <input type="file" class="form-control"  >
+                        <input type="file"  name="photo" class="form-control"  >
                      </div>
                      <!-- end /. form group -->
                   </div>

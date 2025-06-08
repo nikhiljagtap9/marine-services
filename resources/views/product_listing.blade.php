@@ -164,7 +164,10 @@
    <div id="hotel-list">
       <h3 class="reslt_fnd" > {{ $products->total() }} Result{{ $products->total() !== 1 ? 's' : '' }} Found</h3>
       <div id="product-list">
-         @include('partials.product_item', ['products' => $products])
+         <form id="quoteRequestForm" action="{{ route('quotes.store') }}" method="POST">
+         @csrf
+            @include('partials.product_item', ['products' => $products])
+         </form>
       </div>
      
       <div class="clear"></div>
@@ -204,10 +207,10 @@
 </div>
 <!-- Hidden content to show when checkbox is selected -->
 <div id="quoteContent" class="conte_slide_text" style="display: none; margin-top: 10px;">
-   <a href="" class="" >
-   <i class="fa fa-file-text-o" aria-hidden="true"></i>
-   Submit Quote
-   </a>
+   <button type="submit" form="quoteRequestForm" class="btn btn-primary">
+      <i class="fa fa-file-text-o" aria-hidden="true"></i>
+      Submit Quote
+   </button>
 </div>
 @endsection
 @section('scripts')
@@ -330,15 +333,26 @@
    
 </script>  
 <script>
-   const checkbox = document.getElementById('quoteOption');
-   const quoteContent = document.getElementById('quoteContent');
-   
-   checkbox.addEventListener('change', function () {
-      if (this.checked) {
-         quoteContent.style.display = 'block';
-      }
-   });
+document.addEventListener('DOMContentLoaded', function () {
+    const checkboxes = document.querySelectorAll('.quoteOption');
+    const quoteContent = document.getElementById('quoteContent');
+
+    function toggleQuoteButton() {
+        // Check if at least one checkbox is checked
+        const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
+        quoteContent.style.display = anyChecked ? 'block' : 'none';
+    }
+
+    checkboxes.forEach(function (checkbox) {
+        checkbox.addEventListener('change', toggleQuoteButton);
+    });
+
+    // Optional: run on page load in case some checkboxes are pre-selected
+    toggleQuoteButton();
+});
 </script>
+
+
 <script>
       // get port
       $('#country-select').on('change', function() {
