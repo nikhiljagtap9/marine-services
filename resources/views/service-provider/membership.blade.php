@@ -380,28 +380,34 @@
                                     <div class="col-sm-4" bis_skin_checked="1">
                                        <div class="" bis_skin_checked="1">
                                           <label class="required fw-medium mb-2">Certificates</label>
-                                          <input type="file" name="certificates[]" multiple class="form-control" >
+                                          <input type="file" name="certificates[]" multiple class="form-control" id="certificate-upload" accept=".jpg,.jpeg,.png">
+                                          <small class="text-muted">Max 20 photos (jpeg, png, jpg, max size 1MB each)</small>
                                        </div>
-                                       @if(!empty($company->certificates))
-                                       @php
-                                       $certs = json_decode($company->certificates, true);
-                                       @endphp
-                                       <ul>
-                                          @foreach($certs as $cert)
-                                          <li>
-                                             <a href="{{ asset('storage/' . $cert) }}" target="_blank">View Certificate</a>
-                                          </li>
-                                          @endforeach
-                                       </ul>
-                                       @endif
+                                       <div class="row" id="certificate-preview">
+                                          @if(!empty($company->certificates))
+                                          @php
+                                          $certs = json_decode($company->certificates, true);
+                                          @endphp
+                                             @foreach($certs as $key => $cert)
+                                             <div class="col-md-3 position-relative mb-2 existing-cert" id="cert-{{ $key }}">
+                                                         <img src="{{ asset('storage/' . $cert) }}" class="img-thumbnail mb-2"/>
+                                                         {{-- Optional Remove Button --}}
+                                                         <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 remove-db-cert"
+                                                            data-key="{{ $key }}" data-path="{{ $cert }}">&times;</button>
+                                                         <input type="hidden" name="existing_cert[]" value="{{ $cert }}">
+                                                      </div>
+                                             @endforeach
+                                          @endif
+                                       </div>
 
                                     </div>
                                     <div class="col-sm-4" bis_skin_checked="1">
                                        <div class="" bis_skin_checked="1">
                                           <label class="required fw-medium mb-2">Photos</label>
-                                          <input type="file" name="photos[]" multiple class="form-control" >
+                                          <input type="file" name="photos[]" multiple class="form-control" id="photo-upload" accept=".jpg,.jpeg,.png">
+                                          <small class="text-muted">Min 3 & max 20 photos (jpeg, png, jpg, max size 1MB each)</small>
                                        </div>
-                                       @if(!empty($company->photos))
+                                       <!-- @if(!empty($company->photos))
                                        @php
                                        $photos = json_decode($company->photos, true);
                                        @endphp
@@ -412,7 +418,25 @@
                                           </div>
                                           @endforeach
                                        </div>
-                                       @endif
+                                       @endif -->
+
+
+                                       <div class="row" id="photo-preview">
+                                          @if(!empty($company->photos))
+                                                @php
+                                                   $photos = json_decode($company->photos, true);
+                                                @endphp
+                                                @foreach($photos as $key => $photo)
+                                                   <div class="col-md-3 position-relative mb-2 existing-photo" id="photo-{{ $key }}">
+                                                      <img src="{{ asset('storage/' . $photo) }}" class="img-thumbnail mb-2 " width="100" />
+                                                      {{-- Optional Remove Button --}}
+                                                      <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 remove-db-photo"
+                                                         data-key="{{ $key }}" data-path="{{ $photo }}">&times;</button>
+                                                      <input type="hidden" name="existing_photos[]" value="{{ $photo }}">
+                                                   </div>
+                                                @endforeach
+                                          @endif
+                                       </div>
                                     </div>
 
                                     <div class="col-sm-4" bis_skin_checked="1">
@@ -776,5 +800,195 @@
    //    });
    });
 </script>
+
+<script>
+    // multiple upload photo, preview,removed
+    let selectedFiles = [];
+   
+    $('#photo-upload').on('change', function (e) {
+        const newFiles = Array.from(e.target.files);
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+
+        newFiles.forEach((file) => {
+            // if (!allowedTypes.includes(file.type)) {
+            //     alert(file.name + " is not a valid image.");
+            //     return;
+            // }
+            // if (file.size > 1024 * 1024) {
+            //     alert(file.name + " exceeds 1MB.");
+            //     return;
+            // }
+
+            // if ((selectedFiles.length + $('.existing-photo').length) >= 20) {
+            //    <div class="error-text text-danger">You can upload a maximum of 20 photos</div>
+            //     return;
+            // }
+
+            selectedFiles.push(file);
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const index = selectedFiles.length - 1;
+                const previewHtml = `
+                    <div class="col-md-3 position-relative mb-2 new-photo" data-index="${index}">
+                        <img src="${e.target.result}" class="img-thumbnail">
+                        <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 remove-photo">&times;</button>
+                    </div>
+                `;
+                $('#photo-preview').append(previewHtml);
+            };
+            reader.readAsDataURL(file);
+        });
+
+        updateFileInput();
+    });
+
+    // Remove new photo
+    $(document).on('click', '.remove-photo', function () {
+        const index = $(this).parent().data('index');
+        selectedFiles.splice(index, 1);
+        $(this).parent().remove();
+        rebuildNewPreviews();
+        updateFileInput();
+    });
+
+    // Remove existing photo
+    $(document).on('click', '.remove-db-photo', function () {
+        const key = $(this).data('key');
+        $(this).parent().remove();
+    });
+
+    function updateFileInput() {
+        const input = document.getElementById('photo-upload');
+        const dt = new DataTransfer();
+        selectedFiles.forEach(file => dt.items.add(file));
+        input.files = dt.files;
+    }
+
+    function rebuildNewPreviews() {
+        $('.new-photo').remove();
+        selectedFiles.forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const html = `
+                    <div class="col-md-3 position-relative mb-2 new-photo" data-index="${index}">
+                        <img src="${e.target.result}" class="img-thumbnail">
+                        <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 remove-photo">&times;</button>
+                    </div>
+                `;
+                $('#photo-preview').append(html);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+</script>
+
+<script>
+    // multiple upload certificate, preview,removed
+let selectedCerts = [];
+
+$('#certificate-upload').on('change', function (e) {
+    const newFiles = Array.from(e.target.files);
+    const allowedTypes = [
+        'image/jpeg', 'image/png', 'image/jpg',
+        'application/pdf', 'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    ];
+
+    newFiles.forEach((file) => {
+        if (!allowedTypes.includes(file.type)) {
+            alert(file.name + " is not a valid file.");
+            return;
+        }
+
+        if (file.size > 1024 * 1024) {
+            alert(file.name + " exceeds 1MB.");
+            return;
+        }
+
+        if ((selectedCerts.length + $('.existing-cert').length) >= 20) {
+            alert("You can upload a maximum of 20 certificates.");
+            return;
+        }
+
+        selectedCerts.push(file);
+        const index = selectedCerts.length - 1;
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            let previewHtml = '';
+            if (file.type.startsWith('image/')) {
+                previewHtml = `
+                    <div class="col-md-3 position-relative mb-2 new-cert" data-index="${index}">
+                        <img src="${e.target.result}" class="img-thumbnail">
+                        <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 remove-cert">&times;</button>
+                    </div>
+                `;
+            } else {
+                previewHtml = `
+                    <div class="col-md-3 position-relative mb-2 new-cert" data-index="${index}">
+                        <div class="border p-2">${file.name}</div>
+                        <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 remove-cert">&times;</button>
+                    </div>
+                `;
+            }
+
+            $('#certificate-preview').append(previewHtml);
+        };
+        reader.readAsDataURL(file);
+    });
+
+    updateCertInput();
+});
+
+// Remove new cert
+$(document).on('click', '.remove-cert', function () {
+    const index = $(this).parent().data('index');
+    selectedCerts.splice(index, 1);
+    $(this).parent().remove();
+    rebuildNewCerts();
+    updateCertInput();
+});
+
+// Remove existing cert
+$(document).on('click', '.remove-db-cert', function () {
+    $(this).closest('.existing-cert').remove();
+});
+
+function updateCertInput() {
+    const input = document.getElementById('certificate-upload');
+    const dt = new DataTransfer();
+    selectedCerts.forEach(file => dt.items.add(file));
+    input.files = dt.files;
+}
+
+function rebuildNewCerts() {
+    $('.new-cert').remove();
+    selectedCerts.forEach((file, index) => {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            let html = '';
+            if (file.type.startsWith('image/')) {
+                html = `
+                    <div class="col-md-3 position-relative mb-2 new-cert" data-index="${index}">
+                        <img src="${e.target.result}" class="img-thumbnail">
+                        <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 remove-cert">&times;</button>
+                    </div>
+                `;
+            } else {
+                html = `
+                    <div class="col-md-3 position-relative mb-2 new-cert" data-index="${index}">
+                        <div class="border p-2">${file.name}</div>
+                        <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 remove-cert">&times;</button>
+                    </div>
+                `;
+            }
+            $('#certificate-preview').append(html);
+        };
+        reader.readAsDataURL(file);
+    });
+}
+</script>
+
+
 
 @endsection

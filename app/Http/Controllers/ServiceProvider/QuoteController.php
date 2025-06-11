@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Quote;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Category;
-
+use App\Models\ChatMessage;
 class QuoteController extends Controller
 {
     public function store(Request $request)
@@ -58,6 +58,20 @@ class QuoteController extends Controller
         $categories = Category::whereIn('id', $allCategoryIds)->pluck('name', 'id');
 
         return view('service-provider.dashboard.quote', compact('quotes', 'categories'));
+    }
+
+    public function show($id)
+    {
+        $quote = Quote::findOrFail($id);
+
+        $chat = ChatMessage::where('quotation_id', $id)->first();
+        $chatMessages = $chat ? $chat->message : [];
+
+        return view('service-provider.dashboard.quote_detail', [
+            'quote' => $quote,
+            'chatMessages' => $chatMessages,
+            'authId' => auth()->id()
+        ]);
     }
 
 

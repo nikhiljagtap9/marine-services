@@ -77,7 +77,7 @@
                               </div>
                            </div>
                         </div>
-                        @if ($errors->any())
+                        <!-- @if ($errors->any())
                            <div class="alert alert-danger">
                               <ul>
                                     @foreach ($errors->all() as $error)
@@ -85,9 +85,10 @@
                                     @endforeach
                               </ul>
                            </div>
-                        @endif
+                        @endif -->
+                        <div id="formErrors" class="alert alert-danger d-none"></div>
                         <!-- Form -->
-                        <form action="{{ route('service-provider.store') }}" method="POST" enctype="multipart/form-data"> 
+                        <form id="multiStepForm"  method="POST" enctype="multipart/form-data"> 
                            @csrf
                            @include('service-provider.steps.step1')
                            @include('service-provider.steps.step2')
@@ -217,6 +218,49 @@
         }
     });
 
+</script>
+
+
+<script>
+// form Submit
+$(document).ready(function () {
+    $('#multiStepForm').on('submit', function (e) {
+        e.preventDefault();
+
+        var formData = new FormData(this);
+
+        $.ajax({
+            url: "{{ route('service-provider.store') }}",
+            method: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            beforeSend: function () {
+                $('#formErrors').addClass('d-none').html(''); // clear errors
+            },
+            success: function (response) {
+                if (response.success) {
+                    window.location.href = response.redirect_url ;
+                } else {
+                    $('#formErrors').removeClass('d-none').html("Something went wrong. Please try again.");
+                }
+            },
+            error: function (xhr) {
+                if (xhr.status === 422) {
+                    var errors = xhr.responseJSON.errors;
+                    let errorHtml = '<ul>';
+                    $.each(errors, function (key, value) {
+                        errorHtml += '<li>' + value[0] + '</li>';
+                    });
+                    errorHtml += '</ul>';
+                    $('#formErrors').removeClass('d-none').html(errorHtml);
+                } else {
+                    $('#formErrors').removeClass('d-none').html("An unexpected error occurred.");
+                }
+            }
+        });
+    });
+});
 </script>
 
 

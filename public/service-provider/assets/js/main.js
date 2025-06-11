@@ -109,6 +109,22 @@
                     $(this).removeClass("is-invalid");
                 }
             }
+
+            // Company logo file size check (if this is the logo input)
+            if ($(this).attr('type') === 'file' && this.files.length > 0) {
+                const maxSize = 1024 * 1024; // 1MB
+                const file = this.files[0];
+
+                if (file.size > maxSize) {
+                    $(this).addClass("is-invalid");
+                    $('#formErrors').removeClass('d-none').html("Company logo must be less than 1MB.");
+                    valid = false;
+                } else {
+                    // Clear previous file error if any
+                    $(this).removeClass("is-invalid");
+                    $('#formErrors').addClass('d-none').html('');
+                }
+            }
         });
 
 

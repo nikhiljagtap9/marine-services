@@ -16831,7 +16831,7 @@ ul {
   font-family: 'Roboto', sans-serif;
   cursor: pointer;
   display: inline-block;
-  font-size: 17px;
+  font-size: 30px;
   font-weight: 500;
   -webkit-box-shadow: none;
   box-shadow: none;
@@ -16839,8 +16839,8 @@ ul {
   border: 1px solid #fff;
   color: #fff;
   border-radius: 45px;
-  background-color: transparent;
-  padding: 10px 36px;
+  background-color: #124F98;
+  padding: 20px 60px;
   -webkit-transition: all 0.3s ease-in-out;
   -o-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;

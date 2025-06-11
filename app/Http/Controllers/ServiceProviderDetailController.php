@@ -36,17 +36,87 @@ class ServiceProviderDetailController extends Controller
         return view('service-provider.create',compact('countries','ports','categories','googleMapsKey'));
     }
 
-     // Store submitted data
+    // Store submitted data
+    // public function storeOld(Request $request)
+    // {   
+    //     $validator = Validator::make($request->all(), [
+    //         // Your validation rules
+    //         'email' => 'required|email|unique:users,email',
+    //         'password' => 'required|string|confirmed|min:6',
+    //         'company_name' => 'required|string|max:255',
+    //         'company_logo' => 'nullable|image|mimes:jpg,png,jpeg|max:1024',
+    //         'company_description' => 'nullable|string',
+    //         'contact_person_name' => 'required|string|max:255',
+    //         'phone' => 'required|string|max:20',
+    //         'country' => 'required|string|max:100',
+    //         'city' => 'nullable|string|max:100',
+    //         'office_address' => 'required|string',
+    //         'port_id' => 'required|string',
+    //         'service_type' => 'required|string',
+    //         'sub_service_type' => 'required|string',
+    //         'contact_number' => 'nullable|string|max:20',
+    //     ]);
+
+    //     if ($validator->fails()) {
+    //         return back()
+    //             ->withErrors($validator)
+    //             ->withInput()
+    //             ->with('current_step', $request->input('current_step', 1));
+    //     }
+
+    //    // dd($request);
+
+    //     // 1. Create User
+    //     $user = User::create([
+    //         'name' => $request->contact_person_name,
+    //         'email' => $request->email,
+    //         'password' => Hash::make($request->password),
+    //         'user_type' => 'service_provider'
+    //     ]);
+
+    //     // 2. Handle logo upload
+    //     $logoPath = null;
+    //     if ($request->hasFile('company_logo')) {
+    //         $logoPath = $request->file('company_logo')->store('logos', 'public');
+    //     }
+
+        
+
+    //      // 3. Save service provider details
+    //     ServiceProviderDetail::create([
+    //         'user_id' => $user->id,
+    //         'company_name' => $request->company_name,
+    //         'company_logo' => $logoPath,
+    //         'company_description' => $request->company_description,
+    //         'contact_person_name' => $request->contact_person_name,
+    //         'phone' => $request->phone,
+    //        // 'email' => $request->email,
+    //         'country' => $request->country,
+    //         'city' => $request->city,
+    //         'office_address' => $request->office_address,
+    //         'lat' => $request->lat,
+    //         'lng' => $request->lng,
+    //         'port_id' => $request->port_id,
+    //         'service_type' => $request->service_type,
+    //         'sub_service_type' => $request->sub_service_type,
+    //         'contact_number' => $request->contact_number,
+    //     ]);
+
+    //     session(['registration_success' => true]);
+    //     // Log the user in after registration
+    //     Auth::login($user);
+    //         return redirect()->route('service-provider.confirm');
+    // }
+
+
+    // Store submitted data
     public function store(Request $request)
-    {   
-        $request->validate([
-             // User credentials
+    {
+        $validator = Validator::make($request->all(), [
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|confirmed|min:6',
-
-             // Company details
             'company_name' => 'required|string|max:255',
-            'company_logo' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
+            'company_logo' => 'nullable|image|mimes:jpg,png,jpeg|max:1024',
             'company_description' => 'nullable|string',
             'contact_person_name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
@@ -59,14 +129,21 @@ class ServiceProviderDetailController extends Controller
             'contact_number' => 'nullable|string|max:20',
         ]);
 
-       // dd($request);
+        if ($validator->fails()) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $validator->errors(),
+                ], 422);
+            }
+        }
 
         // 1. Create User
         $user = User::create([
             'name' => $request->contact_person_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'user_type' => 'service_provider'
+            'user_type' => 'service_provider',
         ]);
 
         // 2. Handle logo upload
@@ -75,9 +152,7 @@ class ServiceProviderDetailController extends Controller
             $logoPath = $request->file('company_logo')->store('logos', 'public');
         }
 
-        
-
-         // 3. Save service provider details
+        // 3. Save service provider details
         ServiceProviderDetail::create([
             'user_id' => $user->id,
             'company_name' => $request->company_name,
@@ -85,7 +160,6 @@ class ServiceProviderDetailController extends Controller
             'company_description' => $request->company_description,
             'contact_person_name' => $request->contact_person_name,
             'phone' => $request->phone,
-           // 'email' => $request->email,
             'country' => $request->country,
             'city' => $request->city,
             'office_address' => $request->office_address,
@@ -100,8 +174,17 @@ class ServiceProviderDetailController extends Controller
         session(['registration_success' => true]);
         // Log the user in after registration
         Auth::login($user);
-            return redirect()->route('service-provider.confirm');
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'redirect_url' => route('service-provider.confirm'),
+            ]);
+        }
+
+        return redirect()->route('service-provider.confirm');
     }
+
 
     public function confirm()
     {
@@ -232,9 +315,9 @@ class ServiceProviderDetailController extends Controller
         $request->validate([
             // Contact
             'alternative_email' => 'nullable|email',
-            'office_telephone' => 'required|regex:/^[0-9]+$/|max:20',
-            'mobile_number'    => 'required|regex:/^[0-9]+$/|max:20',
-            'whatsapp_number'  => 'nullable|regex:/^[0-9]+$/|max:20',
+            'office_telephone' => 'required|regex:/^[0-9 +]+$/|max:20',
+            'mobile_number'    => 'required|regex:/^[0-9 +]+$/|max:20',
+            'whatsapp_number'  => 'nullable|regex:/^[0-9 +]+$/|max:20',
             'has_emergency_contact' => 'required|boolean',
             'emergency_contact_number' => 'nullable|required_if:has_emergency_contact,1',
             
@@ -244,8 +327,8 @@ class ServiceProviderDetailController extends Controller
             'twitter' => 'nullable|url',
 
             // Company
-            'slogan' => $isBasic ? 'nullable|string|max:255' : 'required|string|max:255',
-            'about' => $isBasic ? 'nullable|string|max:500' : 'required|string|max:500',
+            'slogan' => $isBasic ? 'nullable|string' : 'required|string',
+            'about' => $isBasic ? 'nullable|string' : 'required|string',
             'brands' => 'nullable|string',
             'reference_shipowners' => 'nullable|string',
 
@@ -547,9 +630,10 @@ class ServiceProviderDetailController extends Controller
         $request->validate([
             // Contact
             'alternative_email' => 'nullable|email',
-            'office_telephone' => 'required|regex:/^[0-9]+$/|max:20',
-            'mobile_number'    => 'required|regex:/^[0-9]+$/|max:20',
-            'whatsapp_number'  => 'nullable|regex:/^[0-9]+$/|max:20',
+            'office_telephone' => 'required|regex:/^[0-9 +]+$/|max:20',
+            'mobile_number'    => 'required|regex:/^[0-9 +]+$/|max:20',
+            'whatsapp_number'  => 'nullable|regex:/^[0-9 +]+$/|max:20',
+
             'has_emergency_contact' => 'required|boolean',
             'emergency_contact_number' => 'nullable|required_if:has_emergency_contact,1',
             
@@ -559,8 +643,8 @@ class ServiceProviderDetailController extends Controller
             'twitter' => 'nullable|url',
 
             // Company
-            'slogan' => $isBasic ? 'nullable|string|max:255' : 'required|string|max:255',
-            'about' => $isBasic ? 'nullable|string|max:500' : 'required|string|max:500',
+            'slogan' => $isBasic ? 'nullable|string' : 'required|string',
+            'about' => $isBasic ? 'nullable|string' : 'required|string',
             'brands' => 'nullable|string',
             'reference_shipowners' => 'nullable|string',
 
@@ -570,7 +654,6 @@ class ServiceProviderDetailController extends Controller
             'photos' => [
                 $isBasic || $hasPhotos ? 'nullable' : 'required',
                 'array',
-                'min:3',
             ],
             'photos.*' => 'image|mimes:jpeg,png,jpg|max:1024',
 
@@ -591,6 +674,36 @@ class ServiceProviderDetailController extends Controller
             'port.0.required' => 'Please select port.',
             'service_category.0.0.required' => 'Please select at least one service category in the first group.',
         ]);
+
+        // Start ----- Add manual check CERTIFICATE condition
+        $totalUploadedCerts = count($request->file('certificates', []));
+        $existingCertsCount = count($request->input('existing_cert', []));
+        $totalCerts = $totalUploadedCerts + $existingCertsCount;
+
+        if ($totalCerts > 20) {
+            return response()->json([
+                'errors' => ['certificates' => ['You can upload a maximum of 20 certificates']]
+            ], 422);
+        }
+        // End ---- Add manual check CERTIFICATE condition
+
+        //Start ----- Add manual check PHOTO condition
+        $totalUploadedPhotos = count($request->file('photos', []));
+        $existingPhotosCount = count($request->input('existing_photos', []));
+        $totalPhotos = $totalUploadedPhotos + $existingPhotosCount;
+
+        if (!$isBasic && $totalPhotos < 3) {
+            return response()->json([
+                'errors' => ['photos' => ['Please upload at least 3 photos.']]
+            ], 422);
+        }
+
+        if ($totalPhotos > 20) {
+            return response()->json([
+                'errors' => ['photos' => ['You can upload a maximum of 20 photos']]
+            ], 422);
+        }
+        //End ---- Add manual check PHOTO condition
         
         //  Custom Conditional Validation Logic (after validate())
         $allCategories = $request->input('service_category', []);
@@ -673,41 +786,101 @@ class ServiceProviderDetailController extends Controller
         );
 
         // Save Company Details (with files)
-        $certPaths = [];
+        // $certPaths = [];
+        // if ($request->hasFile('certificates')) {
+
+        //     // Delete old certificates if they exist
+        //     if ($companyDetail && $companyDetail->certificates) {
+        //         foreach (json_decode($companyDetail->certificates) as $oldCert) {
+        //             Storage::disk('public')->delete($oldCert);
+        //         }
+        //     }
+
+        //     // Save new ones
+        //     foreach ($request->file('certificates') as $cert) {
+        //         $certPaths[] = $cert->store('certificates', 'public');
+        //     }
+        // }else {
+        //     // Preserve existing photos
+        //     $certPaths = $companyDetail ? json_decode($companyDetail->certificates, true) : [];
+        // }
+
+        // $photoPaths = [];
+        // if ($request->hasFile('photos')) {
+        //     // Delete old photos if they exist
+        //     if ($companyDetail && $companyDetail->photos) {
+        //         foreach (json_decode($companyDetail->photos) as $oldPhoto) {
+        //             Storage::disk('public')->delete($oldPhoto);
+        //         }
+        //     }
+        //      // Save new ones
+        //     foreach ($request->file('photos') as $photo) {
+        //         $photoPaths[] = $photo->store('photos', 'public');
+        //     }
+        // }else {
+        //     // Preserve existing photos
+        //     $photoPaths = $companyDetail ? json_decode($companyDetail->photos, true) : [];
+        // }
+
+          /**************** Save certificates ***************/
+        // Step 1: Decode existing stored certificates
+        $existingCertsInDb = $companyDetail && $companyDetail->certificates
+            ? json_decode($companyDetail->certificates, true)
+            : [];
+
+        // Step 2: Get user-submitted retained certificates
+        $retainedCerts = $request->input('existing_cert', []);
+
+        // Step 3: Delete certificates that are no longer retained
+        $certsToDelete = array_diff($existingCertsInDb, $retainedCerts);
+        foreach ($certsToDelete as $file) {
+            Storage::disk('public')->delete($file);
+        }
+
+        // Step 4: Initialize certPaths with retained certificates
+        $certPaths = $retainedCerts;
+
+        // Step 5: Add newly uploaded certificates
         if ($request->hasFile('certificates')) {
-
-            // Delete old certificates if they exist
-            if ($companyDetail && $companyDetail->certificates) {
-                foreach (json_decode($companyDetail->certificates) as $oldCert) {
-                    Storage::disk('public')->delete($oldCert);
-                }
-            }
-
-            // Save new ones
             foreach ($request->file('certificates') as $cert) {
-                $certPaths[] = $cert->store('certificates', 'public');
-            }
-        }else {
-            // Preserve existing photos
-            $certPaths = $companyDetail ? json_decode($companyDetail->certificates, true) : [];
-        }
-
-        $photoPaths = [];
-        if ($request->hasFile('photos')) {
-            // Delete old photos if they exist
-            if ($companyDetail && $companyDetail->photos) {
-                foreach (json_decode($companyDetail->photos) as $oldPhoto) {
-                    Storage::disk('public')->delete($oldPhoto);
+                if ($cert->isValid()) {
+                    $userId = $companyDetail->user_id;
+                    $path = $cert->store("certificates/{$userId}", 'public');
+                    $certPaths[] = $path;
                 }
             }
-             // Save new ones
-            foreach ($request->file('photos') as $photo) {
-                $photoPaths[] = $photo->store('photos', 'public');
-            }
-        }else {
-            // Preserve existing photos
-            $photoPaths = $companyDetail ? json_decode($companyDetail->photos, true) : [];
         }
+
+        /********* Save photo ********/
+        // Step 1: Decode existing stored photos
+        $existingFilesInDb = $companyDetail && $companyDetail->photos
+            ? json_decode($companyDetail->photos, true)
+            : [];
+
+        // Step 2: Get user-submitted retained photos
+        $retainedPhotos = $request->input('existing_photos', []);
+
+        // Step 3: Delete files that are no longer retained
+        $filesToDelete = array_diff($existingFilesInDb, $retainedPhotos);
+        foreach ($filesToDelete as $file) {
+            Storage::disk('public')->delete($file);
+        }
+
+        // Step 4: Initialize photoPaths with retained photos
+        $photoPaths = $retainedPhotos;
+
+        // Step 5: Add newly uploaded photos
+        if ($request->hasFile('photos')) {
+            foreach ($request->file('photos') as $file) {
+                if ($file->isValid()) {
+                    $userId = $companyDetail->user_id;
+                    $path = $file->store("photos/{$userId}", 'public');
+                    $photoPaths[] = $path;
+                }
+            }
+        }
+
+
 
         CompanyDetail::updateOrCreate(
             ['user_id' => $userId],
@@ -820,9 +993,9 @@ class ServiceProviderDetailController extends Controller
             case 'contact':
                 $rules = [
                     'alternative_email' => 'nullable|email',
-                    'office_telephone' => 'required|regex:/^[0-9]+$/|max:20',
-                    'mobile_number'    => 'required|regex:/^[0-9]+$/|max:20',
-                    'whatsapp_number'  => 'nullable|regex:/^[0-9]+$/|max:20',
+                    'office_telephone' => 'required|regex:/^[0-9 +]+$/|max:20',
+                    'mobile_number'    => 'required|regex:/^[0-9 +]+$/|max:20',
+                    'whatsapp_number'  => 'nullable|regex:/^[0-9 +]+$/|max:20',
                 ];
                 break;
 
@@ -841,8 +1014,8 @@ class ServiceProviderDetailController extends Controller
                 $hasPhotos = $companyDetail && !empty(json_decode($companyDetail->photos, true));
 
                 $rules = [
-                    'slogan' => 'required|string|max:255',
-                    'about' => 'required|string|max:500',
+                    'slogan' => 'required|string',
+                    'about' => 'required|string',
                     'brands' => 'nullable|string',
                     'reference_shipowners' => 'nullable|string',
 

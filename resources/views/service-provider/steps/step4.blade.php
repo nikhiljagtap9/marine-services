@@ -8,7 +8,7 @@
                                  </div>
                                  <div class="form-group">
                                     <label class="Mylabel" for="password">Password</label>
-                                    <input id="password" type="password" class="form-control" name="password" placeholder="Enter your Password" required>
+                                    <input id="password" type="password" class="form-control" name="password" placeholder="Password must be at least 6 characters" required>
                                  </div>
                                  <div class="form-group">
                                     <label class="Mylabel" for="password_confirmation">Confirm Password</label>

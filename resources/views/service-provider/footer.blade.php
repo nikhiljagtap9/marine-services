@@ -6,7 +6,7 @@
             <li class="list-inline-item"><a href="{{ route('t&c') }}" target="_blank">Terms & Condition</a></li>
             <li class="list-inline-item"><a href="{{ route('consent') }}" target="_blank">Consent</a></li>
         </ul>
-        <div class="copy">© 2025 Rated Marine Services - All Rights Reserved- All Rights Reserved</div>
+        <div class="copy">© 2025 Rated Marine Services - All Rights Reserved</div>
     </div>
 </footer>
 

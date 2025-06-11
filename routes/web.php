@@ -17,6 +17,7 @@ use App\Http\Controllers\ServiceProvider\ServiceProviderDashboardController;
 use App\Http\Controllers\Admin\UserListController;
 use App\Http\Controllers\ServiceProvider\EnquiryController;
 use App\Http\Controllers\ServiceProvider\QuoteController;
+use App\Http\Controllers\ChatController;
 
 /*
 |--------------------------------------------------------------------------
@@ -127,6 +128,12 @@ Route::prefix('service-provider')->middleware(['auth'])->group(function () {
     Route::get('/enquiries', [EnquiryController::class, 'enquiriesByServiceUser'])->name('enquiry.index');
     Route::post('/quotes/store', [QuoteController::class, 'store'])->name('quotes.store');
     Route::get('/quotes', [QuoteController::class, 'quotesByServiceUser'])->name('quotes.list');
+    
+    Route::get('/quote/{id}', [QuoteController::class, 'show'])->name('quote.detail');
+    Route::post('/chat/send', [ChatController::class, 'send'])->name('chat.send');
+
+    // Route::post('/chat/send', [ChatController::class, 'store'])->name('chat.send');
+    // Route::get('/chat/{userId}', [ChatController::class, 'getChat'])->name('chat.view');
 });
 
 

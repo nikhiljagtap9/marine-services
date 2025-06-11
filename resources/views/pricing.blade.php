@@ -32,7 +32,7 @@
          </div>
          <div class="pric_til_3">
             <b style="font-size: 24px;" >Silver Membership is FREE for 3 months</b>
-            <br> valid until September 15, 2025 No credit card required. No strings attached.
+            <br> valid until Oct 1, 2025 No credit card required. No strings attached.
          </div>
          <div class="fre_mbrshp_wrp">
             <a href="" class="fre_mbrshp" >
@@ -53,10 +53,10 @@
                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-gift"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 8m0 1a1 1 0 0 1 1 -1h16a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-16a1 1 0 0 1 -1 -1z" /><path d="M12 8l0 13" /><path d="M19 12v7a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-7" /><path d="M7.5 8a2.5 2.5 0 0 1 0 -5a4.8 8 0 0 1 4.5 5a4.8 8 0 0 1 4.5 -5a2.5 2.5 0 0 1 0 5" /></svg>
             </div>
             <div class="sect_4_titl">
-               Silver Plan <br> FREE Until 1 Sept 2025!
+               Silver Plan <br> FREE Until 1 Oct 2025!
             </div>
             <div class="sect_4_titl_sub">
-               Register anytime before 1 Sept and enjoy free access starting 1 July. <br>
+               Register anytime before 1 Oct and enjoy free access starting 1 July. <br>
                The earlier you register, the longer your free access will last.
 
             </div>
@@ -73,7 +73,7 @@
                Up to 50% <br> OFF all plans  
             </div>
             <div class="sect_4_titl_sub">
-               Exclusive launch pricing valid until <b> September 15, 2025</b>
+               Exclusive launch pricing valid until <b> Oct 1, 2025</b>
             </div>
             <div class="clear"></div>
          </div>
@@ -119,8 +119,8 @@
          <thead >
             <tr>
                <th>Plan</th>
-               <th>Launch Price<br><small>(until Sept 15, 2025)</small></th>
-               <th>Standard Price<br><small>(after Sept 15, 2025)</small></th>
+               <th>Launch Price<br><small>(until Oct 1, 2025)</small></th>
+               <th>Standard Price<br><small>(after Oct 1, 2025)</small></th>
                <th>Discount<br><small>$</small></th>
                <th>% Discount</th>
             </tr>
@@ -195,7 +195,7 @@
                            <span class="font-caveat fs-3 text-primary">{{ $plan->name }}</span>
                            <div class="d-flex pt-md-3">
                               <span class="h3">$</span>
-                              <span class="display-4 fw-semibold">{{ $plan->price == 0 ? 'Free' : '₹' . $plan->price . '/Year'}}</span>
+                              <span class="display-4 fw-semibold">{{ $plan->price == 0 ? 'Free' : $plan->price . '/Year'}}</span>
                            </div>
                            <!-- <a href="{{route('service-provider.membership', ['id' => $encryptedPlanId])}}" target="_blank" class="btn d-block mt-4 btn-primary text-nowrap">Get {{ $plan->name }}</a> -->
                            @if($plan->name == 'Basic' || $plan->name == 'Silver')
@@ -1345,8 +1345,8 @@
          <thead >
             <tr>
                <th>Plan</th>
-               <th>Launch Price<br><small>(until Sept 15, 2025)</small></th>
-               <th>Standard Price<br><small>(after Sept 15, 2025)</small></th>
+               <th>Launch Price<br><small>(until Oct 15, 2025)</small></th>
+               <th>Standard Price<br><small>(after Oct 15, 2025)</small></th>
                <th>Discount<br><small>$</small></th>
                <th>% Discount</th>
             </tr>
@@ -1458,7 +1458,7 @@
                            </h2>
                            <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
                               <div class="accordion-body p-4 pt-0">
-                                 Your Silver membership is 100% free for 3 months, from June 15 to September 15, 2025. No credit card required; no strings attached.
+                                 Your Silver membership is 100% free for 3 months, from July 1 to Oct 1, 2025. No credit card required; no strings attached.
                               </div>
                            </div>
                         </div>
@@ -1470,8 +1470,8 @@
                            </h2>
                            <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                               <div class="accordion-body p-4 pt-0">
-                                 o  If you upgrade to a paid Silver plan before September 15, 2025, you’ll pay $99 for your first paid year.<br><br>
-                                 o  If you don’t upgrade by September 15, 2025, your Silver trial will expire and your account will revert to the Free plan. You’ll remain in our system but lose access to most premium features—such as collecting new reviews, displaying existing reviews, appearing in filtered searches, and showcasing your company logo, photos, and full profile details.
+                                 o  If you upgrade to a paid Silver plan before Oct 1, 2025, you’ll pay $99 for your first paid year.<br><br>
+                                 o  If you don’t upgrade by Oct 1, 2025, your Silver trial will expire and your account will revert to the Free plan. You’ll remain in our system but lose access to most premium features—such as collecting new reviews, displaying existing reviews, appearing in filtered searches, and showcasing your company logo, photos, and full profile details.
                               </div>
                            </div>
                         </div>
