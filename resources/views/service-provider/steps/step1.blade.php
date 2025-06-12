@@ -13,7 +13,18 @@
       <label class="Mylabel" for="w3review"> Company Description</label>
       <textarea id="company_description" type="text" class="form-control" name="company_description" placeholder="Company Description" required>{{ old('company_description') }}</textarea>
    </div>
-
+   <div class="clear"></div>
+   <label class="checkbx_wrp">
+      <input type="checkbox" required>
+      <div class="chebkx_text">
+         By continuing, I confirm I’ve read and agree to Rated Marine Services' 
+         <a href="{{ route('t&c') }}" target="_blank">Terms &amp; Conditions </a> and
+         <a href="{{ route('privacy') }}" target="_blank"> Privacy Policy </a> and
+         <a href="{{ route('consent') }}" target="_blank">Consent Statement .</a>
+      </div>
+      <div class="clear"></div>
+   </label>
+    <div class="clear"></div>
    <div class="form-group">
       <div class="d-flex align-items-center gap-2 mt-5">
          <div class="next fxt-btn-fill">

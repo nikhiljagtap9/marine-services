@@ -738,10 +738,10 @@
                 .removeClass('d-none alert-danger')
                 .addClass('alert-success')
                 .text('Data saved successfully!');
-              // window.location.href = "{{ route('service-provider.index') }}";
-              // Reload page after 2 seconds
+               
+               // Reload page after 2 seconds
                   setTimeout(function() {
-                     location.reload();
+                     window.location.href = "{{ route('service-provider.confirmTemp') }}";
                   }, 2000);
             },
            error: function(xhr) {
@@ -895,20 +895,20 @@ $('#certificate-upload').on('change', function (e) {
     ];
 
     newFiles.forEach((file) => {
-        if (!allowedTypes.includes(file.type)) {
-            alert(file.name + " is not a valid file.");
-            return;
-        }
+      //   if (!allowedTypes.includes(file.type)) {
+      //       alert(file.name + " is not a valid file.");
+      //       return;
+      //   }
 
-        if (file.size > 1024 * 1024) {
-            alert(file.name + " exceeds 1MB.");
-            return;
-        }
+      //   if (file.size > 1024 * 1024) {
+      //       alert(file.name + " exceeds 1MB.");
+      //       return;
+      //   }
 
-        if ((selectedCerts.length + $('.existing-cert').length) >= 20) {
-            alert("You can upload a maximum of 20 certificates.");
-            return;
-        }
+      //   if ((selectedCerts.length + $('.existing-cert').length) >= 20) {
+      //       alert("You can upload a maximum of 20 certificates.");
+      //       return;
+      //   }
 
         selectedCerts.push(file);
         const index = selectedCerts.length - 1;

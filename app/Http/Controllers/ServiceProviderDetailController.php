@@ -197,6 +197,11 @@ class ServiceProviderDetailController extends Controller
         return view('service-provider.confirm');
     }
 
+    public function confirmTemp()
+    {
+        return view('service-provider.temp_confirm');
+    }
+
     public function getLatLngFromAddress(Request $request)
     {
         $address = $request->input('office_address');

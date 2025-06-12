@@ -18189,3 +18189,44 @@ margin-bottom: 30px;
     position: absolute;
     z-index: -1;
 }
+
+/*new add*/
+
+.fxt-inner-wrap.fxt-opacity .mb-5.d-grid{
+  margin-bottom: 10px !important;
+}
+
+.fxt-template-layout35 .fxt-form-content h2.fxt-page-title{
+  margin-bottom: 10px;
+}
+
+.checkbx_wrp{
+  float: left;
+  width: 100%;
+}
+
+.checkbx_wrp input {
+    float: left;
+    width:5%;
+    height: 17px;
+    margin-top: 3px;
+}
+
+.chebkx_text {
+    float: left;
+    width: 95%;
+    font-size: 17px;
+    line-height: 24px;  
+    padding-left: 3px;
+}
+
+.chebkx_text a {
+    font-weight: 500;
+    color: #124f98;
+}
+
+input[type="checkbox"].is-invalid {
+    outline: 2px solid red;
+    outline-offset: 2px;
+    border-radius: 4px; 
+}

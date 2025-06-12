@@ -78,6 +78,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/service-provider/create', [ServiceProviderDetailController::class, 'create'])->name('service-provider.create');
     Route::post('/service-provider/store', [ServiceProviderDetailController::class, 'store'])->name('service-provider.store');
     Route::get('/service-provider/confirm', [ServiceProviderDetailController::class, 'confirm'])->name('service-provider.confirm');
+   
+    
     Route::get('/get-cities/{country_id}',[ServiceProviderDetailController::class, 'getCities'])->name('get-cities');
     Route::get('/get-ports/{country_id}',[ServiceProviderDetailController::class, 'getPorts'])->name('get-ports');
     Route::get('/get-sub-service/{service_id}',[ServiceProviderDetailController::class, 'getSubService'])->name('get-sub-service');
@@ -131,6 +133,8 @@ Route::prefix('service-provider')->middleware(['auth'])->group(function () {
     
     Route::get('/quote/{id}', [QuoteController::class, 'show'])->name('quote.detail');
     Route::post('/chat/send', [ChatController::class, 'send'])->name('chat.send');
+
+    Route::get('/service-provider/confirmTemp', [ServiceProviderDetailController::class, 'confirmTemp'])->name('service-provider.confirmTemp'); // Temp page
 
     // Route::post('/chat/send', [ChatController::class, 'store'])->name('chat.send');
     // Route::get('/chat/{userId}', [ChatController::class, 'getChat'])->name('chat.view');

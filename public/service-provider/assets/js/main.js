@@ -127,6 +127,15 @@
             }
         });
 
+        // Validate checkbox (inside current step)
+        const checkbox = currentStep.find("input[type='checkbox'][required]");
+        if (checkbox.length && !checkbox.is(":checked")) {
+            checkbox.addClass("is-invalid");
+            valid = false;
+        } else {
+            checkbox.removeClass("is-invalid");
+        }
+
 
      
         if (!valid) {
