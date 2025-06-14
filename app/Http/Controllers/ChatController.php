@@ -8,13 +8,19 @@ use App\Models\ChatMessage;
 class ChatController extends Controller
 {
 
-    public function send(Request $request)
+  
+
+  public function send(Request $request)
     {
         $request->validate([
             'quotation_id' => 'required|exists:quotes,id',
             'message' => 'nullable|string',
             'file' => 'nullable|file|max:1024|mimes:jpg,jpeg,png,pdf,doc,docx',
         ]);
+
+        if (!$request->filled('message') && !$request->hasFile('file')) {
+            return response()->json(['error' => 'Either message or file is required.'], 422);
+        }
 
         $user = auth()->user();
 
@@ -29,10 +35,22 @@ class ChatController extends Controller
 
         if ($request->hasFile('file')) {
             $file = $request->file('file');
-            $fileName = time().'_'.$file->getClientOriginalName();
-            $filePath = 'uploads/chat/' . $fileName;
 
-            $file->move(public_path('uploads/chat'), $fileName);
+            // Validate size
+            if ($file->getSize() > 1024 * 1024) {
+                return response()->json(['error' => 'File size exceeds 1MB.'], 422);
+            }
+
+            $userId = auth()->id();
+            $fileName = time() . '_' . $file->getClientOriginalName();
+
+            $folder = 'chat/' . $user->id; // chat/{user_id}
+    
+            // Store the file in storage/app/public/chat/{user_id}
+            $filePath = $file->storeAs($folder, $fileName, 'public');
+
+            // message pass empty
+            $newMessage['message'] = '';
 
             $newMessage['attachments'][] = [
                 'file_name' => $fileName,
@@ -41,6 +59,7 @@ class ChatController extends Controller
                 'size'      => round($file->getSize() / 1024) . 'kb',
             ];
         }
+
 
         $transcript = ChatMessage::where('quotation_id', $request->quotation_id)->first();
         
@@ -63,6 +82,4 @@ class ChatController extends Controller
             'message' => $newMessage,
         ]);
     }
-
-
 }

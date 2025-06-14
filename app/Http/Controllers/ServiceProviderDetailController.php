@@ -849,7 +849,6 @@ class ServiceProviderDetailController extends Controller
         if ($request->hasFile('certificates')) {
             foreach ($request->file('certificates') as $cert) {
                 if ($cert->isValid()) {
-                    $userId = $companyDetail->user_id;
                     $path = $cert->store("certificates/{$userId}", 'public');
                     $certPaths[] = $path;
                 }
@@ -878,7 +877,6 @@ class ServiceProviderDetailController extends Controller
         if ($request->hasFile('photos')) {
             foreach ($request->file('photos') as $file) {
                 if ($file->isValid()) {
-                    $userId = $companyDetail->user_id;
                     $path = $file->store("photos/{$userId}", 'public');
                     $photoPaths[] = $path;
                 }

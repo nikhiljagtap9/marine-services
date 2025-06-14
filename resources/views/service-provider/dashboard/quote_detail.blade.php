@@ -90,24 +90,32 @@
                               <div class="text-main">
                                  <span class="time-ago">{{ \Carbon\Carbon::parse($msg['timestamp'])->format('h:i A') }}</span>
 
-                                 {{-- Attachment case --}}
-                                 @if(isset($msg['attachment']))
-                                 <div class="text-group {{ $msg['sender_id'] == $authId ? 'me' : '' }}">
-                                    <div class="text {{ $msg['sender_id'] == $authId ? 'me' : '' }}">
-                                       <div class="align-items-center attachment d-flex gap-2">
-                                          <a href="{{ asset('storage/chat/' . $msg['attachment']) }}" target="_blank" class="align-items-center attach btn btn-primary d-flex justify-content-center p-0">
-                                             <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="currentColor" class="bi bi-hdd" viewBox="0 0 16 16">
-                                                <path d="..." />
-                                             </svg>
-                                          </a>
-                                          <div class="file">
-                                             <h5><a href="{{ asset('storage/chat/' . $msg['attachment']) }}" target="_blank">{{ $msg['attachment'] }}</a></h5>
-                                             <span>{{ \Illuminate\Support\Str::ucfirst(pathinfo($msg['attachment'], PATHINFO_EXTENSION)) }} File</span>
+                              {{-- Attachment case --}}
+                              @if(!empty($msg['attachments']) && is_array($msg['attachments']))
+                                 @foreach ($msg['attachments'] as $file)
+                                    <div class="text-group {{ $msg['sender_id'] == $authId ? 'me' : '' }}">
+                                          <div class="text {{ $msg['sender_id'] == $authId ? 'me' : '' }}">
+                                             <div class="align-items-center attachment d-flex gap-2">
+                                                <a href="{{ asset('storage/' . $file['file_path']) }}" target="_blank" class="align-items-center attach btn btn-primary d-flex justify-content-center p-0">
+                                                      <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="currentColor" class="bi bi-hdd" viewBox="0 0 16 16">
+                                                         <path d="M4.5 11a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0v-1a.5.5 0 0 1 .5-.5zM11 11a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0v-1a.5.5 0 0 1 .5-.5z"/>
+                                                         <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v1h14V4a1 1 0 0 0-1-1H2zm13 3H1v5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V6z"/>
+                                                      </svg>
+                                                </a>
+                                                <div class="file">
+                                                      <h5>
+                                                         <a href="{{ asset('storage/' . $file['file_path']) }}" target="_blank">
+                                                            {{ $file['file_name'] }}
+                                                         </a>
+                                                      </h5>
+                                                      <span>{{ ucfirst($file['type']) }} File ({{ $file['size'] }})</span>
+                                                </div>
+                                             </div>
                                           </div>
-                                       </div>
                                     </div>
-                                 </div>
-                                 @endif
+                                 @endforeach
+                              @endif
+
 
                                  {{-- Text message case --}}
                                  @if(!empty($msg['message']))
@@ -159,7 +167,8 @@
                               </svg>
                            </div>
                            <input type="hidden" name="quotation_id" value="{{ $quote->id }}">
-                           <textarea class="form-control" name="message" placeholder="Type a message..." rows="1"></textarea>
+                           <textarea class="form-control" id="message" name="message" placeholder="Type a message..." rows="1"></textarea>
+                           <small class="text-danger d-block mt-1" id="messageError"></small>
                            <button type="submit" class="align-items-center btn d-flex end-0 justify-content-center p-0 position-absolute send top-0">
                               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
                                  <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z" />
@@ -167,7 +176,7 @@
                            </button>
                            
                            <label>
-                              <input type="file" name="file" class="d-none" id="chatFile">
+                              <input type="file" name="file" class="d-none" id="chatFile" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx">
                               <span class="align-items-center attach btn btn-primary d-flex justify-content-center ms-3 p-0 rounded-circle text-white">
                                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-paperclip" viewBox="0 0 16 16">
                                     <path d="M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0z" />
@@ -196,49 +205,91 @@
  <script>
 
    // AJAX Chat Submission
-    $('#chatForm').on('submit', function(e) {
-        e.preventDefault();
-        let formData = new FormData(this);
+   $('#chatForm').on('submit', function(e) {
+      e.preventDefault();
+      let formData = new FormData(this);
 
-        $.ajax({
-            url: '{{ route("chat.send") }}',
-            method: 'POST',
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function(response) {
-               if (response.success) {
-                  appendMessage(response.message);
-                  $('#chatForm')[0].reset();
-               }
-            },
-            error: function(xhr) {
-                alert("Message not sent. Check input.");
+      // Clear previous error message
+      $('#messageError').text('');
+
+      $.ajax({
+         url: '{{ route("chat.send") }}',
+         method: 'POST',
+         data: formData,
+         contentType: false,
+         processData: false,
+         success: function(response) {
+            if (response.success) {
+               appendMessage(response.message);
+               $('#chatForm')[0].reset();
             }
-        });
-    });
+         },
+         error: function(xhr) {
+            if (xhr.status === 422) {
+                const res = xhr.responseJSON;
 
-     function appendMessage(msg) {
+                if (res.errors?.message) {
+                    $('#messageError').text(res.errors.message[0]);
+                } else if (res.errors?.file) {
+                    $('#messageError').text(res.errors.file[0]);
+                } else if (res.error) {
+                    // Custom error message like "Either message or file is required."
+                    $('#messageError').text(res.error);
+                }
+            } else {
+                $('#messageError').text('Something went wrong. Please try again.');
+            }
+        }
+      });
+   });
+
+   function appendMessage(msg) {
         const isMe = msg.sender_id == {{ auth()->id() }};
         const meClass = isMe ? 'me' : '';
         const avatar = isMe ? '' : `<img class="avatar" src="{{ asset('assets/dist/img/avatar/01.jpg') }}" alt="avatar">`;
 
-        let attachmentsHtml = '';
-        if (msg.attachments.length > 0) {
-            msg.attachments.forEach(file => {
-                attachmentsHtml += `
-                    <div class="align-items-center attachment d-flex gap-2">
-                        <a href="/${file.file_path}" target="_blank" class="align-items-center attach btn btn-primary d-flex justify-content-center p-0">
-                            📎
-                        </a>
-                        <div class="file">
-                            <h5><a href="/${file.file_path}" target="_blank">${file.file_name}</a></h5>
-                            <span>${file.type.toUpperCase()} File</span>
-                        </div>
-                    </div>
-                `;
-            });
-        }
+      //   let attachmentsHtml = '';
+      //   if (msg.attachments.length > 0) {
+      //       msg.attachments.forEach(file => {
+      //           attachmentsHtml += `
+      //               <div class="align-items-center attachment d-flex gap-2">
+      //                   <a href="/${file.file_path}" target="_blank" class="align-items-center attach btn btn-primary d-flex justify-content-center p-0">
+      //                       📎
+      //                   </a>
+      //                   <div class="file">
+      //                       <h5><a href="/${file.file_path}" target="_blank">${file.file_name}</a></h5>
+      //                       <span>${file.type.toUpperCase()} File</span>
+      //                   </div>
+      //               </div>
+      //           `;
+      //       });
+      //   }
+
+      let attachmentsHtml = '';
+      if (Array.isArray(msg.attachments) && msg.attachments.length > 0) {
+         msg.attachments.forEach(file => {
+               attachmentsHtml += `
+                  <div class="text-group ${meClass}">
+                     <div class="text ${meClass}">
+                           <div class="align-items-center attachment d-flex gap-2">
+                              <a href="/storage/${file.file_path}" target="_blank" class="align-items-center attach btn btn-primary d-flex justify-content-center p-0">
+                                 <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="currentColor" class="bi bi-hdd" viewBox="0 0 16 16">
+                                       <path d="M4.5 11a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0v-1a.5.5 0 0 1 .5-.5zM11 11a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0v-1a.5.5 0 0 1 .5-.5z"/>
+                                       <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v1h14V4a1 1 0 0 0-1-1H2zm13 3H1v5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V6z"/>
+                                 </svg>
+                              </a>
+                              <div class="file">
+                                 <h5>
+                                       <a href="/storage/${file.file_path}" target="_blank">${file.file_name}</a>
+                                 </h5>
+                                 <span>${file.type.charAt(0).toUpperCase() + file.type.slice(1)} File (${file.size})</span>
+                              </div>
+                           </div>
+                     </div>
+                  </div>
+               `;
+         });
+      }
 
         // Then inside your rendering logic:
          const timeFormatted = formatTo12HourTime(msg.timestamp);
@@ -260,9 +311,9 @@
         `;
 
         $('.message-content-scroll').append(html);
-    }
+   }
 
-    function formatTo12HourTime(isoTime) {
+   function formatTo12HourTime(isoTime) {
       const date = new Date(isoTime);
       let hours = date.getHours();
       const minutes = date.getMinutes();
@@ -274,6 +325,19 @@
 
       return `${hours}:${paddedMinutes} ${ampm}`;
    }
+
+   // show the file name and file priview
+   $('#chatFile').on('change', function () {
+        const file = this.files[0];
+        if (file) {
+            $('#message').val(file.name);
+        } else {
+            $('#message').val('');
+        }
+    });
+   
+
+
 </script>
 
 @endsection
