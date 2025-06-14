@@ -16,9 +16,9 @@ use App\Http\Controllers\ServiceProviderDetailController;
 use App\Http\Controllers\ServiceProvider\ServiceProviderDashboardController;
 use App\Http\Controllers\Admin\UserListController;
 use App\Http\Controllers\ServiceProvider\EnquiryController;
-use App\Http\Controllers\ServiceProvider\QuoteController;
+use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\ChatController;
-
+use App\Http\Controllers\User\DashboardController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -130,8 +130,7 @@ Route::prefix('service-provider')->middleware(['auth'])->group(function () {
     Route::get('/enquiries', [EnquiryController::class, 'enquiriesByServiceUser'])->name('enquiry.index');
     Route::post('/quotes/store', [QuoteController::class, 'store'])->name('quotes.store');
     Route::get('/quotes', [QuoteController::class, 'quotesByServiceUser'])->name('quotes.list');
-    
-    Route::get('/quote/{id}', [QuoteController::class, 'show'])->name('quote.detail');
+    Route::get('/quote/{quotation_id}', [QuoteController::class, 'showQuotesDetailsByServiceUser'])->name('quote.detail');
     Route::post('/chat/send', [ChatController::class, 'send'])->name('chat.send');
 
     Route::get('/service-provider/confirmTemp', [ServiceProviderDetailController::class, 'confirmTemp'])->name('service-provider.confirmTemp'); // Temp page
@@ -140,5 +139,12 @@ Route::prefix('service-provider')->middleware(['auth'])->group(function () {
     // Route::get('/chat/{userId}', [ChatController::class, 'getChat'])->name('chat.view');
 });
 
+Route::prefix('user')->middleware(['auth'])->group(function () {
+    Route::get('/index', [DashboardController::class, 'index'])->name('user.index');
+    Route::get('/user-quotes', [QuoteController::class, 'quotesByUser'])->name('user-quotes.list');
+    Route::get('/user-quote/{quotation_id}', [QuoteController::class, 'showQuotesDetailsByUser'])->name('user-quote.detail');
+});
+
+Route::get('/user-quote-json/{quotation_id}', [QuoteController::class, 'quoteMessagesJson'])->name('user-quote.json');
 
 require __DIR__.'/auth.php';

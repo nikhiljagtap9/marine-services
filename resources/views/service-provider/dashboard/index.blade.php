@@ -27,7 +27,7 @@
                      </svg>
                   </div>
                </div>
-               <h1 class="price"><span class="counter">120</span> </h1>
+               <h1 class="price"><span class="counter">{{ $totalEnquiries }}</span> </h1>
             </div>
             <div class="col-sm-4 total-box-left">
                <div class="align-items-center d-flex justify-content-between mb-4">
@@ -42,7 +42,7 @@
                      </svg>
                   </div>
                </div>
-               <h1 class="price counter">132</h1>
+               <h1 class="price counter">{{ $totalQuotes }}</h1>
             </div>
             <div class="col-sm-4 total-box__right">
                <div class="align-items-center d-flex justify-content-between mb-4">

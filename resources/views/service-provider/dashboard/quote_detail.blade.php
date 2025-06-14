@@ -49,7 +49,7 @@
                         </div>
                      </div>
                      <!-- /.conversation search -->
-                     <div class="message-content message-content-scroll bg-text-green">
+                     <div id="chatContainer" class="message-content message-content-scroll bg-text-green">
                         <div class="position-relative">
                            @php
                               use Carbon\Carbon;
@@ -246,7 +246,7 @@
    function appendMessage(msg) {
         const isMe = msg.sender_id == {{ auth()->id() }};
         const meClass = isMe ? 'me' : '';
-        const avatar = isMe ? '' : `<img class="avatar" src="{{ asset('assets/dist/img/avatar/01.jpg') }}" alt="avatar">`;
+        const avatar = isMe ? '' : '';
 
       //   let attachmentsHtml = '';
       //   if (msg.attachments.length > 0) {
@@ -310,7 +310,8 @@
             </div>
         `;
 
-        $('.message-content-scroll').append(html);
+        $('#chatContainer').append(html);
+        $('#chatContainer').scrollTop($('#chatContainer')[0].scrollHeight); // Auto scroll to bottom
    }
 
    function formatTo12HourTime(isoTime) {
@@ -335,9 +336,50 @@
             $('#message').val('');
         }
     });
-   
 
+   // JavaScript Polling (e.g., every 10 seconds) 
+   // Only fetch new messages (track last timestamp or message ID)
+   const quotationId = "{{ $quote->id }}";
+   const authId = {{ $authId }};
+   let lastMessageTimestamp = null;
 
+   setInterval(() => {
+      $.get(`/user-quote-json/${quotationId}`, function (response) {
+         response.messages.forEach(msg => {
+               if (!lastMessageTimestamp || new Date(msg.timestamp) > new Date(lastMessageTimestamp)) {
+                  appendMessage(msg, response.authId);
+                  lastMessageTimestamp = msg.timestamp;
+               }
+         });
+      });
+   }, 10000);
+
+   // function fetchMessages() {
+   //    $.ajax({
+   //       url: `/user-quote-json/${quotationId}`,
+   //       method: 'GET',
+   //       success: function(response) {
+   //             let newMessages = response.messages.filter(msg =>
+   //                !lastMessageTimestamp || new Date(msg.timestamp) > new Date(lastMessageTimestamp)
+   //             );
+
+   //             newMessages.forEach(msg => {
+   //                appendMessage(msg, response.authId);
+   //                lastMessageTimestamp = msg.timestamp;
+   //             });
+
+   //             // 🌀 Immediately fetch next messages (not after 5s)
+   //             fetchMessages();
+   //       },
+   //       error: function() {
+   //             // 🔁 Try again after a short delay if error occurs
+   //             setTimeout(fetchMessages, 3000);
+   //       }
+   //    });
+   // }
+
+   // // Start the long polling
+   // fetchMessages();
 </script>
 
 @endsection

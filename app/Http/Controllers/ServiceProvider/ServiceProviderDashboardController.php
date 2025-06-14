@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ServiceProviderDetail;
+use App\Models\Quote;
+use App\Models\Enquiry;
 
 class ServiceProviderDashboardController extends Controller
 {
@@ -27,7 +29,13 @@ class ServiceProviderDashboardController extends Controller
                 'socialMediaDetails'
             ])->where('user_id', $user->id)->first();
 
-            return view('service-provider.dashboard.index', compact('user', 'providerDetail'));
+            // Total quote requests
+            $totalQuotes = Quote::where('service_user_id', $user->id)->count();
+
+            // Total enquiries
+            $totalEnquiries = Enquiry::where('service_user_id', $user->id)->count();
+
+            return view('service-provider.dashboard.index', compact('user', 'providerDetail','totalQuotes','totalEnquiries'));
         }
 
         // Not a service provider
