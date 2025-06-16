@@ -113,6 +113,23 @@
             <div class="clear"></div>
          </div>
          <div class="col-lg-auto">
+            <div style="float:right; width: 200px; text-align: center; background:#fff; padding: 20px; margin-bottom: 20px; border-radius: 10px; box-shadow: 0px 0px 13px #ccc; position: relative; ">
+
+               <a class="downld_btn" id="downloadQR" style="cursor: pointer; padding-top: 6px; position: absolute; right: 0; top: 0; width: 40px; height: 40px; background: #124f98; margin-top: -15px; margin-right: -20px; border-radius: 10px; " >
+                  <svg style="color:#fff;" xmlns="http://www.w3.org/2000/svg"  width="25"  height="25"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-download"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" /><path d="M7 11l5 5l5 -5" /><path d="M12 4l0 12" /></svg>
+                  
+               </a>
+               @php
+                  $qrCodeSvg = base64_encode(QrCode::format('svg')->size(150)->generate(route('review.form', $encryptedUserId)));
+               @endphp
+
+               <img id="qrImage" src="data:image/svg+xml;base64,{{ $qrCodeSvg }}" alt="QR Code" style="width: 90%;">
+
+
+               <div style="float:left; width: 100%; font-size: 20px; font-weight: 500; ">
+                  Scan for Review
+               </div>
+            </div>
             <!-- start checkbbox bookmark -->
             <div class="form-check form-check-bookmark mb-2 mb-sm-0">
                <input class="form-check-input" type="checkbox" value="" id="jobBookmarkCheck">
@@ -773,13 +790,24 @@ We also encourage users to upload a photo of the service received, if possible
 </div>
 <!-- POPUP_SCRIPT 603 -->
 @endsection
-<!-- @section('script')
-   @auth
+ @section('scripts')
+   <!-- @auth
    <script>
       $(document).ready(function () {
          $(".last_li_hide_new").addClass("last_li_hide_new_hide");
          $(".comn_cont").addClass("comn_cont_show");
       });
    </script>
-   @endauth
-@endsection -->
+   @endauth -->
+<script>
+   // Add JavaScript to Trigger Download
+    document.getElementById('downloadQR').addEventListener('click', function () {
+        const qrImg = document.getElementById('qrImage');
+        const link = document.createElement('a');
+        link.href = qrImg.src;
+        link.download = 'qr-code.png';
+        link.click();
+    });
+</script>
+
+@endsection

@@ -54,7 +54,7 @@
                      </svg>
                   </div>
                </div>
-               <h1 class="price counter">34</h1>
+               <h1 class="price counter">{{$totalReview}}</h1>
             </div>
          </div>
       </div>

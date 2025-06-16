@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\ServiceProviderDetail;
 use App\Models\Quote;
 use App\Models\Enquiry;
+use App\Models\ServiceReview;
 
 class ServiceProviderDashboardController extends Controller
 {
@@ -35,7 +36,10 @@ class ServiceProviderDashboardController extends Controller
             // Total enquiries
             $totalEnquiries = Enquiry::where('service_user_id', $user->id)->count();
 
-            return view('service-provider.dashboard.index', compact('user', 'providerDetail','totalQuotes','totalEnquiries'));
+            // Total Review
+            $totalReview = ServiceReview::where('service_provider_id', $user->id)->count();
+
+            return view('service-provider.dashboard.index', compact('user', 'providerDetail','totalQuotes','totalEnquiries','totalReview'));
         }
 
         // Not a service provider

@@ -9,6 +9,7 @@ use App\Models\Country;
 use App\Models\Category;
 use App\Models\Subscription;
 use App\Models\Enquiry;
+use Illuminate\Support\Facades\Crypt;
 
 class ListingController extends Controller
 {
@@ -147,6 +148,9 @@ class ListingController extends Controller
     {
         $subscription = Subscription::with('user', 'plan')->findOrFail($subscriptionId);
 
+        // encrypt the user ID in the QR code 
+        $encryptedUserId = Crypt::encrypt($subscription->user_id);
+
         $provider = ServiceProviderDetail::with([
             'companyDetail',
             'contactDetail',
@@ -156,7 +160,7 @@ class ListingController extends Controller
             'socialMediaDetails'
         ])->where('user_id', $subscription->user_id)->firstOrFail();
 
-        return view('detail', compact('provider', 'subscription'));
+        return view('detail', compact('provider', 'subscription','encryptedUserId'));
     }
 
     public function enquiryStore(Request $request)

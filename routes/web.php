@@ -19,6 +19,7 @@ use App\Http\Controllers\ServiceProvider\EnquiryController;
 use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\User\DashboardController;
+use App\Http\Controllers\ReviewController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -42,6 +43,13 @@ Route::get('/detail/{subscriptionId}', [ListingController::class, 'detail'])->na
 Route::post('/enquiry-store', [ListingController::class, 'enquiryStore'])->name('enquiry.store');
 
 Route::get('/pricing', [PricingController::class, 'index'])->name('pricing');
+
+// Show rating/review form (accessed via QR)
+Route::get('/review/provider/{id}', [ReviewController::class, 'showForm'])->name('review.form');
+
+// Store submitted review
+Route::post('/review/provider/{id}', [ReviewController::class, 'storeReview'])->name('review.store');
+
 
 Route::get('/about_us', function () {
     return view('about_us');
