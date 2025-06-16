@@ -133,24 +133,23 @@ Route::prefix('admin')->name('admin.')->group(function () {
     });
 });
 
-Route::prefix('service-provider')->middleware(['auth'])->group(function () {
+Route::prefix('service-provider')->middleware(['auth','checkUserType:service_provider'])->group(function () {
     Route::get('/index', [ServiceProviderDashboardController::class, 'index'])->name('service-provider.index');
     Route::get('/enquiries', [EnquiryController::class, 'enquiriesByServiceUser'])->name('enquiry.index');
     Route::post('/quotes/store', [QuoteController::class, 'store'])->name('quotes.store');
     Route::get('/quotes', [QuoteController::class, 'quotesByServiceUser'])->name('quotes.list');
     Route::get('/quote/{quotation_id}', [QuoteController::class, 'showQuotesDetailsByServiceUser'])->name('quote.detail');
     Route::post('/chat/send', [ChatController::class, 'send'])->name('chat.send');
+    Route::get('/get-review-by-service-user', [ReviewController::class, 'reviewByServiceUser'])->name('get-review-by-service-user');
 
     Route::get('/service-provider/confirmTemp', [ServiceProviderDetailController::class, 'confirmTemp'])->name('service-provider.confirmTemp'); // Temp page
-
-    // Route::post('/chat/send', [ChatController::class, 'store'])->name('chat.send');
-    // Route::get('/chat/{userId}', [ChatController::class, 'getChat'])->name('chat.view');
 });
 
-Route::prefix('user')->middleware(['auth'])->group(function () {
+Route::prefix('user')->middleware(['auth','checkUserType:client'])->group(function () {
     Route::get('/index', [DashboardController::class, 'index'])->name('user.index');
     Route::get('/user-quotes', [QuoteController::class, 'quotesByUser'])->name('user-quotes.list');
     Route::get('/user-quote/{quotation_id}', [QuoteController::class, 'showQuotesDetailsByUser'])->name('user-quote.detail');
+    Route::get('/get-review-by-user', [ReviewController::class, 'reviewByUser'])->name('get-review-by-user');
 });
 
 Route::get('/user-quote-json/{quotation_id}', [QuoteController::class, 'quoteMessagesJson'])->name('user-quote.json');

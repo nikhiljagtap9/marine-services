@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Quote;
 use App\Models\Category;
+use App\Models\ServiceReview;
 
 class DashboardController extends Controller
 {
@@ -24,6 +25,9 @@ class DashboardController extends Controller
            // Total quote requests
             $totalQuotes = Quote::where('requested_by', $user->id)->count();
 
+            // Total Review
+            $totalReview = ServiceReview::where('user_id', $user->id)->count();
+
             $quotes = Quote::where('requested_by', $user->id)
                         ->latest()
                         ->get();
@@ -34,7 +38,7 @@ class DashboardController extends Controller
             // Fetch category names by IDs
             $categories = Category::whereIn('id', $allCategoryIds)->pluck('name', 'id');
 
-            return view('user.dashboard.index', compact('user','totalQuotes','quotes', 'categories'));
+            return view('user.dashboard.index', compact('user','totalQuotes','totalReview','quotes', 'categories'));
         }
 
         // Not a service provider

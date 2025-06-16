@@ -8,13 +8,20 @@ use App\Models\Port;
 use App\Models\Category;
 use App\Models\ServiceReview;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
     public function showForm($encryptedId)
     {
-         try {
-        $id = Crypt::decrypt($encryptedId); // decrypt the ID
+        // Check if user is logged in
+        if (!Auth::check()) {
+            $redirectUrl = url()->full(); // current page URL (encrypted ID included)
+            return redirect()->route('login', ['redirect' => $redirectUrl]);
+        }
+        
+        try {
+            $id = Crypt::decrypt($encryptedId); // decrypt the ID
         } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
             abort(403, 'Invalid or tampered link.');
         }
@@ -55,20 +62,55 @@ class ReviewController extends Controller
         if ($request->hasFile('invoice_document')) {
             $path = $request->file('invoice_document')->store('rating_doc', 'public');
         }
-
+        $user = Auth::user();
+        
         ServiceReview::create([
-            'service_provider_id' => $id,
+            'user_id' => $user->id, // rating submit user id
+            'service_provider_id' => $id, // service provider user id
             'vessel_company_name'    => $request->vessel_company_name,
             'vessel_company_email'   => $request->vessel_company_email,
             'port_id' => $request->port_id,
             'service_date' => $request->service_date,
             'service_category_id' => $request->service_category_id,
             'invoice_document' => $path,
-            'rating'  => 1,
+            'rating'  => $request->rating,
             'comment' => $request->comment,
         ]);
 
         return back()->with('success', 'Thank you for your review!');
+    }
+
+    public function reviewByServiceUser(){
+        $user = Auth::user();
+
+        $provider = User::with('serviceProviderDetail')->findOrFail($user->id);
+
+        $reviews = ServiceReview::where('service_provider_id', $user->id)
+                   // ->with(['port', 'category']) // Optional: if you need related data
+                    ->latest()
+                    ->get();
+
+        return view('service-provider.dashboard.review', compact('provider', 'reviews'));
+    }
+
+    public function reviewByUser(){
+        $user = Auth::user();
+
+        // Get the service provider(s) that the user has reviewed
+        $providerIds = ServiceReview::where('user_id', $user->id)
+                    ->pluck('service_provider_id')
+                    ->unique();
+
+        $providers = User::with('serviceProviderDetail')
+                    ->whereIn('id', $providerIds)
+                    ->where('user_type', 'service_provider')
+                    ->get();
+
+        $reviews = ServiceReview::where('user_id', $user->id)
+                    ->latest()
+                    ->get();
+
+        return view('user.dashboard.review', compact('providers', 'reviews'));
     }
 
 }

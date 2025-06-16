@@ -450,7 +450,7 @@
                               </div>
                            <div id="responseMessage" class="alert d-none"></div>   
                            <div class="col-sm-12 text-end" bis_skin_checked="1">
-                              <button type="submit" class="btn btn-primary submit_btn" fdprocessedid="43gnio">
+                              <!-- <button type="submit" class="btn btn-primary submit_btn" fdprocessedid="43gnio">
                                  Submit
                                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-right">
                                     <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
@@ -458,6 +458,16 @@
                                     <path d="M13 18l6 -6"></path>
                                     <path d="M13 6l6 6"></path>
                                  </svg>
+                              </button> -->
+                              <button type="submit" class="btn btn-primary submit_btn" id="submitBtn">
+                                   <span id="submitText">Submit</span>
+                                   <span id="submitLoader" class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
+                                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-right">
+                                      <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                      <path d="M5 12l14 0"></path>
+                                      <path d="M13 18l6 -6"></path>
+                                      <path d="M13 6l6 6"></path>
+                                   </svg>
                               </button>
                            </div>
                          </form>
@@ -719,6 +729,11 @@
       $('#masterForm').on('submit', function(e) {
          e.preventDefault();
 
+         // Show loader
+         $('#submitBtn').prop('disabled', true);
+         $('#submitText').text('Submitting...');
+         $('#submitLoader').removeClass('d-none');
+
          // Clear previous errors
          $('.error-text').remove();
          
@@ -788,6 +803,12 @@
 
            
 
+            },
+            complete: function() {
+                 // Hide loader and re-enable button
+                 $('#submitBtn').prop('disabled', false);
+                 $('#submitText').text('Submit');
+                 $('#submitLoader').addClass('d-none');
             }
          });
       });

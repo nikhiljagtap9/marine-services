@@ -10,6 +10,7 @@ class ServiceReview extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'service_provider_id',
         'vessel_company_name',
         'vessel_company_email',
