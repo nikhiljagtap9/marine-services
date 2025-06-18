@@ -40,6 +40,7 @@ use App\Http\Controllers\ReviewController;
 Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::get('/product-listing', [ListingController::class, 'index'])->name('product_listing');
 Route::get('/detail/{subscriptionId}', [ListingController::class, 'detail'])->name('detail');
+Route::get('/review/detail/{userId}', [ListingController::class, 'detail'])->name('review.detail');
 Route::post('/enquiry-store', [ListingController::class, 'enquiryStore'])->name('enquiry.store');
 
 Route::get('/pricing', [PricingController::class, 'index'])->name('pricing');
@@ -67,6 +68,13 @@ Route::get('t&c', function () {
     return view('t&c');
 })->name('t&c');
 
+Route::get('data_processing', function () {
+    return view('data_processing');
+})->name('data_processing');
+
+Route::get('distance_sales_agreement', function () {
+    return view('distance_sales_agreement');
+})->name('distance_sales_agreement');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

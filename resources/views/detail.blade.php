@@ -326,11 +326,11 @@
                                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"> </polygon>
                               </svg>
                               <!-- /.End Svg Icon  -->
-                              <h3 class="position-absolute mb-0 fs-18 text-primary">4.3</h3>
+                              <h3 class="position-absolute mb-0 fs-18 text-primary">{{ $averageRating }}</h3>
                            </div>
                            <!-- End Rating Point -->
-                           <span class="fs-13">2,525 Ratings &amp;</span><br>
-                           <span class="fs-13">293 Reviews</span>
+                           <span class="fs-13">{{ $totalRatings }} Ratings &amp;</span><br>
+                           <span class="fs-13">{{ $reviews->count() }} Reviews</span>
                         </div>
                      </div>
                      <div class="col" bis_skin_checked="1">
@@ -340,218 +340,54 @@
                            <!-- end /. title -->
                            <!-- Start Rating Point -->
                            <!-- start rating dimension -->
-                           <div class="align-items-center d-flex mb-2 rating-dimension gap-2" bis_skin_checked="1">
-                              <!-- start rating quantity -->
-                              <div class="d-flex align-items-center gap-2" bis_skin_checked="1">
-                                 <span class="fs-14 fw-semibold rating-points">5</span>
-                                 <div class="d-flex align-items-center text-primary rating-stars" bis_skin_checked="1">
-                                    <i class="fa-star-icon"></i>
-                                    <i class="fa-star-icon"></i>
-                                    <i class="fa-star-icon"></i>
-                                    <i class="fa-star-icon"></i>
-                                    <i class="fa-star-icon"></i>
+                           @for($i = 5; $i >= 1; $i--)
+                              @php
+                                 $count = $ratingCounts[$i] ?? 0;
+                                 $percentage = $totalRatings > 0 ? ($count / $totalRatings) * 100 : 0;
+                              @endphp
+                              <div class="align-items-center d-flex mb-2 rating-dimension gap-2">
+                                 <div class="d-flex align-items-center gap-2">
+                                       <span class="fs-14 fw-semibold rating-points">{{ $i }}</span>
+                                       <div class="d-flex align-items-center text-primary rating-stars">
+                                          @for($s = 0; $s < 5; $s++)
+                                             <i class="fa-star-icon {{ $s < $i ? '' : 'none' }}"></i>
+                                          @endfor
+                                       </div>
                                  </div>
-                              </div>
-                              <!-- end /. rating quantity -->
-                              <!-- Start Progress -->
-                              <div class="progress flex-grow-1 me-2" bis_skin_checked="1">
-                                 <div class="progress-bar bg-primary" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" bis_skin_checked="1"></div>
-                              </div>
-                              <!-- /.End Progress -->
-                              <!-- Start User Rating -->
-                              <div class="bg-dark fs-11 fw-medium px-2 py-1 rounded-pill text-white user-rating" bis_skin_checked="1">4.5</div>
-                              <!-- /.End User Rating -->
-                           </div>
-                           <!-- end /. rating dimension -->
-                           <!-- start rating dimension -->
-                           <div class="align-items-center d-flex mb-2 rating-dimension gap-2" bis_skin_checked="1">
-                              <!-- start rating quantity -->
-                              <div class="d-flex align-items-center gap-2" bis_skin_checked="1">
-                                 <span class="fs-14 fw-semibold rating-points">5</span>
-                                 <div class="d-flex align-items-center text-primary rating-stars" bis_skin_checked="1">
-                                    <i class="fa-star-icon"></i>
-                                    <i class="fa-star-icon"></i>
-                                    <i class="fa-star-icon"></i>
-                                    <i class="fa-star-icon half"></i>
-                                    <i class="fa-star-icon none"></i>
+                                 <div class="progress flex-grow-1 me-2">
+                                       <div class="progress-bar {{ $i >= 4 ? 'bg-primary' : ($i == 3 ? 'bg-warning' : 'text-bg-danger') }}" 
+                                          role="progressbar" 
+                                          style="width: {{ $percentage }}%" 
+                                          aria-valuenow="{{ $percentage }}" 
+                                          aria-valuemin="0" 
+                                          aria-valuemax="100"></div>
                                  </div>
+                                 <div class="bg-dark fs-11 fw-medium px-2 py-1 rounded-pill text-white user-rating">{{ number_format($percentage, 1) }}%</div>
                               </div>
-                              <!-- end /. rating quantity -->
-                              <!-- start progress -->
-                              <div class="progress flex-grow-1 me-2" bis_skin_checked="1">
-                                 <div class="progress-bar bg-success" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" bis_skin_checked="1"></div>
-                              </div>
-                              <!-- end /. progress -->
-                              <!-- start user rating -->
-                              <div class="bg-dark fs-11 fw-medium px-2 py-1 rounded-pill text-white user-rating" bis_skin_checked="1">3.5</div>
-                              <!-- end /. user rating -->
-                           </div>
-                           <!-- end /. rating dimension -->
-                           <!-- start rating dimension -->
-                           <div class="align-items-center d-flex mb-2 rating-dimension gap-2" bis_skin_checked="1">
-                              <!-- start rating quantity -->
-                              <div class="d-flex align-items-center gap-2" bis_skin_checked="1">
-                                 <span class="fs-14 fw-semibold rating-points">3</span>
-                                 <div class="d-flex align-items-center text-primary rating-stars" bis_skin_checked="1">
-                                    <i class="fa-star-icon"></i>
-                                    <i class="fa-star-icon"></i>
-                                    <i class="fa-star-icon half"></i>
-                                    <i class="fa-star-icon none"></i>
-                                    <i class="fa-star-icon none"></i>
-                                 </div>
-                              </div>
-                              <!-- end /. rating quantity -->
-                              <!-- start progress -->
-                              <div class="progress flex-grow-1 me-2" bis_skin_checked="1">
-                                 <div class="progress-bar bg-warning" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" bis_skin_checked="1"></div>
-                              </div>
-                              <!-- end /. progress -->
-                              <!-- start user rating -->
-                              <div class="bg-dark fs-11 fw-medium px-2 py-1 rounded-pill text-white user-rating" bis_skin_checked="1">1.5</div>
-                              <!-- end /. user rating -->
-                           </div>
-                           <!-- end /. rating dimension -->
-                           <!-- start rating dimension -->
-                           <div class="align-items-center d-flex mb-2 rating-dimension gap-2" bis_skin_checked="1">
-                              <!-- start rating quantity -->
-                              <div class="d-flex align-items-center gap-2" bis_skin_checked="1">
-                                 <span class="fs-14 fw-semibold rating-points">3</span>
-                                 <div class="d-flex align-items-center text-primary rating-stars" bis_skin_checked="1">
-                                    <i class="fa-star-icon"></i>
-                                    <i class="fa-star-icon half"></i>
-                                    <i class="fa-star-icon none"></i>
-                                    <i class="fa-star-icon none"></i>
-                                    <i class="fa-star-icon none"></i>
-                                 </div>
-                              </div>
-                              <!-- end /. rating quantity -->
-                              <!-- start progress -->
-                              <div class="progress flex-grow-1 me-2" bis_skin_checked="1">
-                                 <div class="progress-bar bg-info" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" bis_skin_checked="1"></div>
-                              </div>
-                              <!-- end /. progress -->
-                              <!-- start user rating -->
-                              <div class="bg-dark fs-11 fw-medium px-2 py-1 rounded-pill text-white user-rating" bis_skin_checked="1">5.2</div>
-                              <!-- end /. user rating -->
-                           </div>
-                           <!-- end /. rating dimension -->
-                           <!-- start rating dimension -->
-                           <div class="align-items-center d-flex mb-2 rating-dimension gap-2" bis_skin_checked="1">
-                              <!-- start rating quantity -->
-                              <div class="d-flex align-items-center gap-2" bis_skin_checked="1">
-                                 <span class="fs-14 fw-semibold rating-points">1</span>
-                                 <div class="d-flex align-items-center text-primary rating-stars" bis_skin_checked="1">
-                                    <i class="fa-star-icon"></i>
-                                    <i class="fa-star-icon none"></i>
-                                    <i class="fa-star-icon none"></i>
-                                    <i class="fa-star-icon none"></i>
-                                    <i class="fa-star-icon none"></i>
-                                 </div>
-                              </div>
-                              <!-- end /. rating quantity -->
-                              <!-- start progress -->
-                              <div class="progress flex-grow-1 me-2" bis_skin_checked="1">
-                                 <div class="progress-bar text-bg-danger" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" bis_skin_checked="1"></div>
-                              </div>
-                              <!-- end /. progress -->
-                              <!-- start user rating -->
-                              <div class="bg-dark fs-11 fw-medium px-2 py-1 rounded-pill text-white user-rating" bis_skin_checked="1">6.9</div>
-                              <!-- end /. user rating -->
-                           </div>
+                           @endfor
                            <!-- end /. rating dimension -->
                         </div>
                      </div>
                   </div>
                </div>
-               <div class="d-flex mb-4 border-bottom pb-4" bis_skin_checked="1">
-                  <div class="flex-shrink-0" bis_skin_checked="1">
-                     <img src="{{ asset('assets/images/avatar/01.jpg')}}" alt="..." height="70" width="70" class="object-fit-cover rounded-circle">
-                  </div>
-                  <div class="flex-grow-1 ms-4" bis_skin_checked="1">
-                     <div class="comment-header d-flex flex-wrap gap-2 mb-3" bis_skin_checked="1">
-                        <div bis_skin_checked="1">
-                           <h4 class="fs-18 mb-0">- Ethan Blackwood</h4>
-                           <div class="comment-datetime fs-12 text-muted" bis_skin_checked="1">25 Oct 2025 at 12.27 pm</div>
-                        </div>
-                        <!-- start rating -->
-                        <div class="d-flex align-items-center gap-2 ms-auto" bis_skin_checked="1">
-                           <div class="d-flex align-items-center text-primary rating-stars" bis_skin_checked="1">
-                              <i class="fa-star-icon"></i>
-                              <i class="fa-star-icon"></i>
-                              <i class="fa-star-icon"></i>
-                              <i class="fa-star-icon half"></i>
-                              <i class="fa-star-icon none"></i>
-                           </div>
-                           <span class="fs-14 fw-semibold rating-points">3.5/5</span>
-                        </div>
-                        <!-- end /. rating -->
-                     </div>
-                     <div class="fs-15" bis_skin_checked="1">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which.</div>
-                  </div>
+
+               <div id="review-container">
+                  @include('partials.review_item', ['reviews' => $reviews])
                </div>
-               <div class="d-flex mb-4 border-bottom pb-4" bis_skin_checked="1">
-                  <div class="flex-shrink-0" bis_skin_checked="1">
-                     <img src="{{ asset('assets/images/avatar/04.jpg')}}" alt="..." height="70" width="70" class="object-fit-cover rounded-circle">
+
+
+               {{-- Show Load More only if there are reviews to show AND more pages --}}
+               @if ($reviews->hasMorePages())
+                  <div class="text-center mt-4" id="load-more-container">
+                     <button id="load-more-reviews" class="btn btn-outline-primary" data-page="2">Load More</button>
                   </div>
-                  <div class="flex-grow-1 ms-3" bis_skin_checked="1">
-                     <div class="comment-header d-flex flex-wrap gap-2 mb-3" bis_skin_checked="1">
-                        <div bis_skin_checked="1">
-                           <h4 class="fs-18 mb-0">- Pranoti </h4>
-                           <div class="comment-datetime fs-12 text-muted" bis_skin_checked="1">25 Oct 2025 at 12.27 pm</div>
-                        </div>
-                        <!-- start rating -->
-                        <div class="d-flex align-items-center gap-2 ms-auto" bis_skin_checked="1">
-                           <div class="d-flex align-items-center text-primary rating-stars" bis_skin_checked="1">
-                              <i class="fa-star-icon"></i>
-                              <i class="fa-star-icon"></i>
-                              <i class="fa-star-icon"></i>
-                              <i class="fa-star-icon half"></i>
-                              <i class="fa-star-icon none"></i>
-                           </div>
-                           <span class="fs-14 fw-semibold rating-points">3.5/5</span>
-                        </div>
-                        <!-- end /. rating -->
-                     </div>
-                     <div class="fs-15" bis_skin_checked="1">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. </div>
-                  </div>
-               </div>
-               <div class="d-flex mb-4" bis_skin_checked="1">
-                  <div class="flex-shrink-0" bis_skin_checked="1">
-                     <img src="{{ asset('assets/images/avatar/05.jpg')}}" alt="..." height="70" width="70" class="object-fit-cover rounded-circle">
-                  </div>
-                  <div class="flex-grow-1 ms-3" bis_skin_checked="1">
-                     <div class="comment-header d-flex flex-wrap gap-2 mb-3" bis_skin_checked="1">
-                        <div bis_skin_checked="1">
-                           <h4 class="fs-18 mb-0">- Marcus Knight</h4>
-                           <div class="comment-datetime fs-12 text-muted" bis_skin_checked="1">25 Oct 2025 at 12.27 pm</div>
-                        </div>
-                        <!-- start rating -->
-                        <div class="d-flex align-items-center gap-2 ms-auto" bis_skin_checked="1">
-                           <div class="d-flex align-items-center text-primary rating-stars" bis_skin_checked="1">
-                              <i class="fa-star-icon"></i>
-                              <i class="fa-star-icon"></i>
-                              <i class="fa-star-icon"></i>
-                              <i class="fa-star-icon half"></i>
-                              <i class="fa-star-icon none"></i>
-                           </div>
-                           <span class="fs-14 fw-semibold rating-points">3.5/5</span>
-                        </div>
-                        <!-- end /. rating -->
-                     </div>
-                     <div class="fs-15" bis_skin_checked="1"> This is some content from a media component. You can replace this with any content and adjust it as needed.</div>
-                  </div>
-               </div>
+               @endif
             </div>
             <hr class="my-5">
             <div class="mb-4 mb-lg-0" bis_skin_checked="1" id="enquiryForm">
                <h4 class="fw-semibold fs-3 mb-4">Leave a <span class="font-caveat text-primary">Enquiry & Comment</span></h4>
                <div class="rating_star_a">
                   <div class="ad_rting_titl required ">Add Enquiry</div>
-                  <i class="fa fa-star-o" aria-hidden="true"></i>
-                  <i class="fa fa-star-o" aria-hidden="true"></i>
-                  <i class="fa fa-star-o" aria-hidden="true"></i>
-                  <i class="fa fa-star-o" aria-hidden="true"></i>
-                  <i class="fa fa-star-o" aria-hidden="true"></i>
                   <div class="clear"></div>
                </div>
                <div class="clear"></div>
@@ -809,5 +645,36 @@ We also encourage users to upload a photo of the service received, if possible
         link.click();
     });
 </script>
+
+<script>
+   // load more review data
+   $(document).on('click', '#load-more-reviews', function () {
+      let page = $(this).data('page');
+      let button = $(this);
+
+      $.ajax({
+         url: "?page=" + page,
+         type: "get",
+         beforeSend: function () {
+               button.prop('disabled', true).text('Loading...');
+         },
+         success: function (response) {
+                // Append the content first
+               $('#review-container').append(response);
+               if (response.trim() === '' || response.includes('No reviews found')) {
+                  $('#load-more-container').remove(); // Hide button if no more data
+               } else {            
+                  button.data('page', page + 1);
+                  button.prop('disabled', false).text('Load More');
+               }
+         },
+         error: function () {
+               button.prop('disabled', false).text('Load More');
+         }
+      });
+   });
+
+</script>
+
 
 @endsection

@@ -1,6 +1,120 @@
 @extends('service-provider.main')
 
 @section('content')
+<style>
+   .mak_pmnt{
+width: 400px;
+background-color:#ececec;
+margin-bottom: 40px;
+border-radius: 20px;
+padding: 10px 30px;
+}
+.com_mn{
+width: 100%;
+text-align:center !important;
+}
+.submit_btn.submit_btn_membr{
+float: none;
+background-color:#124f98;
+border-radius: 100px;
+}
+.btn_pop1, .btn_pop2{
+float: left;
+width: 50%;
+margin: 0px !important;
+border-radius: 0px !important;
+}
+.btn.btn_pop2{
+background-color:#497c97;
+}
+.modal-footer{
+float: left;
+width: 70%;
+padding: 0px !important;
+border-radius: 100px;
+overflow: hidden;
+margin-left: 15%;
+}
+.modal-header, .modal-footer{
+border:0px;
+}
+.modal-footer .btn.btn-primary{
+background-color:#305b72;
+}
+.modal {
+display: none;
+position: fixed;
+z-index: 1000;
+left: 0;
+top: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(0,0,0,0.5);
+animation: fadeIn 0.3s;
+}
+.modal-content {
+background-color: #fff;
+margin: 10% auto;
+margin-top: 4%;
+padding: 20px;
+border-radius: 8px;
+width: 90%;
+max-width: 700px;
+box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+transform: translateY(-50px);
+opacity: 0;
+animation: slideUp 0.4s forwards;
+}
+@keyframes fadeIn {
+from { opacity: 0; }
+to { opacity: 1; }
+}
+@keyframes slideUp {
+to {
+transform: translateY(0);
+opacity: 1;
+}
+}
+.modal-header {
+font-size: 20px;
+font-weight: bold;
+margin-bottom: 15px;
+}
+.modal-footer {
+margin-top: 00px;
+margin-bottom: 30px;
+}
+.submit_btn_membr {
+padding: 10px 20px;
+margin: 5px;
+border: none;
+cursor: pointer;
+border-radius: 5px;
+}
+.btn-primary {
+background-color: #007BFF;
+color: white;
+}
+.btn-secondary {
+background-color: #28a745;
+color: white;
+}
+.bank-details {
+display: none;
+margin-top: 20px;
+font-size: 16px;
+line-height: 28px;
+background: #f9f9f9;
+padding: 30px;
+border-radius: 6px;
+}
+.close {
+float: right;
+font-size: 20px;
+font-weight: bold;
+cursor: pointer;
+}
+</style>
 <div id="preloader" class="preloader">
    <div class='inner'>
       <div class='line1'></div>
@@ -10,8 +124,8 @@
 </div>
 <div class="reviw_wrap" style="transform: none;" bis_skin_checked="1">
    <video class="reviw_wrap_inner" autoplay="" muted="" loop="">
-      <source src="img/vi.mp4" type="video/mp4">
-      <source src="img/vi.mp4" type="video/ogg">
+      <source src="{{ asset('service-provider/assets/img/vi.mp4')}}" type="video/mp4">
+      <source src="{{ asset('service-provider/assets/img/vi.mp4')}}" type="video/ogg">
    </video>
    <div class="rewv_inner_scan" style="transform: none;" bis_skin_checked="1">
       <div class="detl_right_panl" style="transform: none;" bis_skin_checked="1">
@@ -459,7 +573,7 @@
                                     <path d="M13 6l6 6"></path>
                                  </svg>
                               </button> -->
-                              <button type="submit" class="btn btn-primary submit_btn" id="submitBtn">
+                              <!-- <button type="submit" class="btn btn-primary submit_btn" id="submitBtn">
                                    <span id="submitText">Submit</span>
                                    <span id="submitLoader" class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-right">
@@ -468,7 +582,20 @@
                                       <path d="M13 18l6 -6"></path>
                                       <path d="M13 6l6 6"></path>
                                    </svg>
-                              </button>
+                              </button> -->
+                              <div class="col-sm-12 text-end com_mn" bis_skin_checked="1" id="make_payment">
+                                 <img src="{{ asset('service-provider/assets/img/payment.png')}}" class="mak_pmnt" >
+                                 <div class="clear"></div>
+                                 <a onclick="showModal()" class="btn btn-primary submit_btn submit_btn_membr" >
+                                    Make PAYment  
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-right">
+                                       <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                       <path d="M5 12l14 0"></path>
+                                       <path d="M13 18l6 -6"></path>
+                                       <path d="M13 6l6 6"></path>
+                                    </svg>
+                                 </a>
+                              </div>
                            </div>
                          </form>
                         </div>
@@ -498,6 +625,27 @@
    <div class="clear" bis_skin_checked="1"></div>
    <br><br>
 </div>
+
+ <!-- Modal -->
+      <div id="paymentModal" class="modal">
+         <div class="modal-content">
+            <div class="modal-header">Choose Payment Method
+               <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-footer">
+               <button class="btn btn-primary btn_pop1" onclick="showBankDetails()">Pay via Bank Transfer</button>
+               <a href="#" class="btn btn-secondary btn_pop2">Pay Online</a>
+            </div>
+            <div class="bank-details" id="bankDetails">
+               <strong>BANK NAME:</strong> TURKIYE GARANTI BANKASI A.S.<br>
+               <strong>BRANCH NAME AND CODE:</strong> ICERENKOY CARR. AVM – 1324<br>
+               <strong>BENEFICIARY:</strong> UGUR TUFAN EMEKSIZ<br>
+               <strong>ACCOUNT NO:</strong> 9087289<br>
+               <strong>IBAN:</strong> TR42 0006 2001 3240 0009 0872 89<br>
+               <strong>SWIFT CODE:</strong> TGBATRISXXX
+            </div>
+         </div>
+      </div>
 @endsection
 
 @section('scripts')
@@ -1008,6 +1156,26 @@ function rebuildNewCerts() {
         reader.readAsDataURL(file);
     });
 }
+</script>
+
+<script>
+   function showModal() {
+      const modal = document.getElementById('paymentModal');
+      modal.style.display = 'block';
+      
+      // Force reflow to restart animation
+      void modal.offsetWidth;
+   }
+   
+   function closeModal() {
+      const modal = document.getElementById('paymentModal');
+      modal.style.display = 'none';
+      document.getElementById('bankDetails').style.display = 'none';
+   }
+   
+   function showBankDetails() {
+      document.getElementById('bankDetails').style.display = 'block';
+   }
 </script>
 
 

@@ -18,9 +18,12 @@
       <input type="checkbox" required>
       <div class="chebkx_text">
          By continuing, I confirm I’ve read and agree to Rated Marine Services' 
-         <a href="{{ route('t&c') }}" target="_blank">Terms &amp; Conditions </a> and
-         <a href="{{ route('privacy') }}" target="_blank"> Privacy Policy </a> and
-         <a href="{{ route('consent') }}" target="_blank">Consent Statement .</a>
+         <a href="{{ route('t&c') }}" target="_blank">Terms &amp; Conditions </a>,
+         <a href="{{ route('privacy') }}" target="_blank"> Privacy Policy </a>,
+         <a href="{{ route('consent') }}" target="_blank">Consent Statement</a>,
+         <a target="_blank" href="{{ route('distance_sales_agreement') }}">Distance Sales Agreement</a>
+                                    and
+         <a target="_blank" href="{{ route('data_processing') }}">Data Processing and Storage Policy</a>
       </div>
       <div class="clear"></div>
    </label>

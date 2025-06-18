@@ -9,6 +9,7 @@ use App\Models\Country;
 use App\Models\Category;
 use App\Models\Subscription;
 use App\Models\Enquiry;
+use App\Models\ServiceReview;
 use Illuminate\Support\Facades\Crypt;
 
 class ListingController extends Controller
@@ -144,7 +145,7 @@ class ListingController extends Controller
         }
     }
 
-    public function detail($subscriptionId)
+    public function detail($subscriptionId, Request $request)
     {
         $subscription = Subscription::with('user', 'plan')->findOrFail($subscriptionId);
 
@@ -160,7 +161,38 @@ class ListingController extends Controller
             'socialMediaDetails'
         ])->where('user_id', $subscription->user_id)->firstOrFail();
 
-        return view('detail', compact('provider', 'subscription','encryptedUserId'));
+        //  fetch service review rating data using user id
+        $allReviews = ServiceReview::where('service_provider_id', $subscription->user_id)->latest()->get();
+
+         // Rating statistics
+        $ratingCounts = $allReviews->groupBy(function ($item) {
+            return floor($item->rating); // group by star 1-5
+        })->map->count();
+
+        $totalRatings = $allReviews->count();
+        $averageRating = $totalRatings > 0 ? number_format($allReviews->avg('rating'), 1) : 0;
+
+        // Paginated reviews with non-empty comments
+        $reviews = ServiceReview::where('service_provider_id', $subscription->user_id)
+            ->whereNotNull('comment')
+            ->where('comment', '!=', '')
+            ->latest()
+            ->paginate(3); // Load 3 per request
+
+        // If AJAX request (Load More), return only partial HTML
+        if ($request->ajax()) {
+            return view('partials.review_item', compact('reviews'))->render();
+        } 
+
+        return view('detail', compact(
+            'provider',
+            'subscription',
+            'encryptedUserId',
+            'reviews',
+            'averageRating',
+            'ratingCounts',
+            'totalRatings'
+        ));
     }
 
     public function enquiryStore(Request $request)
