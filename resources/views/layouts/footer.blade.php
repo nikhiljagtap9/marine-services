@@ -68,21 +68,21 @@
          <div class="col-lg-auto">
             <!-- start footer nav -->
             <ul class="list-unstyled list-separator mb-2 footer-nav">
-               <li class="list-inline-item"><a href="{{route('privacy')}}">Privacy</a></li>
-               <li class="list-inline-item"><a href="#">Sitemap</a></li>
-               <li class="list-inline-item"><a href="#">Cookies</a></li>
+               <li class="list-inline-item"><a href="{{route('privacy')}}" target="_blank">Privacy</a></li>
+               <li class="list-inline-item"><a href="{{route('t&c')}}" target="_blank">Terms & Condition</a></li>
+               <li class="list-inline-item"><a href="{{route('data_processing')}}" target="_blank">Data Processing</a></li>
             </ul>
             <!-- end /. footer nav -->
          </div>
          <div class="col-lg order-md-first">
             <div class="align-items-center row">
                <!-- start footer logo -->
-               <a href="#" class="col-sm-auto footer-logo mb-2 mb-sm-0">
+               <a href="{{ url('/') }}" class="col-sm-auto footer-logo mb-2 mb-sm-0">
                <img src="{{ asset('assets/images/logo.png') }}" alt="">
                </a>
                <!-- end /. footer logo -->
                <!-- start text -->
-               <div class="col-sm-auto copy">© 2025 Rated Marine Services - All Rights Reserved- All Rights Reserved</div>
+               <div class="col-sm-auto copy">© 2025 Rated Marine Services - All Rights Reserved</div>
                <!-- end /. text -->
             </div>
          </div>

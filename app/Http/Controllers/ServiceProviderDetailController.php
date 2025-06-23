@@ -549,7 +549,13 @@ class ServiceProviderDetailController extends Controller
         return redirect()->back()->with('success', 'Membership form saved successfully!');
     }
 
-    public function membership(Request $request) {
+    public function membership(Request $request) 
+    {
+        if (!auth()->check()) {
+            // Store info in session that user tried to access membership
+            session()->put('show_provider_register', true);
+            return redirect()->route('login');
+        }
 
         $userId = auth()->id();
         $planId = $request->id; // get plan id using url
@@ -614,7 +620,7 @@ class ServiceProviderDetailController extends Controller
             'groupedServiceDetails',
             'existingIds',
             'planId',
-            'selectedPlan'
+            'selectedPlan',
         ));
         
     }

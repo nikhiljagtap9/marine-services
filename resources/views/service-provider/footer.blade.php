@@ -4,7 +4,7 @@
         <ul class="list-unstyled list-inline mb-2">
             <li class="list-inline-item"><a href="{{ route('privacy') }}" target="_blank">Privacy</a></li>
             <li class="list-inline-item"><a href="{{ route('t&c') }}" target="_blank">Terms & Condition</a></li>
-            <li class="list-inline-item"><a href="{{ route('consent') }}" target="_blank">Consent</a></li>
+            <li class="list-inline-item"><a href="{{ route('data_processing') }}" target="_blank">Data Processing</a></li>
         </ul>
         <div class="copy">© 2025 Rated Marine Services - All Rights Reserved</div>
     </div>

@@ -12,6 +12,7 @@ class ServiceReview extends Model
     protected $fillable = [
         'user_id',
         'service_provider_id',
+        'subscription_id',
         'vessel_company_name',
         'vessel_company_email',
         'port_id',
@@ -21,4 +22,9 @@ class ServiceReview extends Model
         'comment',
         'rating'
     ];
+
+    public function subscription()
+    {
+        return $this->belongsTo(Subscription::class);
+    }
 }

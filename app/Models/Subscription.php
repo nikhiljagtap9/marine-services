@@ -21,4 +21,9 @@ class Subscription extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function serviceReviews()
+    {
+        return $this->hasMany(ServiceReview::class);
+    }
+
 }

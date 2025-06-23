@@ -63,7 +63,7 @@
          <div class="authentication-wrap overflow-hidden position-relative text-center text-sm-start my-5">
             <!-- Start Header Text -->
             <div class="mb-5">
-               <h2 class="display-6 fw-semibold mb-3">Welcome back!</h2>
+               <!-- <h2 class="display-6 fw-semibold mb-3">Welcome back!</h2> -->
                <p class="mb-0 cont_tx">
                   Please Sign in to Continue.
                </p>

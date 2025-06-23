@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
-    public function showForm($encryptedId)
+    // Show review form
+    public function showForm($encryptedId,$subscriptionId)
     {
         // Check if user is logged in
         if (!Auth::check()) {
@@ -32,12 +33,14 @@ class ReviewController extends Controller
         $ports = Port::orderBy('name')->get();
         $categories = Category::orderBy('name')->get();
 
-        return view('review', compact('provider','ports','categories'));
+        return view('review', compact('provider','subscriptionId','ports','categories'));
     }
 
+    // Save review form
     public function storeReview(Request $request, $id)
     {
         $validated = $request->validate([
+            'subscription_id' => 'required|exists:subscriptions,id',
             'vessel_company_name' => 'required|string|max:255',
             'vessel_company_email' => 'required|email',
             'port_id' => 'required|exists:ports,id',
@@ -67,6 +70,7 @@ class ReviewController extends Controller
         ServiceReview::create([
             'user_id' => $user->id, // rating submit user id
             'service_provider_id' => $id, // service provider user id
+            'subscription_id' =>  $request->subscription_id,
             'vessel_company_name'    => $request->vessel_company_name,
             'vessel_company_email'   => $request->vessel_company_email,
             'port_id' => $request->port_id,
@@ -80,6 +84,7 @@ class ReviewController extends Controller
         return back()->with('success', 'Thank you for your review!');
     }
 
+    // get review By Service user
     public function reviewByServiceUser(){
         $user = Auth::user();
 
@@ -93,6 +98,7 @@ class ReviewController extends Controller
         return view('service-provider.dashboard.review', compact('provider', 'reviews'));
     }
 
+    // get review By user
     public function reviewByUser(){
         $user = Auth::user();
 

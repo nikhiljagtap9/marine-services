@@ -197,9 +197,12 @@
                               <span class="h3">$</span>
                               <span class="display-4 fw-semibold">{{ $plan->price == 0 ? 'Free' : $plan->price . '/Year'}}</span>
                            </div>
-                           <!-- <a href="{{route('service-provider.membership', ['id' => $encryptedPlanId])}}" target="_blank" class="btn d-block mt-4 btn-primary text-nowrap">Get {{ $plan->name }}</a> -->
+                           @if($plan->name == 'Silver')
+                           <span class="text-muted small mt-1">FREE Until 1 Oct 2025!</span>
+                           @endif
+                           <!-- <a href="{{route('service-provider.membership', ['id' => $encryptedPlanId, 'from' => 'pricing'])}}" target="_blank" class="btn d-block mt-4 btn-primary text-nowrap">Get {{ $plan->name }}</a> -->
                            @if($plan->name == 'Basic' || $plan->name == 'Silver')
-                              <a href="{{route('service-provider.membership', ['id' => $encryptedPlanId])}}" target="_blank" class="btn d-block mt-4 btn-primary text-nowrap">Get {{ $plan->name }}</a>  
+                              <a href="{{route('service-provider.membership', ['id' => $encryptedPlanId, 'from' => 'pricing'])}}" target="_blank" class="btn d-block mt-4 btn-primary text-nowrap">Get {{ $plan->name }}</a>  
                            @else
                               <a href="#" class="btn d-block mt-4 btn-primary text-nowrap">Get After Launch</a>
                            @endif   

@@ -52,6 +52,7 @@
                            <form method="POST" action="{{ route('review.store', $provider->id) }}" enctype="multipart/form-data" class="row g-4">
                                @csrf
                               <div class="rating_star_a mb-3">
+                                    <input type="hidden" name="subscription_id" value="{{ $subscriptionId }}">
                                     <div class="ad_rting_titl required mb-2 d-block">Add Rating</div>
                                     <div id="star-rating">
                                        @for ($i = 1; $i <= 5; $i++)

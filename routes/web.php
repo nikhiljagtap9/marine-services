@@ -20,6 +20,7 @@ use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\FavouriteController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -46,7 +47,7 @@ Route::post('/enquiry-store', [ListingController::class, 'enquiryStore'])->name(
 Route::get('/pricing', [PricingController::class, 'index'])->name('pricing');
 
 // Show rating/review form (accessed via QR)
-Route::get('/review/provider/{id}', [ReviewController::class, 'showForm'])->name('review.form');
+Route::get('/review/provider/{id}/{subscriptionId}', [ReviewController::class, 'showForm'])->name('review.form');
 
 // Store submitted review
 Route::post('/review/provider/{id}', [ReviewController::class, 'storeReview'])->name('review.store');
@@ -84,11 +85,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    Route::get('/service-provider/membership',[ServiceProviderDetailController::class, 'membership'])->name('service-provider.membership');
-    Route::post('/service-provider-autosave/{section}', [ServiceProviderDetailController::class, 'autoSave']);
-    Route::post('/service-provider-submit-form', [ServiceProviderDetailController::class, 'membershipForm'])->name('service-provider.membershipForm');
-
 });
 
     Route::get('/service-provider/create', [ServiceProviderDetailController::class, 'create'])->name('service-provider.create');
@@ -141,23 +137,52 @@ Route::prefix('admin')->name('admin.')->group(function () {
     });
 });
 
-Route::prefix('service-provider')->middleware(['auth','checkUserType:service_provider'])->group(function () {
-    Route::get('/index', [ServiceProviderDashboardController::class, 'index'])->name('service-provider.index');
-    Route::get('/enquiries', [EnquiryController::class, 'enquiriesByServiceUser'])->name('enquiry.index');
-    Route::post('/quotes/store', [QuoteController::class, 'store'])->name('quotes.store');
-    Route::get('/quotes', [QuoteController::class, 'quotesByServiceUser'])->name('quotes.list');
-    Route::get('/quote/{quotation_id}', [QuoteController::class, 'showQuotesDetailsByServiceUser'])->name('quote.detail');
-    Route::post('/chat/send', [ChatController::class, 'send'])->name('chat.send');
-    Route::get('/get-review-by-service-user', [ReviewController::class, 'reviewByServiceUser'])->name('get-review-by-service-user');
+// Route::prefix('service-provider')->middleware(['auth','checkUserType:service_provider'])->group(function () {
+//     Route::get('/index', [ServiceProviderDashboardController::class, 'index'])->name('service-provider.index');
+//     Route::get('/enquiries', [EnquiryController::class, 'enquiriesByServiceUser'])->name('enquiry.index');
+//     Route::post('/quotes/store', [QuoteController::class, 'store'])->name('quotes.store');
+//     Route::get('/quotes', [QuoteController::class, 'quotesByServiceUser'])->name('quotes.list');
+//     Route::get('/quote/{quotation_id}', [QuoteController::class, 'showQuotesDetailsByServiceUser'])->name('quote.detail');
+//     Route::post('/chat/send', [ChatController::class, 'send'])->name('chat.send');
+//     Route::get('/get-review-by-service-user', [ReviewController::class, 'reviewByServiceUser'])->name('get-review-by-service-user');
 
-    Route::get('/service-provider/confirmTemp', [ServiceProviderDetailController::class, 'confirmTemp'])->name('service-provider.confirmTemp'); // Temp page
+//     Route::get('/service-provider/confirmTemp', [ServiceProviderDetailController::class, 'confirmTemp'])->name('service-provider.confirmTemp'); // Temp page
+//     Route::get('/service-provider/membership',[ServiceProviderDetailController::class, 'membership'])->name('service-provider.membership');
+//     Route::post('/service-provider-autosave/{section}', [ServiceProviderDetailController::class, 'autoSave']);
+//     Route::post('/service-provider-submit-form', [ServiceProviderDetailController::class, 'membershipForm'])->name('service-provider.membershipForm');
+// });
+
+
+
+Route::prefix('service-provider')->middleware(['checkUserType:service_provider'])->group(function () {
+    // Other routes (keep protected with default auth)
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/index', [ServiceProviderDashboardController::class, 'index'])->name('service-provider.index');
+        Route::get('/enquiries', [EnquiryController::class, 'enquiriesByServiceUser'])->name('enquiry.index');
+        Route::post('/quotes/store', [QuoteController::class, 'store'])->name('quotes.store');
+        Route::get('/quotes', [QuoteController::class, 'quotesByServiceUser'])->name('quotes.list');
+        Route::get('/quote/{quotation_id}', [QuoteController::class, 'showQuotesDetailsByServiceUser'])->name('quote.detail');
+        Route::post('/chat/send', [ChatController::class, 'send'])->name('chat.send');
+        Route::get('/get-review-by-service-user', [ReviewController::class, 'reviewByServiceUser'])->name('get-review-by-service-user');
+        Route::get('/service-provider/confirmTemp', [ServiceProviderDetailController::class, 'confirmTemp'])->name('service-provider.confirmTemp');
+        Route::post('/service-provider-autosave/{section}', [ServiceProviderDetailController::class, 'autoSave']);
+        Route::post('/service-provider-submit-form', [ServiceProviderDetailController::class, 'membershipForm'])->name('service-provider.membershipForm');
+    });
 });
+
+// Use custom middleware for this route only
+     Route::get('service-provider/membership', [ServiceProviderDetailController::class, 'membership'])
+        ->middleware(['service_provider.auth'])
+        ->name('service-provider.membership');
+
 
 Route::prefix('user')->middleware(['auth','checkUserType:client'])->group(function () {
     Route::get('/index', [DashboardController::class, 'index'])->name('user.index');
     Route::get('/user-quotes', [QuoteController::class, 'quotesByUser'])->name('user-quotes.list');
     Route::get('/user-quote/{quotation_id}', [QuoteController::class, 'showQuotesDetailsByUser'])->name('user-quote.detail');
     Route::get('/get-review-by-user', [ReviewController::class, 'reviewByUser'])->name('get-review-by-user');
+    Route::post('/favourite/toggle', [FavouriteController::class, 'toggle'])->name('favourite.toggle');
+    Route::get('/favourite-by-user', [FavouriteController::class, 'favouriteByUser'])->name('favourite.by-user');
 });
 
 Route::get('/user-quote-json/{quotation_id}', [QuoteController::class, 'quoteMessagesJson'])->name('user-quote.json');

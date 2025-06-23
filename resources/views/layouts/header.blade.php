@@ -40,7 +40,7 @@
       <img class="logo-dark" src="{{ asset('assets/images/logo.png') }}" alt="">
     </a> -->
 
-     <a class="navbar-brand m-0" href="#" data-aos="fade-right" data-aos-delay="400">
+    <a class="navbar-brand m-0" href="{{ url('/') }}" data-aos="fade-right" data-aos-delay="400">
       <img class="logo-white" src="{{ asset('assets/images/logo.png') }}" alt="">
       <img class="logo-dark" src="{{ asset('assets/images/logo.png') }}" alt="">
     </a>
@@ -56,11 +56,35 @@
       </a>
 
       <!-- Register -->
-      <a href="{{route('register')}}" class="btn-user position-relative d-flex align-items-center justify-content-center p-0"
+      <!-- <a href="{{route('register')}}" class="btn-user position-relative d-flex align-items-center justify-content-center p-0"
          data-aos="fade-left" data-aos-delay="1200"
          data-bs-toggle="tooltip" data-bs-placement="bottom" title="Register">
         <i class="fa fa-user-plus"></i>
-      </a>
+      </a> -->
+      <!-- Register Dropdown -->
+      <div class="dropdown" id="register">
+        <button class="btn-user position-relative d-flex align-items-center justify-content-center p-0 dropdown-toggle"
+            type="button"
+            id="registerDropdown"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            data-aos="fade-left" data-aos-delay="1200"
+            data-bs-placement="bottom" title="Register">
+            <i class="fa fa-user-plus"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end text-sm" aria-labelledby="registerDropdown">
+            <li>
+              <a class="dropdown-item py-2 px-3" href="{{ route('register') }}">
+                  <i class="fa fa-user me-2"></i> Register as a User
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item py-2 px-3" href="{{ route('service-provider.create') }}">
+                  <i class="fa fa-briefcase me-2"></i> Register as a Service Provider
+              </a>
+            </li>
+        </ul>
+      </div>
       @endguest
 
       @auth
@@ -81,18 +105,18 @@
       <!-- Favourites -->
       <a href="#" class="btn-user position-relative d-flex align-items-center justify-content-center p-0"
          data-aos="fade-left" data-aos-delay="1200"
-         data-bs-toggle="tooltip" data-bs-placement="bottom" title="Favourite">
+         data-bs-toggle="tooltip" data-bs-placement="bottom" title="Favourite" >
         <i class="fa-solid fa-heart"></i>
         
       </a>
 
       @guest
       <!-- Add Listing -->
-      <a href="{{route('service-provider.create')}}" class="btn btn-primary d-none d-sm-flex align-items-center gap-2 rounded-5 bold_listng"
+      <!-- <a href="{{route('service-provider.create')}}" class="btn btn-primary d-none d-sm-flex align-items-center gap-2 rounded-5 bold_listng"
          data-aos="zoom-in" data-aos-delay="1500">
         <i class="bi bi-plus-circle"></i>
         <span class="d-none d-sm-inline-block">Add Listing</span>
-      </a>
+      </a> -->
       @endguest
 
       <!-- Toggle -->
@@ -115,7 +139,7 @@
           <a class="nav-link actv_expl" href="{{route('product_listing')}}">Explore</a>
         </li> 
          <li class="nav-item" data-aos="fade-up" data-aos-delay="700">
-          <a class="nav-link actv_pric actv_home" href="{{route('pricing')}}">Pricing</a>
+          <a class="nav-link actv_pric actv_pricing" href="{{route('pricing')}}">Pricing</a>
         </li>
          <li class="nav-item" data-aos="fade-up" data-aos-delay="800">
           <a class="nav-link about_activ" href="{{route('about_us')}}">About Us</a>
@@ -126,12 +150,12 @@
       </ul>
 
       <!-- Add Listing Button (Mobile) -->
-      <div class="d-sm-none" data-aos="zoom-in" data-aos-delay="1200">
+      <!-- <div class="d-sm-none" data-aos="zoom-in" data-aos-delay="1200">
         <a href="{{route('service-provider.create')}}" class="btn btn-primary d-flex gap-2 align-items-center justify-content-center rounded-3">
           <i class="bi bi-plus-circle"></i>
           <span>Add Listing</span>
         </a>
-      </div>
+      </div> -->
     </div>
   </div>
 </nav>

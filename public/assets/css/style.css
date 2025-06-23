@@ -7074,3 +7074,9 @@ hr {
     font-size: 20px;
     font-weight: 500;
 }
+
+
+#register #registerDropdown{
+    border: none;
+    background: transparent;
+}

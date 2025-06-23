@@ -120,7 +120,7 @@
                   
                </a>
                @php
-                  $qrCodeSvg = base64_encode(QrCode::format('svg')->size(150)->generate(route('review.form', $encryptedUserId)));
+                  $qrCodeSvg = base64_encode(QrCode::format('svg')->size(150)->generate(route('review.form', [$encryptedUserId, $subscription->id])));
                @endphp
 
                <img id="qrImage" src="data:image/svg+xml;base64,{{ $qrCodeSvg }}" alt="QR Code" style="width: 90%;">
@@ -131,17 +131,47 @@
                </div>
             </div>
             <!-- start checkbbox bookmark -->
-            <div class="form-check form-check-bookmark mb-2 mb-sm-0">
-               <input class="form-check-input" type="checkbox" value="" id="jobBookmarkCheck">
-               <label class="form-check-label" for="jobBookmarkCheck">
-               <span class="form-check-bookmark-default">
-               <i class="fa fa-heart-o" aria-hidden="true"></i>  Save this listing
-               </span>
-               <span class="form-check-bookmark-active">
-               <i class="fa-solid fa-heart me-1"></i> Saved
-               </span>
-               </label>
-            </div>
+            @php
+               $isClient = Auth::check() && Auth::user()->user_type === 'client';
+               $favourite = $isClient
+                  ? \App\Models\Favourite::where('user_id', Auth::id())->where('subscription_id', $subscription->id)->exists()
+                  : false;
+
+               $loginUrl = route('login', ['redirect' => request()->fullUrl()]);
+            @endphp
+
+            @if(!Auth::check())
+               {{-- Not logged in, show fake checkbox with login redirect --}}
+               <a href="{{ $loginUrl }}" class="text-decoration-none">
+                  <div class="form-check form-check-bookmark mb-2 mb-sm-0">
+                     <input class="form-check-input" type="checkbox" disabled>
+                     <label class="form-check-label">
+                        <span class="form-check-bookmark-default">
+                           <i class="fa fa-heart-o" aria-hidden="true"></i> Save this listing
+                        </span>
+                        <span class="form-check-bookmark-active">
+                           <i class="fa-solid fa-heart me-1"></i> Saved
+                        </span>
+                     </label>
+                  </div>
+               </a>
+            @else
+               {{-- Logged in --}}
+               <div class="form-check form-check-bookmark mb-2 mb-sm-0">
+                  <input class="form-check-input" type="checkbox" id="jobBookmarkCheck"
+                     {{ $favourite ? 'checked' : '' }} {{ $isClient ? '' : 'disabled' }}>
+                  <label class="form-check-label" for="jobBookmarkCheck">
+                     <span class="form-check-bookmark-default">
+                        <i class="fa fa-heart-o" aria-hidden="true"></i> Save this listing
+                     </span>
+                     <span class="form-check-bookmark-active">
+                        <i class="fa-solid fa-heart me-1"></i> Saved
+                     </span>
+                  </label>
+               </div>
+            @endif
+
+
             <!-- end /. checkbbox bookmark -->
             <div class="small mt-1">
                46 people added this company <br> to their Favorites.
@@ -167,7 +197,7 @@
             {{-- Main Photo (Large left column) --}}
             <div class="col-md-8">
                @if($mainPhoto)
-                  <a class="d-block position-relative" href="{{ asset('storage/' . $mainPhoto) }}">
+                  <a class="d-block position-relative" href="{{ asset('storage/' . $mainPhoto) }}" title="Main Photo">
                         <img class="img-fluid w-100" src="{{ asset('storage/' . $mainPhoto) }}" alt="Main Photo">
                         <div class="position-absolute bottom-0 end-0 mb-3 me-3">
                            <span class="align-items-center btn btn-light btn-sm d-flex d-md-none fw-semibold gap-2">
@@ -182,7 +212,7 @@
             {{-- Side Photos (Right small column) --}}
             <div class="col-md-4 d-none d-md-inline-block">
                @foreach($sidePhotos as $photo)
-                  <a class="d-block mb-2 position-relative" href="{{ asset('storage/' . $photo) }}">
+                  <a class="d-block mb-2 position-relative" href="{{ asset('storage/' . $photo) }}"title="Side Photo">>
                         <img class="img-fluid w-100" src="{{ asset('storage/' . $photo) }}" alt="Side Photo">
                         @if ($loop->last)
                         <div class="position-absolute bottom-0 end-0 mb-3 me-3">
@@ -459,14 +489,15 @@
                      <!-- end /. form group -->
                   </div>
                   <div class="clear"></div>
-                  <div class="note_comn">
+                  <!-- <div class="note_comn">
                      Note: To ensure the authenticity of all reviews, we require users to upload an invoice or a relevant proof of service received from the listed company. <br><br>
 The invoice will NOT be displayed publicly and is only used for verification purposes.
 You may blur or hide the price or any sensitive information on the document before uploading. <br><br>
 We also encourage users to upload a photo of the service received, if possible
 
-                  </div>
+                  </div> 
                   <div class="clear"></div>
+                  -->
 
 
                   <div class="col-sm-12 text-end" bis_skin_checked="1">
@@ -675,6 +706,38 @@ We also encourage users to upload a photo of the service received, if possible
    });
 
 </script>
+
+<script>
+   // add favourite
+    $(document).on('change', '#jobBookmarkCheck', function () {
+        let isChecked = $(this).is(':checked');
+
+        $.ajax({
+            url: "{{ route('favourite.toggle') }}",
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                subscription_id: '{{ $subscription->id }}'
+            },
+            success: function (res) {
+                if (res.status === 'added') {
+                    console.log('Saved');
+                } else if (res.status === 'removed') {
+                    console.log('Removed');
+                }
+            },
+            error: function (xhr) {
+                if (xhr.status === 403) {
+                    alert('Please login as a client to save this listing.');
+                    $('#jobBookmarkCheck').prop('checked', false);
+                } else {
+                    alert('An error occurred.');
+                }
+            }
+        });
+    });
+</script>
+
 
 
 @endsection

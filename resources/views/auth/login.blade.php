@@ -26,7 +26,7 @@
          <div class="authentication-wrap overflow-hidden position-relative text-center text-sm-start my-5">
             <!-- Start Header Text -->
             <div class="mb-5">
-               <h2 class="display-6 fw-semibold mb-3">Welcome back!</h2>
+               <!-- <h2 class="display-6 fw-semibold mb-3">Welcome back!</h2> -->
                <p class="mb-0 cont_tx">
                   Please Sign in to Continue.
                </p>
@@ -65,16 +65,31 @@
                <!-- End Button -->
             </form>
             <!-- Start Bottom Text -->
-            <div class="bottom-text text-center mt-4"> Don't have an account? <a href="{{route('register')}}" class="fw-medium text-decoration-underline">Register Now</a>
-            </div>
+           <!-- <pre>Session: {{ session('show_provider_register') ? 'SET' : 'NOT SET' }}</pre> -->
+
+            @guest
+               @if (session('show_provider_register'))
+                  <div class="text-center mt-4">
+                        Register as a Service Provider -
+                        <a href="{{ route('service-provider.create') }}" class="fw-medium text-decoration-underline">Register Now</a>
+                  </div>
+                  @php session()->forget('show_provider_register'); @endphp
+               @else
+                 <div class="text-center mt-4"> Register as a User - <a href="{{route('register')}}" class="fw-medium text-decoration-underline">Register Now</a>
+               @endif
+            </div> 
+            @endguest
+
             <!-- /.End Bottom Text -->
-            <div class="or_cont_with">
-               <p>Or continue with</p>
+            <!-- <div class="or_cont_with">
+               <div class="text-center"> Register as a Service Provider - <a href="{{route('service-provider.create')}}" class="fw-medium text-decoration-underline">Register Now</a>
+            </div> -->
+               <!-- <p>Or continue with</p>
                <div class="social-login">
                   <div class="social-btn"><i class="fa fa-google"></i></div>
                   <div class="social-btn"><i class="fa fa-facebook"></i></div>
                   <div class="social-btn"><i class="fa fa-twitter"></i></div>
-               </div>
+               </div> -->
             </div>
             <div class="clear"></div>
          </div>
