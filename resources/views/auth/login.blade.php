@@ -75,7 +75,8 @@
                   </div>
                   @php session()->forget('show_provider_register'); @endphp
                @else
-                 <div class="text-center mt-4"> Register as a User - <a href="{{route('register')}}" class="fw-medium text-decoration-underline">Register Now</a>
+                 <div class="text-center mt-4"> 
+                  Not registered yet? <a href="{{route('register')}}" class="fw-medium text-decoration-underline"> [Create your Service Provider account] </a>
                @endif
             </div> 
             @endguest

@@ -39,14 +39,15 @@
 
             <div class="border-end col-lg-4 col-md-5 col-sm-6">
                <h5 class="fw-bold mb-4 aos-init animate__animated animate__fadeIn" data-wow-duration="1s" data-wow-delay="0.5s" >Stay Connect</h5>
-               <div class="aos-init animate__animated animate__fadeIn" data-wow-duration="1s" data-wow-delay="0.5s" >1123 Fictional St, San Francisco<br class="d-none d-xxl-block"> , CA 94103</div>
+               <div class="aos-init animate__animated animate__fadeIn" data-wow-duration="1s" data-wow-delay="0.5s" >Atalar Mah. Dolunay Sok. No :14/8  
+<br class="d-none d-xxl-block"> 34862 Kartal- Istanbul Turkiye</div>
                <div class="mt-4 aos-init animate__animated animate__fadeIn" data-wow-duration="1s" data-wow-delay="0.7s">
                   <a class="d-block fw-medium mb-1" href="#">
-                  <i class="fa-solid fa-phone me-2"></i><span>(123) 456-7890</span>
+                  <i class="fa-solid fa-phone me-2"></i><span>+90 532 482 82 15</span>
                   </a>
                   <a class="email-link d-block fw-medium" href="#">
                   <i class="fa-solid fa-envelope me-2"></i>
-                  <span class="__cf_email__" >[email&#160;protected]</span>
+                  <span class="__cf_email__" >info@ratedmarineservices.com</span>
                   </a>
                </div>
             </div>

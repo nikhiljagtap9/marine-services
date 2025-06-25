@@ -35,7 +35,7 @@
                   </svg>
                </div>
                <select class="serch_drop_select" id="country-select" name="country">
-                  <option>Select Country</option>
+                  <option value="">Select Country</option>
                   @foreach($countries as $country)
                      <option value="{{ $country->id }}" {{ request('country') == $country->id ? 'selected' : '' }}>
                            {{ $country->name }}

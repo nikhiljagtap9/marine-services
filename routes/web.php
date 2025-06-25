@@ -57,6 +57,10 @@ Route::get('/about_us', function () {
     return view('about_us');
 })->name('about_us');
 
+Route::get('/contact_us', function () {
+    return view('contact_us');
+})->name('contact_us');
+
 Route::get('/privacy', function () {
     return view('privacy');
 })->name('privacy');
@@ -164,7 +168,7 @@ Route::prefix('service-provider')->middleware(['checkUserType:service_provider']
         Route::get('/quote/{quotation_id}', [QuoteController::class, 'showQuotesDetailsByServiceUser'])->name('quote.detail');
         Route::post('/chat/send', [ChatController::class, 'send'])->name('chat.send');
         Route::get('/get-review-by-service-user', [ReviewController::class, 'reviewByServiceUser'])->name('get-review-by-service-user');
-        Route::get('/service-provider/confirmTemp', [ServiceProviderDetailController::class, 'confirmTemp'])->name('service-provider.confirmTemp');
+        Route::get('/confirmTemp', [ServiceProviderDetailController::class, 'confirmTemp'])->name('service-provider.confirmTemp');
         Route::post('/service-provider-autosave/{section}', [ServiceProviderDetailController::class, 'autoSave']);
         Route::post('/service-provider-submit-form', [ServiceProviderDetailController::class, 'membershipForm'])->name('service-provider.membershipForm');
     });

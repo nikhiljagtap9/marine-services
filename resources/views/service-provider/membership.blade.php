@@ -470,28 +470,28 @@ cursor: pointer;
                                        Company Details
                                     </div>
                                     <div class="clear"></div>
-                                    <div class="col-sm-4 cols_30" bis_skin_checked="1">
+                                    <div class="col-sm-4 cols_30 mb-4" bis_skin_checked="1">
                                        <div class="" bis_skin_checked="1">
                                           <label class="required fw-medium mb-2">Company Slogan / Short Description</label>
                                           <textarea class="form-control"
                                              name="slogan" rows="3" placeholder="A brief tagline or a short description of your company">{{old('slogan', $company->slogan ?? '')}}</textarea>
                                        </div>
                                     </div>
-                                    <div class="col-sm-4 cols_30" bis_skin_checked="1">
+                                    <div class="col-sm-4 cols_30 mb-4" bis_skin_checked="1">
                                        <div class="" bis_skin_checked="1">
                                           <label class="required fw-medium mb-2">About Your Company</label>
                                           <textarea class="form-control"
                                              name="about" rows="3" placeholder="Please tell us about your company's history, experience, mission, and vision">{{old('about', $company->about ?? '')}}</textarea>
                                        </div>
                                     </div>
-                                    <div class="col-sm-4 cols_30" bis_skin_checked="1">
+                                    <div class="col-sm-4 cols_30 mb-4" bis_skin_checked="1">
                                        <div class="" bis_skin_checked="1">
                                           <label class="required fw-medium mb-2">Service Brands</label>
                                           <textarea class="form-control"
                                              name="brands" rows="3" placeholder="Please list the machinery types, brand names, or any specific equipment you supply or work with.">{{old('brands', $company->brands ?? '')}}</textarea>
                                        </div>
                                     </div>
-                                    <div class="col-sm-4" bis_skin_checked="1">
+                                    <div class="col-sm-4 cols_30 mb-4" bis_skin_checked="1">
                                        <div class="" bis_skin_checked="1">
                                           <label class="required fw-medium mb-2">Certificates</label>
                                           <input type="file" name="certificates[]" multiple class="form-control" id="certificate-upload" accept=".jpg,.jpeg,.png">
@@ -515,7 +515,7 @@ cursor: pointer;
                                        </div>
 
                                     </div>
-                                    <div class="col-sm-4" bis_skin_checked="1">
+                                    <div class="col-sm-4 cols_30 mb-4" bis_skin_checked="1">
                                        <div class="" bis_skin_checked="1">
                                           <label class="required fw-medium mb-2">Photos</label>
                                           <input type="file" name="photos[]" multiple class="form-control" id="photo-upload" accept=".jpg,.jpeg,.png">
@@ -553,7 +553,7 @@ cursor: pointer;
                                        </div>
                                     </div>
 
-                                    <div class="col-sm-4" bis_skin_checked="1">
+                                    <div class="col-sm-4 cols_30 mb-4" bis_skin_checked="1">
                                        <div class="" bis_skin_checked="1">
                                           <label class="required fw-medium mb-2">Reference Shipowners </label>
                                           <textarea class="form-control" name="reference_shipowners" rows="3" placeholder="Enter Reference Shipowners"></textarea>

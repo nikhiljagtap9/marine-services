@@ -13,6 +13,39 @@
    .footer-dark.main-footer .container.pt-4{
    display: none;
    }
+
+   .thumb-wrapper {
+    display: block;
+    overflow: hidden;
+}
+
+.thumb-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.2s ease;
+}
+
+.thumb-img:hover {
+    transform: scale(1.05);
+}
+
+/* Size classes based on image count */
+.thumb-large {
+  /*  width: 110px;
+    height: 110px; */
+}
+
+.thumb-medium {
+    width: 80px;
+    height: 80px;
+}
+
+.thumb-small {
+    width: 62px;
+    height: 62px;
+}
+
 </style>
 <link rel="stylesheet" href="{{ asset('assets/css/internal_page.css')}}">
 <!-- start details header -->
@@ -185,7 +218,7 @@
 
 <div class="detl_left_panl">
 <div class="container">
-  @if(!empty($provider->companyDetail->photos))
+  <!-- @if(!empty($provider->companyDetail->photos))
     @php
         $photos = json_decode($provider->companyDetail->photos, true);
         $mainPhoto = $photos[0] ?? null;
@@ -212,7 +245,7 @@
             {{-- Side Photos (Right small column) --}}
             <div class="col-md-4 d-none d-md-inline-block">
                @foreach($sidePhotos as $photo)
-                  <a class="d-block mb-2 position-relative" href="{{ asset('storage/' . $photo) }}"title="Side Photo">>
+                  <a class="d-block mb-2 position-relative" href="{{ asset('storage/' . $photo) }}"title="Side Photo">
                         <img class="img-fluid w-100" src="{{ asset('storage/' . $photo) }}" alt="Side Photo">
                         @if ($loop->last)
                         <div class="position-absolute bottom-0 end-0 mb-3 me-3">
@@ -227,7 +260,65 @@
             </div>
       </div>
    </div>
-   @endif
+   @endif -->
+
+@if(!empty($provider->companyDetail->photos))
+    @php
+        $photos = json_decode($provider->companyDetail->photos, true);
+        $mainPhoto = $photos[0] ?? null;
+        $otherPhotos = array_slice($photos, 1);
+        $count = count($otherPhotos);
+        
+        // Determine size class based on count
+        if ($count <= 2) {
+            $thumbSize = 'large'; // ~120px
+        } elseif ($count <= 9) {
+            $thumbSize = 'medium'; // ~90px
+        } else {
+            $thumbSize = 'small'; // ~70px
+        }
+    @endphp
+
+    @if($mainPhoto)
+        <div class="rounded-4 overflow-hidden">
+            <div class="row gx-2 zoom-gallery">
+                {{-- Main Photo --}}
+                <div class="col-md-8 mb-2 mb-md-0">
+                    <a href="{{ asset('storage/' . $mainPhoto) }}" class="d-block position-relative" title="Main Photo">
+                        <img src="{{ asset('storage/' . $mainPhoto) }}" class="img-fluid w-100 rounded" alt="Main Photo">
+                        <div class="position-absolute bottom-0 end-0 mb-2 me-2">
+                            <span class="align-items-center btn btn-light btn-sm fw-semibold gap-2 d-flex d-md-none">
+                                <i class="fa-solid fa-expand"></i>
+                                <span> View photos</span>
+                            </span>
+                        </div>
+                    </a>
+                </div>
+
+                {{-- Auto-sized thumbnails --}}
+                <div class="col-md-4">
+                    <div class="d-flex flex-wrap gap-2 justify-content-start">
+                        @foreach($otherPhotos as $index => $photo)
+                            <a href="{{ asset('storage/' . $photo) }}" class="thumb-wrapper thumb-{{ $thumbSize }} position-relative" title="Photo {{ $index + 2 }}">
+                                <img src="{{ asset('storage/' . $photo) }}" class="thumb-img rounded" alt="Photo {{ $index + 2 }}">
+                                @if ($loop->last)
+                                    <div class="position-absolute bottom-0 end-0 mb-1 me-1">
+                                        <span class="align-items-center btn btn-light btn-sm fw-semibold gap-2 d-none d-md-flex">
+                                            <i class="fa-solid fa-expand"></i>
+                                            <span> View photos</span>
+                                        </span>
+                                    </div>
+                                @endif
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+@endif
+
+ 
 
    <div class="d-flex justify-content-end mt-2">
       <span class="small text-dark fw-semibold">Published:</span>

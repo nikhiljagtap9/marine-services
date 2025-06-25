@@ -145,7 +145,7 @@
           <a class="nav-link about_activ" href="{{route('about_us')}}">About Us</a>
         </li>
         <li class="nav-item" data-aos="fade-up" data-aos-delay="900">
-          <a class="nav-link" href="#">Contact Us</a>
+          <a class="nav-link contact_activ" href="{{route('contact_us')}}">Contact Us</a>
         </li> 
       </ul>
 

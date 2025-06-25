@@ -14,7 +14,68 @@ use Illuminate\Support\Facades\Crypt;
 
 class ListingController extends Controller
 {
+
     public function index(Request $request)
+    {
+        $countries = Country::orderBy('name')->get();
+        $categories = Category::orderBy('name')->get();
+        $today = Carbon::today();
+
+        $countryFilled = $request->filled('country');
+        $portFilled = $request->filled('ports_services');
+
+        $hasBothFilters = $countryFilled && $portFilled;
+        $hasAnyFilter = $countryFilled || $portFilled;
+
+        $query = ServiceProviderDetail::with([
+            'companyDetail',
+            'contactDetail',
+            'socialMediaDetails',
+            'user.subscriptions.plan',
+        ])
+        ->whereHas('user.subscriptions', function ($q) use ($today) {
+            $q->whereDate('end_date', '>=', $today)
+            ->where('plan_id', '!=', 1);
+        })
+        ->whereHas('companyDetail')
+        ->whereHas('contactDetail')
+        ->whereHas('socialMediaDetails');
+
+        if ($hasBothFilters) {
+            $query->where('country', $request->country)
+                ->where('port_id', $request->ports_services);
+
+            $query->when($request->filled('service_type'), function ($q) use ($request) {
+                $q->where('service_type', $request->service_type);
+            });
+
+            $query->when($request->filled('sub_service_type'), function ($q) use ($request) {
+                $q->where('sub_service_type', $request->sub_service_type);
+            });
+        } elseif ($hasAnyFilter) {
+            // Only one filter is provided → return no results
+            $products = new \Illuminate\Pagination\LengthAwarePaginator([], 0, 15);
+            $plan1Providers = collect();
+            return view('product_listing', compact('products', 'plan1Providers', 'countries', 'categories'));
+        } else {
+            // No filters at all → return all results
+            $query->orderByDesc('id');
+        }
+
+        $plan1Providers = $this->getPlan1Providers($request, $hasBothFilters);
+        $products = $query->paginate(15)->appends($request->all());
+
+        foreach ($products as $product) {
+            if ($product->user) {
+                $product->active_subscription = $product->user->getActiveSubscription();
+            }
+        }
+
+        return view('product_listing', compact('products', 'plan1Providers', 'countries', 'categories'));
+    }
+
+
+    public function indexOld(Request $request)
     {
         $countries = Country::orderBy('name')->get();
         $categories = Category::orderBy('name')->get();
@@ -80,7 +141,7 @@ class ListingController extends Controller
                 $product->active_subscription = $product->user->getActiveSubscription(); // Not filtering by plan
             }
         }
-     //dd($products);
+        //dd($products);
         // if ($request->ajax()) {
         //     return view('partials.product_item', compact('products'))->render();
         // }
