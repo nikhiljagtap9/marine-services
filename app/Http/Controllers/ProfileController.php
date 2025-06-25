@@ -24,15 +24,54 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
-    {
-        $request->user()->fill($request->validated());
+    // public function update(ProfileUpdateRequest $request): RedirectResponse
+    // {
+    //     $request->user()->fill($request->validated());
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+    //     if ($request->user()->isDirty('email')) {
+    //         $request->user()->email_verified_at = null;
+    //     }
+
+    //     $request->user()->save();
+
+    //     return Redirect::route('profile.edit')->with('status', 'profile-updated');
+    // }
+
+
+    public function update(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'company_name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email,' . $request->user()->id],
+            'profile_photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:1024'], // max 1MB
+        ]);
+
+        $user = $request->user();
+
+        if ($request->hasFile('profile_photo')) {
+            // Delete old photo if it exists
+            if ($user->profile_photo && \Storage::disk('public')->exists($user->profile_photo)) {
+                \Storage::disk('public')->delete($user->profile_photo);
+            }
+
+            // Generate unique filename
+            $file      = $request->file('profile_photo');
+            $extension = $file->getClientOriginalExtension();
+            $filename  = time() . '.' . $extension;
+
+            // Save to profile_photo/{user_id}/
+            $path = $file->storeAs('profile_photo/' . $user->id, $filename, 'public');
+            $user->profile_photo = $path;
         }
 
-        $request->user()->save();
+        // Reset email verification if email changed
+        if ($validated['email'] !== $user->email) {
+            $user->email_verified_at = null;
+        }
+
+        $user->fill($validated)->save();
+
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }

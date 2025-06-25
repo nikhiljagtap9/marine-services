@@ -18,7 +18,7 @@ a.revw_activ {
                     <div class="container-xxl">
                         <div class="card">
                             <div class="card-header position-relative">
-                                <h6 class="fs-17 fw-semi-bold my-1">My Submited Reviews</h6>
+                                <h6 class="fs-17 fw-semi-bold my-1">Submited Reviews</h6>
                             </div>
                             <div class="card-body">
                                 <div class="mb-4">
