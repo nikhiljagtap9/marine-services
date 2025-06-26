@@ -10,6 +10,7 @@ use App\Models\Category;
 use App\Models\Subscription;
 use App\Models\Enquiry;
 use App\Models\ServiceReview;
+use App\Models\Favourite;
 use Illuminate\Support\Facades\Crypt;
 
 class ListingController extends Controller
@@ -222,6 +223,9 @@ class ListingController extends Controller
             'socialMediaDetails'
         ])->where('user_id', $subscription->user_id)->firstOrFail();
 
+        // fetch favoritesCount depend on subscription_id
+        $favoritesCount = Favourite::where('subscription_id', $subscriptionId)->count();
+
         //  fetch service review rating data using user id
         $allReviews = ServiceReview::where('service_provider_id', $subscription->user_id)->latest()->get();
 
@@ -252,7 +256,8 @@ class ListingController extends Controller
             'reviews',
             'averageRating',
             'ratingCounts',
-            'totalRatings'
+            'totalRatings',
+            'favoritesCount'
         ));
     }
 

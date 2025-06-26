@@ -88,7 +88,7 @@
                <div class="d-flex" bis_skin_checked="1">
                   <div class="flex-grow-1 ms-3" bis_skin_checked="1">
                      <div class="fs-14 text-muted" bis_skin_checked="1">Contact View<br> Count</div>
-                     <h3 class="fw-semi-bold mb-0">1314</h3>
+                     <h3 class="fw-semi-bold mb-0">{{ $counts['contact'] ?? 0 }}</h3>
                   </div>
                   <div class="flex-shrink-0" bis_skin_checked="1">
                      <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-address-book"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M20 6v12a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2z" /><path d="M10 16h6" /><path d="M13 11m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M4 8h3" /><path d="M4 12h3" /><path d="M4 16h3" /></svg>
@@ -107,7 +107,7 @@
                <div class="d-flex" bis_skin_checked="1">
                   <div class="flex-grow-1 ms-3" bis_skin_checked="1">
                      <div class="fs-14 text-muted" bis_skin_checked="1">WhatsApp View<br> Count</div>
-                     <h3 class="fw-semi-bold mb-0">134</h3>
+                     <h3 class="fw-semi-bold mb-0">{{ $counts['whatsapp'] ?? 0 }}</h3>
                   </div>
                   <div class="flex-shrink-0" bis_skin_checked="1">
                      <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-brand-whatsapp">
@@ -127,7 +127,7 @@
                <div class="d-flex" bis_skin_checked="1">
                   <div class="flex-grow-1 ms-3" bis_skin_checked="1">
                      <div class="fs-14 text-muted" bis_skin_checked="1">Email ID View<br> Count</div>
-                     <h3 class="fw-semi-bold mb-0">332</h3>
+                     <h3 class="fw-semi-bold mb-0">{{ $counts['email'] ?? 0 }}</h3>
                   </div>
                   <div class="flex-shrink-0" bis_skin_checked="1">
                      <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-mail"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z" /><path d="M3 7l9 6l9 -6" /></svg>
@@ -143,7 +143,7 @@
                <div class="d-flex" bis_skin_checked="1">
                   <div class="flex-grow-1 ms-3" bis_skin_checked="1">
                      <div class="fs-14 text-muted" bis_skin_checked="1">Location View<br> Count</div>
-                     <h3 class="fw-semi-bold mb-0">133</h3>
+                     <h3 class="fw-semi-bold mb-0">{{ $counts['location'] ?? 0 }}</h3>
                   </div>
                   <div class="flex-shrink-0" bis_skin_checked="1">
                      <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-location"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5" /></svg>

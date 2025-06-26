@@ -79,40 +79,40 @@
                <li class="list-inline-item">
                   <a href="" class="cont_num comn_num comn_num_con">
                      <i class="fa fa-phone" aria-hidden="true"></i>
-                     <div class="data_li">{{ $provider->phone ?? 'N/A' }}</div>
+                     <div class="data_li" title="{{ $provider->phone }}">{{ $provider->phone ?? 'N/A' }}</div>
                      <div class="clear"></div>
                   </a>
                </li>
                <li class="list-inline-item">
                   <a href="" class="cont_num comn_num">
                      <i class="fa fa-whatsapp" aria-hidden="true"></i>
-                     <div class="data_li">{{ $provider->contactDetail->whatsapp_number ?? 'N/A' }}</div>
+                     <div class="data_li" title="{{ $provider->contactDetail->whatsapp_number  }}">{{ $provider->contactDetail->whatsapp_number ?? 'N/A' }}</div>
                      <div class="clear"></div>
                   </a>
                </li>
                <li class="list-inline-item">
                   <a href="" class="cont_num comn_num email_con">
                      <i class="fa fa-envelope" aria-hidden="true"></i>
-                     <div class="data_li">{{ $provider->user->email ?? 'N/A' }}</div>
+                     <div class="data_li" title="{{ $provider->user->email }}">{{ \Illuminate\Support\Str::limit($provider->user->email, 10) }}</div>
                      <div class="clear"></div>
                   </a>
                </li>
                <li class="list-inline-item">
                   <a href="https://www.google.com/maps?q={{ $provider->lat }},{{ $provider->lng }}" target="_blank" class="cont_num comn_num loctn_mail">
                      <i class="fa fa-map-marker" aria-hidden="true"></i>
-                     <!-- <div class="data_li">{{ $provider->office_address ?? 'N/A' }}</div> -->
-                     <div class="data_li" title="{{ $provider->office_address }}">{{ \Illuminate\Support\Str::limit($provider->office_address, 20) }}</div>
+                     <div class="data_li" title="{{ $provider->office_address }}">{{ \Illuminate\Support\Str::limit($provider->office_address, 10) }}</div>
                      <div class="clear"></div>
                   </a>
                </li>
 
                @guest
-               <li class="last_li_hide_new" >
-                  <div class="">
-                     <i class="fa fa-lock" aria-hidden="true"></i>
-                     Please Login/Register to view contact details.
-                  </div>
-               </li>
+                  <li class="last_li_hide_new" >
+                     <div class="">
+                        <i class="fa fa-lock" aria-hidden="true"></i>
+                        Please Login/Register to view contact details.
+                     </div>
+                  </li>
+               @endguest
                <li class="cont_1 comn_cont" >
                   <div class="">
                      <i class="fa fa-lock" aria-hidden="true"></i>
@@ -137,7 +137,7 @@
                      View Location
                   </div>
                </li>
-              @endguest
+              
             </ul>
             <div class="clear"></div>
             <ul class="fs-14 fw-medium list-inline list-separator mb-0 text-muted">
@@ -207,7 +207,7 @@
 
             <!-- end /. checkbbox bookmark -->
             <div class="small mt-1">
-               46 people added this company <br> to their Favorites.
+               {{$favoritesCount}} people added this company <br> to their Favorites.
             </div>
          </div>
       </div>
@@ -749,16 +749,16 @@ We also encourage users to upload a photo of the service received, if possible
 <!-- POPUP_SCRIPT 603 -->
 @endsection
  @section('scripts')
-   <!-- @auth
+   @auth
    <script>
       $(document).ready(function () {
          $(".last_li_hide_new").addClass("last_li_hide_new_hide");
          $(".comn_cont").addClass("comn_cont_show");
       });
    </script>
-   @endauth -->
+   @endauth 
 <script>
-   // Add JavaScript to Trigger Download
+   // Add JavaScript to Trigger Download QR Code
     document.getElementById('downloadQR').addEventListener('click', function () {
         const qrImg = document.getElementById('qrImage');
         const link = document.createElement('a');
@@ -829,6 +829,23 @@ We also encourage users to upload a photo of the service received, if possible
     });
 </script>
 
+<script>
+   // contact_clicks 
+    function trackClick(type) {
+        $.post("{{ route('contact.click') }}", {
+            _token: "{{ csrf_token() }}",
+            subscription_id: "{{ $subscription->id }}",
+            click_type: type
+        }, function(response) {
+            console.log(response.message);
+        });
+    }
+
+    $('.cont_1').click(() => trackClick('contact'));
+    $('.cont_2').click(() => trackClick('whatsapp'));
+    $('.cont_3').click(() => trackClick('email'));
+    $('.cont_4').click(() => trackClick('location'));
+</script>
 
 
 @endsection
