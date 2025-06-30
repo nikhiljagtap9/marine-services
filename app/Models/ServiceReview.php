@@ -27,4 +27,14 @@ class ServiceReview extends Model
     {
         return $this->belongsTo(Subscription::class);
     }
+
+    public function port()
+    {
+        return $this->belongsTo(Port::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'service_category_id');
+    }
 }

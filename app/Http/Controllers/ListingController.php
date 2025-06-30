@@ -12,11 +12,14 @@ use App\Models\Enquiry;
 use App\Models\ServiceReview;
 use App\Models\Favourite;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Pagination\LengthAwarePaginator;
+use App\Mail\EnquirySubmitted;
+use Illuminate\Support\Facades\Mail;
 
 class ListingController extends Controller
 {
 
-    public function index(Request $request)
+    public function indexNew(Request $request)
     {
         $countries = Country::orderBy('name')->get();
         $categories = Category::orderBy('name')->get();
@@ -150,6 +153,65 @@ class ListingController extends Controller
         return view('product_listing', compact('products','plan1Providers' ,'countries', 'categories'));
     }
 
+    public function index(Request $request)
+    {
+        $countries = Country::orderBy('name')->get();
+        $categories = Category::orderBy('name')->get();
+        $today = Carbon::today();
+        $hasFilters = $request->filled(['country', 'ports_services']);
+
+        $products = new LengthAwarePaginator([], 0, 15); // <-- default paginator
+        $plan1Providers = collect();
+
+        if ($hasFilters) {
+            $query = ServiceProviderDetail::with([
+                'companyDetail',
+                'contactDetail',
+                'socialMediaDetails',
+                'user.subscriptions.plan',
+                'portServiceDetails' => function ($q) use ($request) {
+                    $q->when($request->sub_service_type, function ($q2) use ($request) {
+                        $q2->whereJsonContains('sub_services', (string) $request->sub_service_type);
+                    });
+                },
+                'portServiceDetails.port',
+                'portServiceDetails.country',
+                'portServiceDetails.category'
+            ])
+            ->whereHas('user.subscriptions', function ($q) use ($today) {
+                $q->whereDate('end_date', '>=', $today)
+                ->where('plan_id', '!=', 1);
+            })
+            ->whereHas('companyDetail')
+            ->whereHas('contactDetail')
+            ->whereHas('socialMediaDetails')
+            ->whereHas('portServiceDetails', function ($q) use ($request) {
+                $q->where('country_id', $request->country)
+                ->where('port_id', $request->ports_services);
+
+                if ($request->filled('service_type')) {
+                    $q->where('category_id', $request->service_type);
+                }
+
+                if ($request->filled('sub_service_type')) {
+                    $q->whereJsonContains('sub_services', (string) $request->sub_service_type);
+                }
+            });
+
+            $products = $query->paginate(15)->appends($request->all());
+
+            foreach ($products as $product) {
+                if ($product->user) {
+                    $product->active_subscription = $product->user->getActiveSubscription();
+                }
+            }
+
+            $plan1Providers = $this->getPlan1Providers($request, $hasFilters);
+        }
+
+        return view('product_listing', compact('products', 'plan1Providers', 'countries', 'categories', 'hasFilters'));
+    }
+
     private function getPlan1Providers(Request $request,$hasFilters)
     {
         $today = Carbon::today();
@@ -275,7 +337,7 @@ class ListingController extends Controller
 
         $photoPath = $request->file('photo')?->store('uploads/enquiries', 'public');
 
-        Enquiry::create([
+        $enquiry = Enquiry::create([
             'service_user_id' => $request->service_user_id,
             'subscription_id' => $request->subscription_id,
             'company_name' => $request->company_name,
@@ -284,6 +346,13 @@ class ListingController extends Controller
             'comment' => $request->comment,
             'photo' => $photoPath,
         ]);
+
+        // Fetch the subscription and its associated user
+        $subscription = Subscription::with('user')->find($request->subscription_id);
+
+        if ($subscription && $subscription->user && $subscription->user->email) {
+            Mail::to($subscription->user->email)->send(new EnquirySubmitted($enquiry));
+        }
 
         return redirect()->back()->with('success', 'Enquiry submitted successfully.')->withFragment('enquiryForm');
     }

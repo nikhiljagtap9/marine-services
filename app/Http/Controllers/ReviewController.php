@@ -9,6 +9,8 @@ use App\Models\Category;
 use App\Models\ServiceReview;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ServiceReviewSubmitted;
 
 class ReviewController extends Controller
 {
@@ -16,10 +18,10 @@ class ReviewController extends Controller
     public function showForm($encryptedId,$subscriptionId)
     {
         // Check if user is logged in
-        if (!Auth::check()) {
-            $redirectUrl = url()->full(); // current page URL (encrypted ID included)
-            return redirect()->route('login', ['redirect' => $redirectUrl]);
-        }
+        // if (!Auth::check()) {
+        //     $redirectUrl = url()->full(); // current page URL (encrypted ID included)
+        //     return redirect()->route('login', ['redirect' => $redirectUrl]);
+        // }
         
         try {
             $id = Crypt::decrypt($encryptedId); // decrypt the ID
@@ -65,10 +67,10 @@ class ReviewController extends Controller
         if ($request->hasFile('invoice_document')) {
             $path = $request->file('invoice_document')->store('rating_doc', 'public');
         }
-        $user = Auth::user();
+       // $user = Auth::user();
         
-        ServiceReview::create([
-            'user_id' => $user->id, // rating submit user id
+        $review = ServiceReview::with(['port', 'category'])->create([
+          //  'user_id' => $user->id, // rating submit user id
             'service_provider_id' => $id, // service provider user id
             'subscription_id' =>  $request->subscription_id,
             'vessel_company_name'    => $request->vessel_company_name,
@@ -80,6 +82,14 @@ class ReviewController extends Controller
             'rating'  => $request->rating,
             'comment' => $request->comment,
         ]);
+
+        // Send email to service provider
+        $provider = User::find($id);
+        if ($provider && $provider->email) {
+          //  Mail::to($provider->email)->send(new ServiceReviewSubmitted($review));
+            Mail::to('niksjagtap9@gmail.com')->send(new ServiceReviewSubmitted($review));
+            
+        }
 
         return back()->with('success', 'Thank you for your review!');
     }

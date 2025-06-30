@@ -88,7 +88,7 @@
                         <!-- /.End Form Group -->
                         <!-- Start Checkbox -->
                         <div class="form-check mb-4 text-start">
-                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" required>
                             <label class="form-check-label" for="flexCheckDefault"> By signing up, you agree to the <a href="#" class="text-decoration-underline">terms of service</a> </label>
                         </div>
                         <!-- /.End Checkbox -->
