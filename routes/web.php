@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\PortController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\SubCategoryController;
+use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ListingController;
 use App\Http\Controllers\PricingController;
@@ -22,6 +23,7 @@ use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\FavouriteController;
 use App\Http\Controllers\ContactClickController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -141,6 +143,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/users', [UserListController::class, 'index'])->name('usres.index');
         Route::get('/users/detail/{subscriptionId}', [UserListController::class, 'detail'])->name('users.detail');
         
+        Route::get('/blogs', [BlogController::class, 'index'])->name('blogs.index');
+        Route::post('/blogs', [BlogController::class, 'store'])->name('blogs.store');
+        Route::get('ajax/blogs', [BlogController::class, 'getBlogs'])->name('blogs.list');
+        Route::get('/blogs/{id}/edit', [BlogController::class, 'edit'])->name('blogs.edit');
+        Route::put('/blogs/{id}', [BlogController::class, 'update'])->name('blogs.update');
+        Route::delete('/blogs/{id}', [BlogController::class, 'destroy'])->name('blogs.destroy');
     });
 });
 

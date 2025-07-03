@@ -3336,6 +3336,25 @@ hr {
     background-size: 100% 100%;
 }
 
+.blog-img-fixed {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+@media (max-width: 768px) {
+    .blog-img-fixed {
+        height: 160px; /* Smaller height on tablets/mobiles */
+    }
+}
+
+@media (max-width: 480px) {
+    .blog-img-fixed {
+        height: 130px; /* Even smaller on small phones */
+    }
+}
+
 @media(min-width: 576px) {
     .blog-list-card {
         padding: 36px !important;

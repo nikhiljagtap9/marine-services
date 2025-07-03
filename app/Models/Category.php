@@ -15,4 +15,9 @@ class Category extends Model
     {
         return $this->hasMany(SubCategory::class);
     }
+
+    public function portServiceDetails()
+    {
+        return $this->hasMany(PortServiceDetail::class, 'category_id');
+    }
 }
