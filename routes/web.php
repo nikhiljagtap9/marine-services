@@ -22,6 +22,7 @@ use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\FavouriteController;
 use App\Http\Controllers\ContactClickController;
+use App\Http\Controllers\PaymentController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -193,5 +194,10 @@ Route::prefix('user')->middleware(['auth','checkUserType:client'])->group(functi
 });
 
 Route::get('/user-quote-json/{quotation_id}', [QuoteController::class, 'quoteMessagesJson'])->name('user-quote.json');
+
+Route::post('/pay', [PaymentController::class, 'redirectToIyzico'])->name('iyzico.pay');
+Route::post('/iyzico/callback/{payload}', [PaymentController::class, 'handleCallback'])->name('iyzico.callback');
+Route::get('/thank-you/{payment_id}', [PaymentController::class, 'showSuccess'])->name('thankyou.page');
+Route::get('/payment-failed/{payment_id}', [PaymentController::class, 'showFailure'])->name('payment.failed.page');
 
 require __DIR__.'/auth.php';

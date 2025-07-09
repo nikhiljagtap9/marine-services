@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ServiceProviderDetail;
+//use Illuminate\Support\Facades\URL;//need to remove
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -33,6 +34,13 @@ class AppServiceProvider extends ServiceProvider
                     $view->with('providerDetail', $providerDetail);
                 }
             }
+            //need to remove after ngrok url testing
+            // if (env('APP_ENV') !== 'local') {
+            //     URL::forceScheme('https');
+            // }
+
+            // // OR force HTTPS always during ngrok testing
+            // URL::forceScheme('https');
         });
     }
 }

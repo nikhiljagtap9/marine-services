@@ -72,5 +72,13 @@ class ServiceProviderDetail extends Model
         return $this->hasMany(Subscription::class, 'user_id', 'user_id');
     }
 
+    public function cityRelation()
+    {
+        return $this->belongsTo(City::class, 'city');
+    }
+    public function countryRelation()
+    {
+        return $this->belongsTo(Country::class, 'country');
+    }
 }
 
