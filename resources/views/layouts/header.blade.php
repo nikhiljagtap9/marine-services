@@ -103,12 +103,6 @@
       @endauth
 
       <!-- Favourites -->
-      <a href="#" class="btn-user position-relative d-flex align-items-center justify-content-center p-0"
-         data-aos="fade-left" data-aos-delay="1200"
-         data-bs-toggle="tooltip" data-bs-placement="bottom" title="Favourite" >
-        <i class="fa-solid fa-heart"></i>
-        
-      </a>
 
       @guest
       <!-- Add Listing -->

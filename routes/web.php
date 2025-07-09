@@ -92,6 +92,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::put('/password', [PasswordController::class, 'update'])->name('password.update');
+    Route::post('/service-provider/quotes/store', [QuoteController::class, 'store'])->name('quotes.store');
 });
 
     Route::get('/service-provider/create', [ServiceProviderDetailController::class, 'create'])->name('service-provider.create');
@@ -147,7 +148,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
 Route::prefix('service-provider')->middleware(['auth','checkUserType:service_provider'])->group(function () {
     Route::get('/index', [ServiceProviderDashboardController::class, 'index'])->name('service-provider.index');
     Route::get('/enquiries', [EnquiryController::class, 'enquiriesByServiceUser'])->name('enquiry.index');
-    Route::post('/quotes/store', [QuoteController::class, 'store'])->name('quotes.store');
     Route::get('/quotes', [QuoteController::class, 'quotesByServiceUser'])->name('quotes.list');
     Route::get('/quote/{quotation_id}', [QuoteController::class, 'showQuotesDetailsByServiceUser'])->name('quote.detail');
     Route::post('/chat/send', [ChatController::class, 'send'])->name('chat.send');

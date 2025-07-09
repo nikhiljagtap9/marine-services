@@ -506,7 +506,7 @@
             </div>
             <hr class="my-5">
             <div class="mb-4 mb-lg-0" bis_skin_checked="1" id="enquiryForm">
-               <h4 class="fw-semibold fs-3 mb-4">Leave a <span class="font-caveat text-primary">Enquiry & Comment</span></h4>
+               <h4 class="fw-semibold fs-3 mb-4">Leave a <span class="font-caveat text-primary">Enquiry</span></h4>
                <div class="rating_star_a">
                   <div class="ad_rting_titl required ">Add Enquiry</div>
                   <div class="clear"></div>
@@ -596,7 +596,7 @@ We also encourage users to upload a photo of the service received, if possible
                   </div>
                </form>
             </div>
-            
+           @if (optional($provider->companyDetails)->reference_shipowners)
             <hr class="my-5">
             <div class="mb-4">
                <h4 class="fw-semibold fs-3 mb-4">References 
@@ -606,12 +606,12 @@ We also encourage users to upload a photo of the service received, if possible
                <div class="certfc_docmnt certfc_docmnt_2" >
                   <div class="certfc_docmnt_singl">
                      <div class="certfc_docmnt_titl">
-                        Lorem Shipowners
+                        {{ $provider->companyDetails->reference_shipowners }}
                      </div>
-                     <div class="certfc_docmnt_year">
+                     <!-- <div class="certfc_docmnt_year">
                         Sinc : 2005
-                     </div>
-                     <div class="catgry_wrp catgry_wrp_2" bis_skin_checked="1">
+                     </div> -->
+                     <!-- <div class="catgry_wrp catgry_wrp_2" bis_skin_checked="1">
                         <div class="singl_cat" bis_skin_checked="1">
                            <i class="fa fa-ship" aria-hidden="true"></i>
                            <div class="singl_name" bis_skin_checked="1">Fuel Supply</div>
@@ -623,95 +623,12 @@ We also encourage users to upload a photo of the service received, if possible
                            <div class="clear" bis_skin_checked="1"></div>
                         </div>
                         <div class="clear" bis_skin_checked="1"></div>
-                     </div>
-                  </div>
-                  <div class="certfc_docmnt_singl">
-                     <div class="certfc_docmnt_titl">
-                        Lorem Shipowners
-                     </div>
-                     <div class="certfc_docmnt_year">
-                        Sinc : 2005
-                     </div>
-                     <div class="catgry_wrp catgry_wrp_2" bis_skin_checked="1">
-                        <div class="singl_cat" bis_skin_checked="1">
-                           <i class="fa fa-ship" aria-hidden="true"></i>
-                           <div class="singl_name" bis_skin_checked="1">Fuel Supply</div>
-                           <div class="clear" bis_skin_checked="1"></div>
-                        </div>
-                        <div class="singl_cat" bis_skin_checked="1">
-                           <i class="fa fa-ship" aria-hidden="true"></i>
-                           <div class="singl_name" bis_skin_checked="1">Repairs</div>
-                           <div class="clear" bis_skin_checked="1"></div>
-                        </div>
-                        <div class="clear" bis_skin_checked="1"></div>
-                     </div>
-                  </div>
-                  <div class="certfc_docmnt_singl">
-                     <div class="certfc_docmnt_titl">
-                        Lorem Shipowners
-                     </div>
-                     <div class="certfc_docmnt_year">
-                        Sinc : 2005
-                     </div>
-                     <div class="catgry_wrp catgry_wrp_2" bis_skin_checked="1">
-                        <div class="singl_cat" bis_skin_checked="1">
-                           <i class="fa fa-ship" aria-hidden="true"></i>
-                           <div class="singl_name" bis_skin_checked="1">Fuel Supply</div>
-                           <div class="clear" bis_skin_checked="1"></div>
-                        </div>
-                        <div class="singl_cat" bis_skin_checked="1">
-                           <i class="fa fa-ship" aria-hidden="true"></i>
-                           <div class="singl_name" bis_skin_checked="1">Repairs</div>
-                           <div class="clear" bis_skin_checked="1"></div>
-                        </div>
-                        <div class="clear" bis_skin_checked="1"></div>
-                     </div>
-                  </div>
-                  <div class="certfc_docmnt_singl">
-                     <div class="certfc_docmnt_titl">
-                        Lorem Shipowners
-                     </div>
-                     <div class="certfc_docmnt_year">
-                        Sinc : 2005
-                     </div>
-                     <div class="catgry_wrp catgry_wrp_2" bis_skin_checked="1">
-                        <div class="singl_cat" bis_skin_checked="1">
-                           <i class="fa fa-ship" aria-hidden="true"></i>
-                           <div class="singl_name" bis_skin_checked="1">Fuel Supply</div>
-                           <div class="clear" bis_skin_checked="1"></div>
-                        </div>
-                        <div class="singl_cat" bis_skin_checked="1">
-                           <i class="fa fa-ship" aria-hidden="true"></i>
-                           <div class="singl_name" bis_skin_checked="1">Repairs</div>
-                           <div class="clear" bis_skin_checked="1"></div>
-                        </div>
-                        <div class="clear" bis_skin_checked="1"></div>
-                     </div>
-                  </div>
-                  <div class="certfc_docmnt_singl">
-                     <div class="certfc_docmnt_titl">
-                        Lorem Shipowners
-                     </div>
-                     <div class="certfc_docmnt_year">
-                        Sinc : 2005
-                     </div>
-                     <div class="catgry_wrp catgry_wrp_2" bis_skin_checked="1">
-                        <div class="singl_cat" bis_skin_checked="1">
-                           <i class="fa fa-ship" aria-hidden="true"></i>
-                           <div class="singl_name" bis_skin_checked="1">Fuel Supply</div>
-                           <div class="clear" bis_skin_checked="1"></div>
-                        </div>
-                        <div class="singl_cat" bis_skin_checked="1">
-                           <i class="fa fa-ship" aria-hidden="true"></i>
-                           <div class="singl_name" bis_skin_checked="1">Repairs</div>
-                           <div class="clear" bis_skin_checked="1"></div>
-                        </div>
-                        <div class="clear" bis_skin_checked="1"></div>
-                     </div>
+                     </div> -->
                   </div>
                </div>
                <div class="clear"></div>
             </div>
+            @endif
          </div>
         
       </div>

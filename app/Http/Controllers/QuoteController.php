@@ -8,6 +8,9 @@ use App\Models\Quote;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Category;
 use App\Models\ChatMessage;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\QuoteRequested;
+use App\Models\User;
 
 class QuoteController extends Controller
 {
@@ -21,8 +24,6 @@ class QuoteController extends Controller
 
         $requesterId = Auth::id(); // Logged-in user ID
 
-        
-
         foreach ($request->selected_providers as $providerId) {
             $quoteData = $request->quotes[$providerId] ?? [];
 
@@ -33,12 +34,19 @@ class QuoteController extends Controller
                 $categoryIds = explode(',', $categoryIds);
             }
 
-            Quote::create([
+            $quote = Quote::create([
                 'service_user_id' => $quoteData['user_id'],
                 'requested_by'    => $requesterId,
                 'company_name'    => $quoteData['company_name'] ?? 'N/A',
                 'category_id'     => $categoryIds, // This can be ["1,2"] etc.
             ]);
+
+            // Fetch user and send mail
+            $user = User::find($quoteData['user_id']);
+            if ($user && $user->email) {
+               Mail::to($user->email)->send(new QuoteRequested($quote));
+              //  Mail::to('niksjagtap9@gmail.com')->send(new QuoteRequested($quote));
+            }
         }
 
         return redirect()->back()->with('success', 'Quote requests sent successfully!');

@@ -70,13 +70,13 @@
             @guest
                @if (session('show_provider_register'))
                   <div class="text-center mt-4">
-                        Register as a Service Provider -
-                        <a href="{{ route('service-provider.create') }}" class="fw-medium text-decoration-underline">Register Now</a>
+                        Not registered yet? -
+                        <a href="{{ route('service-provider.create') }}" class="fw-medium text-decoration-underline">[Create your Service Provider account]</a>
                   </div>
                   @php session()->forget('show_provider_register'); @endphp
                @else
                  <div class="text-center mt-4"> 
-                  Not registered yet? <a href="{{route('register')}}" class="fw-medium text-decoration-underline"> [Create your Service Provider account] </a>
+                  Not registered yet? <a href="{{route('register')}}" class="fw-medium text-decoration-underline"> [Create your User account] </a>
                @endif
             </div> 
             @endguest
