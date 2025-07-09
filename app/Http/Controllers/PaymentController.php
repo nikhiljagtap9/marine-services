@@ -219,4 +219,14 @@ class PaymentController extends Controller
         return view('paymentfailed', compact('payment'));
     }
 
+    public function listPayments()
+    {
+         $payments = Payment::with(['user', 'plan'])
+        ->orderByDesc('created_at')
+        ->get();
+
+        return view('admin.payments.index', compact('payments'));
+    }
+
+
 }

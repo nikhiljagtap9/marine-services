@@ -19,66 +19,6 @@ use Illuminate\Support\Facades\Mail;
 class ListingController extends Controller
 {
 
-    public function indexNew(Request $request)
-    {
-        $countries = Country::orderBy('name')->get();
-        $categories = Category::orderBy('name')->get();
-        $today = Carbon::today();
-
-        $countryFilled = $request->filled('country');
-        $portFilled = $request->filled('ports_services');
-
-        $hasBothFilters = $countryFilled && $portFilled;
-        $hasAnyFilter = $countryFilled || $portFilled;
-
-        $query = ServiceProviderDetail::with([
-            'companyDetail',
-            'contactDetail',
-            'socialMediaDetails',
-            'user.subscriptions.plan',
-        ])
-        ->whereHas('user.subscriptions', function ($q) use ($today) {
-            $q->whereDate('end_date', '>=', $today)
-            ->where('plan_id', '!=', 1);
-        })
-        ->whereHas('companyDetail')
-        ->whereHas('contactDetail')
-        ->whereHas('socialMediaDetails');
-
-        if ($hasBothFilters) {
-            $query->where('country', $request->country)
-                ->where('port_id', $request->ports_services);
-
-            $query->when($request->filled('service_type'), function ($q) use ($request) {
-                $q->where('service_type', $request->service_type);
-            });
-
-            $query->when($request->filled('sub_service_type'), function ($q) use ($request) {
-                $q->where('sub_service_type', $request->sub_service_type);
-            });
-        } elseif ($hasAnyFilter) {
-            // Only one filter is provided → return no results
-            $products = new \Illuminate\Pagination\LengthAwarePaginator([], 0, 15);
-            $plan1Providers = collect();
-            return view('product_listing', compact('products', 'plan1Providers', 'countries', 'categories'));
-        } else {
-            // No filters at all → return all results
-            $query->orderByDesc('id');
-        }
-
-        $plan1Providers = $this->getPlan1Providers($request, $hasBothFilters);
-        $products = $query->paginate(15)->appends($request->all());
-
-        foreach ($products as $product) {
-            if ($product->user) {
-                $product->active_subscription = $product->user->getActiveSubscription();
-            }
-        }
-
-        return view('product_listing', compact('products', 'plan1Providers', 'countries', 'categories'));
-    }
-
-
     public function indexOld(Request $request)
     {
         $countries = Country::orderBy('name')->get();
@@ -160,32 +100,31 @@ class ListingController extends Controller
         $today = Carbon::today();
         $hasFilters = $request->filled(['country', 'ports_services']);
 
-        $products = new LengthAwarePaginator([], 0, 15); // <-- default paginator
-        $plan1Providers = collect();
+        $query = ServiceProviderDetail::with([
+            'companyDetail',
+            'contactDetail',
+            'socialMediaDetails',
+            'user.subscriptions.plan',
+            'portServiceDetails' => function ($q) use ($request) {
+                $q->when($request->sub_service_type, function ($q2) use ($request) {
+                    $q2->whereJsonContains('sub_services', (string) $request->sub_service_type);
+                });
+            },
+            'portServiceDetails.port',
+            'portServiceDetails.country',
+            'portServiceDetails.category'
+        ])
+        ->whereHas('user.subscriptions', function ($q) use ($today) {
+            $q->whereDate('end_date', '>=', $today)
+            ->where('plan_id', '!=', 1);
+        })
+        ->whereHas('companyDetail')
+        ->whereHas('contactDetail')
+        ->whereHas('socialMediaDetails');
 
+        // If filters applied, add those to the query
         if ($hasFilters) {
-            $query = ServiceProviderDetail::with([
-                'companyDetail',
-                'contactDetail',
-                'socialMediaDetails',
-                'user.subscriptions.plan',
-                'portServiceDetails' => function ($q) use ($request) {
-                    $q->when($request->sub_service_type, function ($q2) use ($request) {
-                        $q2->whereJsonContains('sub_services', (string) $request->sub_service_type);
-                    });
-                },
-                'portServiceDetails.port',
-                'portServiceDetails.country',
-                'portServiceDetails.category'
-            ])
-            ->whereHas('user.subscriptions', function ($q) use ($today) {
-                $q->whereDate('end_date', '>=', $today)
-                ->where('plan_id', '!=', 1);
-            })
-            ->whereHas('companyDetail')
-            ->whereHas('contactDetail')
-            ->whereHas('socialMediaDetails')
-            ->whereHas('portServiceDetails', function ($q) use ($request) {
+            $query->whereHas('portServiceDetails', function ($q) use ($request) {
                 $q->where('country_id', $request->country)
                 ->where('port_id', $request->ports_services);
 
@@ -197,20 +136,36 @@ class ListingController extends Controller
                     $q->whereJsonContains('sub_services', (string) $request->sub_service_type);
                 }
             });
-
-            $products = $query->paginate(15)->appends($request->all());
-
-            foreach ($products as $product) {
-                if ($product->user) {
-                    $product->active_subscription = $product->user->getActiveSubscription();
-                }
-            }
-
-            $plan1Providers = $this->getPlan1Providers($request, $hasFilters);
         }
+
+         // Rating filter using service_reviews average
+        if ($request->filled('rating')) {
+            // $query->whereHas('user.serviceReviews', function ($q) use ($request) {
+            //     $q->select('service_provider_id')
+            //     ->groupBy('service_provider_id')
+            //     ->havingRaw('AVG(rating) >= ', [(int)$request->rating]);
+            // });
+            $query->whereHas('user.serviceReviews', function ($q) use ($request) {
+                $q->where('rating', (int) $request->rating);
+            });
+        }
+
+        // Always paginate
+        $products = $query->paginate(15)->appends($request->all());
+
+        // Attach active subscription if user exists
+        foreach ($products as $product) {
+            if ($product->user) {
+                $product->active_subscription = $product->user->getActiveSubscription();
+            }
+        }
+
+        // Plan 1 providers (if filter applied)
+        $plan1Providers = $hasFilters ? $this->getPlan1Providers($request, $hasFilters) : collect();
 
         return view('product_listing', compact('products', 'plan1Providers', 'countries', 'categories', 'hasFilters'));
     }
+
 
     private function getPlan1Providers(Request $request,$hasFilters)
     {

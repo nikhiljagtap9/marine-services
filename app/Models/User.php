@@ -109,6 +109,8 @@ class User extends Authenticatable
             ->first();
     }
 
-
-
+    public function serviceReviews()
+    {
+        return $this->hasMany(ServiceReview::class, 'service_provider_id');
+    }
 }

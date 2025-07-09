@@ -51,14 +51,14 @@
                     </div>
                     @endif
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#hotelCarousel01" data-bs-slide="prev">
+                <!-- <button class="carousel-control-prev" type="button" data-bs-target="#hotelCarousel01" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Previous</span>
                 </button>
                 <button class="carousel-control-next" type="button" data-bs-target="#hotelCarousel01" data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
-                </button>
+                </button> -->
             </div>
             <div class="bg-blur card-badge d-inline-block position-absolute start-0 text-white z-2">
                 <i class="fa-solid fa-star"></i> <!-- Best Company of the Month -->

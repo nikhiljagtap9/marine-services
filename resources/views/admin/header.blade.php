@@ -62,7 +62,7 @@
                      </li>
                      
 
-                     <li class="{{ request()->routeIs('admin.countries.*', 'admin.cities.*', 'admin.ports.*', 'admin.categories.*', 'admin.sub-categories.*') ? 'mm-active' : '' }}">
+                     <li class="{{ request()->routeIs('admin.countries.*', 'admin.cities.*', 'admin.ports.*', 'admin.categories.*', 'admin.sub-categories.*', 'admin.payments.*') ? 'mm-active' : '' }}">
                             <a class="has-arrow material-ripple" href="#">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-plus" viewBox="0 0 16 16">
                                     <path d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5" />
@@ -75,7 +75,8 @@
                                 <li><a href="{{ route('admin.cities.index') }}">Manage Cities</a></li> 
                                 <li><a href="{{ route('admin.ports.index') }}">Manage Ports</a></li> 
                                 <li><a href="{{ route('admin.categories.index') }}">Manage Categories</a></li> 
-                                <li><a href="{{ route('admin.sub-categories.index') }}">Manage Sub-Categories</a></li> 
+                                <li><a href="{{ route('admin.sub-categories.index') }}">Manage Sub-Categories</a></li>
+                                <li><a href="{{ route('admin.payments.list') }}">Subscription</a></li>  
                             </ul>
                      </li>   
                      
@@ -163,8 +164,7 @@
                                     <img src="{{ asset('admin/assets/dist/img/avatar/01.jpg')}}" class="img-fluid rounded-circle" alt="">
                                  </div>
                                  <div class="profile-text">
-                                    <h6 class="m-0 fw-medium fs-14">Ugur</h6>
-                                    <span><span class="__cf_email__" data-cfemail="b5d0cdd4d8c5d9d0f5d2d8d4dcd99bd6dad8">[email&#160;protected]</span></span>
+                                    <h6 class="m-0 fw-medium fs-14">{{ $user->name }}</h6>
                                  </div>
                               </div>
                            </a>
@@ -177,8 +177,7 @@
                                     <img src="{{ asset('admin/assets/dist/img/avatar/01.jpg')}}" alt="">
                                  </div>
                                  <!-- img-user -->
-                                 <h6>Naeem Khan</h6>
-                                 <span><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3f5a475e524f535a7f58525e5653115c5052">[email&#160;protected]</a></span>
+                                 <h6>{{ $user->name }}</h6>
                               </div>
                               <!-- user-header -->
 
