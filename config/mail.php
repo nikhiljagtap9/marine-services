@@ -131,4 +131,6 @@ return [
         ],
     ],
 
+    'contact_receiver' => env('CONTACT_RECEIVER_EMAIL', 'default@example.com'),
+
 ];

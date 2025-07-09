@@ -10,30 +10,21 @@
                <!-- start social icon -->
                <ul class="d-flex flex-wrap gap-2 list-unstyled mb-0 social-icon">
                   <li class="aos-init animate__animated animate__fadeIn" data-wow-duration="1s" data-wow-delay="0.3s" >
-                     <a href="#" class="rounded-circle align-items-center d-flex fs-19 icon-wrap justify-content-center rounded-2 text-white inst">
+                     <a href="https://www.instagram.com/ratedmarineservices?igsh=MWtod25zdW1qdWNuNA==" target="_blank" class="rounded-circle align-items-center d-flex fs-19 icon-wrap justify-content-center rounded-2 text-white inst">
                      <i class="fab fa-instagram"></i>
                      </a>
                   </li>
                   <li class="aos-init animate__animated animate__fadeIn" data-wow-duration="1s" data-wow-delay="0.5s" >
-                     <a href="#" class="rounded-circle align-items-center d-flex fs-19 icon-wrap justify-content-center rounded-2 text-white twi">
+                     <a href="https://x.com/RatedMarine" target="_blank" class="rounded-circle align-items-center d-flex fs-19 icon-wrap justify-content-center rounded-2 text-white twi">
                      <i class="fab fa-twitter"></i>
                      </a>
                   </li>
                   <li class="aos-init animate__animated animate__fadeIn" data-wow-duration="1s" data-wow-delay="0.7s" >
-                     <a href="#" class="rounded-circle align-items-center d-flex fs-19 icon-wrap justify-content-center rounded-2 text-white dri">
-                     <i class="fab fa-dribbble"></i>
+                     <a href="https://www.linkedin.com/company/rated-marine-services/" target="_blank" class="rounded-circle align-items-center d-flex fs-19 icon-wrap justify-content-center rounded-2 text-white dri">
+                     <i class="fab fa-linkedin-in"></i>
                      </a>
                   </li>
-                  <li class="aos-init animate__animated animate__fadeIn" data-wow-duration="1s" data-wow-delay="0.9s" >
-                     <a href="#" class="rounded-circle align-items-center d-flex fs-19 icon-wrap justify-content-center rounded-2 text-white fb">
-                     <i class="fab fa-facebook-f"></i>
-                     </a>
-                  </li>
-                  <li class="aos-init animate__animated animate__fadeIn" data-wow-duration="1s" data-wow-delay="1.1s" >
-                     <a href="#" class="rounded-circle align-items-center d-flex fs-19 icon-wrap justify-content-center rounded-2 text-white whatsapp">
-                     <i class="fa-brands fa-whatsapp"></i>
-                     </a>
-                  </li>
+
                </ul>
             </div>
 
