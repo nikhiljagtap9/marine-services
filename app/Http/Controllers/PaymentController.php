@@ -22,6 +22,9 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\Subscription;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\PaymentSuccess;
+use App\Mail\PaymentFailed;
 
 
 class PaymentController extends Controller
@@ -130,20 +133,6 @@ class PaymentController extends Controller
 
          $payment = $this->storePayment($checkoutForm);
          $paymentId = $checkoutForm->getPaymentId(); 
-        //  $payment = [
-        //         'status'            => $checkoutForm->getPaymentStatus(),
-        //         'payment_id'        => $checkoutForm->getPaymentId(),
-        //         'price'             => $checkoutForm->getPrice(),
-        //         'paid_price'        => $checkoutForm->getPaidPrice(),
-        //         'currency'          => $checkoutForm->getCurrency(),
-        //         'card_type'         => $checkoutForm->getCardType(),
-        //         'card_association'  => $checkoutForm->getCardAssociation(),
-        //         'card_family'       => $checkoutForm->getCardFamily(),
-        //         'bin_number'        => $checkoutForm->getBinNumber(),
-        //         'last_four_digits'  => $checkoutForm->getLastFourDigits(),
-        //         'auth_code'         => $checkoutForm->getAuthCode(),
-        //         'raw_response'      => json_decode($checkoutForm->getRawResult(), true),
-        //     ];
            
         if ($checkoutForm->getPaymentStatus() === 'SUCCESS') {
 
@@ -183,10 +172,17 @@ class PaymentController extends Controller
                 $subscriptionId = $newSubscription->id;
             }
 
-
+            // Send success email
+            Mail::to(auth()->user()->email)->send(new PaymentSuccess($payment, $newSubscription ?? $activeSubscription));           
+            
             return redirect()->route('thankyou.page', $paymentId);
+        } else {
+            // Send failed email
+            Mail::to(auth()->user()->email)->send(new PaymentFailed($payment));
+
+            return redirect()->route('payment.failed.page', $paymentId);
         }
-        return redirect()->route('payment.failed.page', $paymentId);
+        
     }
     public function storePayment($checkoutForm) // or whatever method you're using
     {
