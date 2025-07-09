@@ -23,6 +23,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\FavouriteController;
 use App\Http\Controllers\ContactClickController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\Auth\PasswordController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -53,6 +54,8 @@ Route::get('/review/provider/{id}/{subscriptionId}', [ReviewController::class, '
 
 // Store submitted review
 Route::post('/review/provider/{id}', [ReviewController::class, 'storeReview'])->name('review.store');
+
+Route::post('/contact/send', [HomeController::class, 'contactPageSend'])->name('contact.send');
 
 
 Route::get('/about_us', function () {
@@ -142,6 +145,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/users', [UserListController::class, 'index'])->name('usres.index');
         Route::get('/users/detail/{subscriptionId}', [UserListController::class, 'detail'])->name('users.detail');
         
+        Route::get('/admin/payments', [PaymentController::class, 'listPayments'])->name('payments.list');
     });
 });
 

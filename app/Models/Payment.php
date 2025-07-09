@@ -25,4 +25,32 @@ class Payment extends Model
         'auth_code',
         'raw_response',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    // public function plan()
+    // {
+    //     return $this->belongsTo(Plan::class);
+    // }
+
+    public function subscription()
+    {
+        return $this->hasOne(Subscription::class, 'payment_id', 'id');
+    }
+
+    public function plan()
+    {
+        return $this->hasOneThrough(
+            Plan::class,
+            Subscription::class,
+            'payment_id', // Foreign key on Subscription
+            'id',         // Foreign key on Plan
+            'id',         // Local key on Payment
+            'plan_id'     // Local key on Subscription
+        );
+    }
+
 }

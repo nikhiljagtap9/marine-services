@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.main')
 
 @section('content')
 <div class="clear"></div>
@@ -118,21 +118,21 @@
                      <path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z" />
                   </svg>
                </div>
-               <select class="serch_drop_select">
-                  <option selected="">Select Rating</option>
-                  <option value="1">
+               <select name="rating" class="serch_drop_select">
+                  <option value="">Select Rating</option>
+                  <option value="5" {{ request('rating') == 5 ? 'selected' : '' }}>
                      ★ ★ ★ ★ ★
                   </option>
-                  <option value="2">
+                  <option value="4" {{ request('rating') == 4 ? 'selected' : '' }}>
                      ★ ★ ★ ★ 
                   </option>
-                  <option value="3">
+                  <option value="3" {{ request('rating') == 3 ? 'selected' : '' }}>
                      ★ ★ ★ 
                   </option>
-                  <option value="3">
+                  <option value="2" {{ request('rating') == 2 ? 'selected' : '' }}>
                      ★ ★ 
                   </option>
-                  <option value="3">
+                  <option value="1" {{ request('rating') == 1 ? 'selected' : '' }}>
                      ★ 
                   </option>
                </select>

@@ -58,18 +58,13 @@
                     </div>
                     <h5 class="fw-bold mb-4">follow us</h5>
                     <div class="d-flex gap-3">
-                        <a href="#" class="fb d-flex align-items-center justify-content-center fs-19 rounded mr-2">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a href="#" class="tw d-flex align-items-center justify-content-center fs-21 rounded mr-2">
+                        <a href="https://x.com/RatedMarine" class="tw d-flex align-items-center justify-content-center fs-21 rounded mr-2" target="_blank">
                             <i class="fab fa-twitter"></i>
                         </a>
-                        <a href="#" class="ins d-flex align-items-center justify-content-center fs-21 rounded mr-2">
+                        <a href="https://www.instagram.com/ratedmarineservices?igsh=MWtod25zdW1qdWNuNA==" class="ins d-flex align-items-center justify-content-center fs-21 rounded mr-2" target="_blank">
                             <i class="fab fa-instagram"></i></a>
-                        <a href="#" class="pr d-flex align-items-center justify-content-center fs-21 rounded mr-2">
-                            <i class="fab fa-pinterest-p"></i>
-                        </a>
-                        <a href="#" class="li d-flex align-items-center justify-content-center fs-21 rounded mr-2">
+                        
+                        <a href="https://www.linkedin.com/company/rated-marine-services/" class="li d-flex align-items-center justify-content-center fs-21 rounded mr-2" target="_blank">
                             <i class="fab fa-linkedin-in"></i>
                         </a>
                     </div>
@@ -80,41 +75,93 @@
 
     <div class="py-5 bg-light mx-3 rounded-4 my-3">
         <div class="container py-5">
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+            <form method="POST" action="{{ route('contact.send') }}">
             <div class="row justify-content-between">
+                 
                 <div class="col-md-6 col-xl-5">
                     <h3 class="h1 mb-4 text-primary">My contact data</h3>
-                    <!-- Start Form Group -->
+                     @csrf
+                    <!-- Full Name -->
                     <div class="mb-4">
                         <label class="required fw-medium mb-2">Full Name</label>
-                        <input type="text" class="form-control" id="firstName" placeholder="David Hall" required="">
+                        <input
+                            type="text"
+                            name="name"
+                            value="{{ old('name') }}"
+                            class="form-control @error('name') is-invalid @enderror"
+                            placeholder="David Hall"
+                            >
+                        @error('name')
+                        <div class="invalid-feedback text-start">{{ $message }}</div>
+                        @enderror
                     </div>
-                    <!-- /.End Form Group -->
-                    <!-- Start Form Group -->
+
+                    <!-- Email -->
                     <div class="mb-4">
                         <label class="required fw-medium mb-2">Your Email</label>
-                        <input type="email" class="form-control" id="email" placeholder="hello@email.com">
+                        <input
+                            type="email"
+                            name="email"
+                            value="{{ old('email') }}"
+                            class="form-control @error('email') is-invalid @enderror"
+                            placeholder="hello@email.com"
+                            >
+                        @error('email')
+                        <div class="invalid-feedback text-start">{{ $message }}</div>
+                        @enderror
                     </div>
-                    <!-- /.End Form Group -->
-                    <!-- Start Form Group -->
+
+                    <!-- Phone -->
                     <div class="mb-4">
                         <label class="required fw-medium mb-2">Your Phone</label>
-                        <input type="number" class="form-control" id="phone">
-                    </div>
-                    <!-- /.End Form Group -->
+                        <input
+                            type="text"
+                            name="phone"
+                            value="{{ old('phone') }}"
+                            class="form-control @error('phone') is-invalid @enderror"
+                            placeholder="Your Phone"
+                            >
+                        @error('phone')
+                        <div class="invalid-feedback text-start">{{ $message }}</div>
+                        @enderror
+                    </div>  
                 </div>
                 <div class="col-md-6 col-xl-5">
                     <h3 class="h1 mb-4 text-primary">My message</h3>
-                    <!-- Start Form Group -->
+                    <!-- Message -->
                     <div class="mb-4">
                         <label class="required fw-medium mb-2">Your Comments</label>
-                        <textarea class="form-control" rows="7" placeholder="Tell us what we can help you with!"></textarea>
+                        <textarea
+                            name="user_message"
+                            rows="5"
+                            class="form-control @error('message') is-invalid @enderror"
+                            placeholder="Tell us what we can help you with!"
+                            >{{ old('user_message') }}</textarea>
+                        @error('user_message')
+                        <div class="invalid-feedback text-start">{{ $message }}</div>
+                        @enderror
                     </div>
-                    <!-- /.End Form Group -->
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                        <label class="form-check-label" for="flexCheckDefault">
+
+                    <!-- Consent -->
+                    <div class="form-check mb-4">
+                        <input
+                            class="form-check-input @error('consent') is-invalid @enderror"
+                            type="checkbox"
+                            name="consent"
+                            {{ old('consent') ? 'checked' : '' }}
+                            >
+                        <label class="form-check-label">
                             YES, I AUTHORIZE THE USE OF MY PERSONAL DATA IN ACCORDANCE WITH THE PRIVACY POLICY DESCRIBED ON THE WEBSITE.
                         </label>
+                        @error('consent')
+                        <div class="invalid-feedback text-start d-block">{{ $message }}</div>
+                        @enderror
                     </div>
                     <!-- Start Submit Button -->
                     <button type="submit" class="btn btn-primary btn-lg d-inline-flex hstack gap-2 mt-4">
@@ -123,9 +170,11 @@
                         <i class="fa-arrow-right fa-solid fs-14"></i>
                     </button>
                     <!-- /.End Submit Button -->
+
                 </div>
+                
             </div>
-            
+             </form>
         </div>
     </div>
        
