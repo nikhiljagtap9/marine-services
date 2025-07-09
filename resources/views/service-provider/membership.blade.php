@@ -562,43 +562,37 @@ cursor: pointer;
                                  </div>
                                  @endif
                               </div>
-                           <div id="responseMessage" class="alert d-none"></div>   
-                           <div class="col-sm-12 text-end" bis_skin_checked="1">
-                              <!-- <button type="submit" class="btn btn-primary submit_btn" fdprocessedid="43gnio">
-                                 Submit
-                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-right">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                    <path d="M5 12l14 0"></path>
-                                    <path d="M13 18l6 -6"></path>
-                                    <path d="M13 6l6 6"></path>
-                                 </svg>
-                              </button> -->
-                               
-                              <div class="col-sm-12 text-end com_mn" bis_skin_checked="1" id="make_payment">
-                                 <img src="{{ asset('service-provider/assets/img/payment.png')}}" class="mak_pmnt" >
-                                 <div class="clear"></div>
-                                 <a onclick="showModal()" class="btn btn-primary submit_btn submit_btn_membr" >
-                                    Make PAYment  
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-right">
-                                       <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                       <path d="M5 12l14 0"></path>
-                                       <path d="M13 18l6 -6"></path>
-                                       <path d="M13 6l6 6"></path>
-                                    </svg>
-                                 </a>
-                                 <button type="submit" class="btn btn-primary submit_btn" id="submitBtn">
-                                   <span id="submitText">Proceed</span>
-                                   <span id="submitLoader" class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
-                                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-right">
-                                      <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                      <path d="M5 12l14 0"></path>
-                                      <path d="M13 18l6 -6"></path>
-                                      <path d="M13 6l6 6"></path>
-                                   </svg>
-                                 </button>
+                           <div id="responseMessage" class="alert d-none"></div> 
+                           @if($showPaymentButton)  
+                              <div class="col-sm-12 text-end" bis_skin_checked="1">
+                                 <div class="col-sm-12 text-end com_mn" bis_skin_checked="1" id="make_payment">
+                                    <img src="{{ asset('service-provider/assets/img/payment.png')}}" class="mak_pmnt" >
+                                    <div class="clear"></div>
+                                    <!-- <a onclick="showModal()" class="btn btn-primary submit_btn submit_btn_membr" >
+                                       Make Payment  
+                                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-right">
+                                          <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                          <path d="M5 12l14 0"></path>
+                                          <path d="M13 18l6 -6"></path>
+                                          <path d="M13 6l6 6"></path>
+                                       </svg>
+                                    </a> -->
+                                    
+                                       <button type="submit" class="btn btn-primary submit_btn" id="submitBtn">
+                                       <span id="submitText">Make Payment </span>
+                                       <span id="submitLoader" class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
+                                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-right">
+                                          <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                          <path d="M5 12l14 0"></path>
+                                          <path d="M13 18l6 -6"></path>
+                                          <path d="M13 6l6 6"></path>
+                                       </svg>
+                                       </button>
+                                    
+                                 </div>
+                                 
                               </div>
-                              
-                           </div>
+                           @endif
                          </form>
                         </div>
                         <div class="resize-sensor" style="position: absolute; inset: 0px; overflow: hidden; z-index: -1; visibility: hidden;" bis_skin_checked="1">
@@ -636,15 +630,24 @@ cursor: pointer;
             </div>
             <div class="modal-footer">
                <button class="btn btn-primary btn_pop1" onclick="showBankDetails()">Pay via Bank Transfer</button>
-               <a href="#" class="btn btn-secondary btn_pop2">Pay Online</a>
+               <form action="{{ route('iyzico.pay') }}" method="POST">
+                  @csrf
+                  <input type="hidden" name="product_name" value="{{$selectedPlan->name}}">
+                  <input type="hidden" name="amount" value="{{$selectedPlan->price}}">
+                  <input type="hidden" name="category" value="Membership">
+                  <input type="hidden" name="plan_id" value="{{ $planId }}">
+                  <button type="submit" class="btn btn-secondary btn_pop2">Pay Online</button>
+               </form>
+
+               <!-- <a href="{{ route('iyzico.pay') }}" class="btn btn-secondary btn_pop2">Pay Online</a> -->
             </div>
             <div class="bank-details" id="bankDetails">
-               <strong>BANK NAME:</strong> TURKIYE GARANTI BANKASI A.S.<br>
-               <strong>BRANCH NAME AND CODE:</strong> ICERENKOY CARR. AVM – 1324<br>
-               <strong>BENEFICIARY:</strong> UGUR TUFAN EMEKSIZ<br>
-               <strong>ACCOUNT NO:</strong> 9087289<br>
-               <strong>IBAN:</strong> TR42 0006 2001 3240 0009 0872 89<br>
-               <strong>SWIFT CODE:</strong> TGBATRISXXX
+               <strong>BANK NAME:</strong> {{ config('bank.name') }}<br>
+               <strong>BRANCH NAME AND CODE:</strong> {{ config('bank.branch') }}<br>
+               <strong>BENEFICIARY:</strong> {{ config('bank.beneficiary') }}<br>
+               <strong>ACCOUNT NO:</strong> {{ config('bank.account') }}<br>
+               <strong>IBAN:</strong> {{ config('bank.iban') }}<br>
+               <strong>SWIFT CODE:</strong> {{ config('bank.swift') }}
             </div>
          </div>
       </div>
@@ -902,11 +905,13 @@ cursor: pointer;
                $('#responseMessage')
                 .removeClass('d-none alert-danger')
                 .addClass('alert-success')
-                .text('Data saved successfully!');
+                .text('Form validated. Redirecting to payment...');
                
                // Reload page after 2 seconds
                   setTimeout(function() {
-                     window.location.href = "{{ route('service-provider.confirmTemp') }}";
+                     // Show payment popup/modal
+                     showModal();
+                    // window.location.href = "{{ route('service-provider.confirmTemp') }}";
                   }, 2000);
             },
            error: function(xhr) {
@@ -957,7 +962,7 @@ cursor: pointer;
             complete: function() {
                  // Hide loader and re-enable button
                  $('#submitBtn').prop('disabled', false);
-                 $('#submitText').text('Submit');
+                 $('#submitText').text('Make Payment');
                  $('#submitLoader').addClass('d-none');
             }
          });

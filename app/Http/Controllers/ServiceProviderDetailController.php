@@ -608,6 +608,22 @@ class ServiceProviderDetailController extends Controller
             ]);
         }
 
+        /*
+        1. Check if subscription is active (payment made and not expired)
+        2. Show/hide payment button accordingly
+        We'll add:
+        $subscriptionExpired boolean
+        $showPaymentButton boolean flag to be used in the Blade view
+        */
+        $subscriptionExpired = true;
+        $showPaymentButton = true;
+
+        if ($subscription) {
+            $subscriptionExpired = Carbon::parse($subscription->end_date)->isPast();
+
+            $showPaymentButton = is_null($subscription->payment_id) || $subscriptionExpired;
+        }
+
 
         return view('service-provider.membership', compact(
             'contact',
@@ -621,6 +637,7 @@ class ServiceProviderDetailController extends Controller
             'existingIds',
             'planId',
             'selectedPlan',
+            'showPaymentButton'
         ));
         
     }
@@ -774,12 +791,6 @@ class ServiceProviderDetailController extends Controller
                 'start_date' => $startDate,
                 'end_date' => $endDate,
             ]);
-            // $newSubscription = Subscription::create([
-            //     'user_id' => $userId,
-            //     'plan_id' => $planId,
-            //     'start_date' => Carbon::now(),
-            //     'end_date' => Carbon::now()->addYear(),
-            // ]);
             $subscriptionId = $newSubscription->id;
         }
         //*******************************************/
