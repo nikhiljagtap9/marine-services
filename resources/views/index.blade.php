@@ -264,26 +264,12 @@
    </div>
    <div class="clear"></div>
    <div class="container">
-      <div class="card aos-init " data-aos="zoom-in" data-aos-delay="600">
-         <div class="number" data-target="120">0</div>
-         <div class="label">Ship Chandlers</div>
-      </div>
-      <div class="card aos-init" data-aos="zoom-in" data-aos-delay="700">
-         <div class="number" data-target="85">0</div>
-         <div class="label">Ship Management Companies</div>
-      </div>
-      <div class="card aos-init " data-aos="zoom-in" data-aos-delay="800">
-         <div class="number" data-target="65">0</div>
-         <div class="label">Marine Repair Companies</div>
-      </div>
-      <div class="card aos-init " data-aos="zoom-in" data-aos-delay="700">
-         <div class="number" data-target="40">0</div>
-         <div class="label">Shipyards</div>
-      </div>
-      <div class="card aos-init " data-aos="zoom-in" data-aos-delay="600">
-         <div class="number" data-target="30">0</div>
-         <div class="label">Other Service Providers</div>
-      </div>
+      @foreach($selectedCategories as $category)
+         <div class="card aos-init " data-aos="zoom-in" data-aos-delay="600">
+            <div class="number" data-target={{ $category->port_service_details_count }}>{{ $category->port_service_details_count }}</div>
+            <div class="label">{{ $category->name }}</div>
+         </div>
+      @endforeach
    </div>
    <video class="bg_map_a"  autoplay muted loop >
       <source src="{{ asset('assets//images/vi.mp4')}}" type="video/mp4">
@@ -312,222 +298,35 @@
             <!-- end /. section header -->
          </div>
       </div>
-      <div class="owl-carousel owl-theme compny_crsl owl-nav-center" data-aos="fade-left">
-         <div class="region-card rounded-4 overflow-hidden position-relative text-white compny_detil_out">
-            <a href="#" class="compny_detil">
-               <img src="{{ asset('assets//images/place/05.jpg')}}" class="img_post_copmny" >
-               <div class="img_infor">
-                  <img src="{{ asset('assets//images/dummy_logo.jpg')}}" class="compny_logo_a" >
-                  <div class="compny_name">Business Name Here</div>
-                  <div class="rating_sastar rating_sastar_hom" bis_skin_checked="1">
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star-o" aria-hidden="true"></i>
-                     <div class="clear"></div>
-                     <div class="comnts_wrp" bis_skin_checked="1">
-                        <i class="fa fa-comment" aria-hidden="true"></i>
-                        <div class="comts_text" bis_skin_checked="1">120 Reviews</div>
-                        <div class="clear" bis_skin_checked="1"></div>
+      @if($topProviders->count())
+         <div class="owl-carousel owl-theme compny_crsl owl-nav-center" data-aos="fade-left">
+            @foreach($topProviders->chunk(5) as $chunk)
+            <div class="region-card rounded-4 overflow-hidden position-relative text-white compny_detil_out">
+               @foreach($chunk as $provider)
+               <a href="#" class="compny_detil">
+                     <img src="{{ asset('assets//images/place/05.jpg')}}" class="img_post_copmny">
+                     <div class="img_infor">
+                        <img src="{{ asset('storage/' .  $provider->serviceProviderDetail->company_logo) }}" alt="Company Logo" class="compny_logo_a" style="border-radius: 50%; object-fit: cover; height:40%">
+                        <div class="compny_name">{{ ucwords($provider->company_name ?? $provider->name) }}</div>
+                        <div class="rating_sastar rating_sastar_hom">
+                           @for ($i = 1; $i <= 5; $i++)
+                                 <i class="fa {{ $i <= round($provider->reviews_avg_rating) ? 'fa-star' : 'fa-star-o' }}" aria-hidden="true"></i>
+                           @endfor
+                           <div class="clear"></div>
+                           <div class="comnts_wrp">
+                                 <i class="fa fa-comment" aria-hidden="true"></i>
+                                 <div class="comts_text">{{ $provider->reviews_count }} Reviews</div>
+                                 <div class="clear"></div>
+                           </div>
+                        </div>
                      </div>
-                     <div class="clear" bis_skin_checked="1"></div>
-                  </div>
-               </div>
-            </a>
-            <a href="#" class="compny_detil">
-               <img src="{{ asset('assets//images/place/01.jpg')}}" class="img_post_copmny" >
-               <div class="img_infor">
-                  <img src="{{ asset('assets//images/logo_2.jpg')}}" class="compny_logo_a" >
-                  <div class="compny_name">Business Name Here</div>
-                  <div class="rating_sastar rating_sastar_hom" bis_skin_checked="1">
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star-o" aria-hidden="true"></i>
-                     <div class="clear"></div>
-                     <div class="comnts_wrp" bis_skin_checked="1">
-                        <i class="fa fa-comment" aria-hidden="true"></i>
-                        <div class="comts_text" bis_skin_checked="1">120 Reviews</div>
-                        <div class="clear" bis_skin_checked="1"></div>
-                     </div>
-                     <div class="clear" bis_skin_checked="1"></div>
-                  </div>
-               </div>
-            </a>
-            <a href="#" class="compny_detil">
-               <img src="{{ asset('assets//images/place/02.jpg')}}" class="img_post_copmny" >
-               <div class="img_infor">
-                  <img src="{{ asset('assets//images/dummy_logo.jpg')}}" class="compny_logo_a" >
-                  <div class="compny_name">Business Name Here</div>
-                  <div class="rating_sastar rating_sastar_hom" bis_skin_checked="1">
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star-o" aria-hidden="true"></i>
-                     <div class="clear"></div>
-                     <div class="comnts_wrp" bis_skin_checked="1">
-                        <i class="fa fa-comment" aria-hidden="true"></i>
-                        <div class="comts_text" bis_skin_checked="1">120 Reviews</div>
-                        <div class="clear" bis_skin_checked="1"></div>
-                     </div>
-                     <div class="clear" bis_skin_checked="1"></div>
-                  </div>
-               </div>
-            </a>
-            <a href="#" class="compny_detil">
-               <img src="{{ asset('assets//images/place/04.jpg')}}" class="img_post_copmny" >
-               <div class="img_infor">
-                  <img src="{{ asset('assets//images/logo_2.jpg')}}" class="compny_logo_a" >
-                  <div class="compny_name">Business Name Here</div>
-                  <div class="rating_sastar rating_sastar_hom" bis_skin_checked="1">
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star-o" aria-hidden="true"></i>
-                     <div class="clear"></div>
-                     <div class="comnts_wrp" bis_skin_checked="1">
-                        <i class="fa fa-comment" aria-hidden="true"></i>
-                        <div class="comts_text" bis_skin_checked="1">120 Reviews</div>
-                        <div class="clear" bis_skin_checked="1"></div>
-                     </div>
-                     <div class="clear" bis_skin_checked="1"></div>
-                  </div>
-               </div>
-            </a>
-            <a href="#" class="compny_detil">
-               <img src="{{ asset('assets//images/place/03.jpg')}}" class="img_post_copmny" >
-               <div class="img_infor">
-                  <img src="{{ asset('assets//images/dummy_logo.jpg')}}" class="compny_logo_a" >
-                  <div class="compny_name">Business Name Here</div>
-                  <div class="rating_sastar rating_sastar_hom" bis_skin_checked="1">
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star-o" aria-hidden="true"></i>
-                     <div class="clear"></div>
-                     <div class="comnts_wrp" bis_skin_checked="1">
-                        <i class="fa fa-comment" aria-hidden="true"></i>
-                        <div class="comts_text" bis_skin_checked="1">120 Reviews</div>
-                        <div class="clear" bis_skin_checked="1"></div>
-                     </div>
-                     <div class="clear" bis_skin_checked="1"></div>
-                  </div>
-               </div>
-            </a>
+               </a>
+               @endforeach
+            </div>
+            @endforeach
          </div>
-         <div class="region-card rounded-4 overflow-hidden position-relative text-white compny_detil_out">
-            <a href="#" class="compny_detil">
-               <img src="{{ asset('assets//images/place/05.jpg')}}" class="img_post_copmny" >
-               <div class="img_infor">
-                  <img src="{{ asset('assets//images/dummy_logo.jpg')}}" class="compny_logo_a" >
-                  <div class="compny_name">Business Name Here</div>
-                  <div class="rating_sastar rating_sastar_hom" bis_skin_checked="1">
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star-o" aria-hidden="true"></i>
-                     <div class="clear"></div>
-                     <div class="comnts_wrp" bis_skin_checked="1">
-                        <i class="fa fa-comment" aria-hidden="true"></i>
-                        <div class="comts_text" bis_skin_checked="1">120 Reviews</div>
-                        <div class="clear" bis_skin_checked="1"></div>
-                     </div>
-                     <div class="clear" bis_skin_checked="1"></div>
-                  </div>
-               </div>
-            </a>
-            <a href="#" class="compny_detil">
-               <img src="{{ asset('assets//images/place/01.jpg')}}" class="img_post_copmny" >
-               <div class="img_infor">
-                  <img src="{{ asset('assets//images/logo_2.jpg')}}" class="compny_logo_a" >
-                  <div class="compny_name">Business Name Here</div>
-                  <div class="rating_sastar rating_sastar_hom" bis_skin_checked="1">
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star-o" aria-hidden="true"></i>
-                     <div class="clear"></div>
-                     <div class="comnts_wrp" bis_skin_checked="1">
-                        <i class="fa fa-comment" aria-hidden="true"></i>
-                        <div class="comts_text" bis_skin_checked="1">120 Reviews</div>
-                        <div class="clear" bis_skin_checked="1"></div>
-                     </div>
-                     <div class="clear" bis_skin_checked="1"></div>
-                  </div>
-               </div>
-            </a>
-            <a href="#" class="compny_detil">
-               <img src="{{ asset('assets//images/place/02.jpg')}}" class="img_post_copmny" >
-               <div class="img_infor">
-                  <img src="{{ asset('assets//images/dummy_logo.jpg')}}" class="compny_logo_a" >
-                  <div class="compny_name">Business Name Here</div>
-                  <div class="rating_sastar rating_sastar_hom" bis_skin_checked="1">
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star-o" aria-hidden="true"></i>
-                     <div class="clear"></div>
-                     <div class="comnts_wrp" bis_skin_checked="1">
-                        <i class="fa fa-comment" aria-hidden="true"></i>
-                        <div class="comts_text" bis_skin_checked="1">120 Reviews</div>
-                        <div class="clear" bis_skin_checked="1"></div>
-                     </div>
-                     <div class="clear" bis_skin_checked="1"></div>
-                  </div>
-               </div>
-            </a>
-            <a href="#" class="compny_detil">
-               <img src="{{ asset('assets//images/place/04.jpg')}}" class="img_post_copmny" >
-               <div class="img_infor">
-                  <img src="{{ asset('assets//images/logo_2.jpg')}}" class="compny_logo_a" >
-                  <div class="compny_name">Business Name Here</div>
-                  <div class="rating_sastar rating_sastar_hom" bis_skin_checked="1">
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star-o" aria-hidden="true"></i>
-                     <div class="clear"></div>
-                     <div class="comnts_wrp" bis_skin_checked="1">
-                        <i class="fa fa-comment" aria-hidden="true"></i>
-                        <div class="comts_text" bis_skin_checked="1">120 Reviews</div>
-                        <div class="clear" bis_skin_checked="1"></div>
-                     </div>
-                     <div class="clear" bis_skin_checked="1"></div>
-                  </div>
-               </div>
-            </a>
-            <a href="#" class="compny_detil">
-               <img src="{{ asset('assets//images/place/03.jpg')}}" class="img_post_copmny" >
-               <div class="img_infor">
-                  <img src="{{ asset('assets//images/dummy_logo.jpg')}}" class="compny_logo_a" >
-                  <div class="compny_name">Business Name Here</div>
-                  <div class="rating_sastar rating_sastar_hom" bis_skin_checked="1">
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star" aria-hidden="true"></i>
-                     <i class="fa fa-star-o" aria-hidden="true"></i>
-                     <div class="clear"></div>
-                     <div class="comnts_wrp" bis_skin_checked="1">
-                        <i class="fa fa-comment" aria-hidden="true"></i>
-                        <div class="comts_text" bis_skin_checked="1">120 Reviews</div>
-                        <div class="clear" bis_skin_checked="1"></div>
-                     </div>
-                     <div class="clear" bis_skin_checked="1"></div>
-                  </div>
-               </div>
-            </a>
-         </div>
-      </div>
+      @endif
+      
    </div>
 </div>
 <!-- end /. process -->
@@ -742,108 +541,42 @@
             <!-- end /. section header -->
          </div>
       </div>
-      <div class="blog-carousel owl-carousel owl-theme owl-nav-bottom aos-init animate__animated animate__fadeIn" data-wow-duration="1s" data-wow-delay="0.5s" >
-         <!-- start article -->
+      <div class="blog-carousel owl-carousel owl-theme owl-nav-bottom aos-init animate__animated animate__fadeIn">
+         @foreach($blogs as $blog)
          <article class="card h-100 overflow-hidden">
             <div class="position-relative overflow-hidden">
-               <img src="{{ asset('assets//images/blog/01-lg.jpg')}}" class="card-img-top image-zoom-hover" alt="Image">
+               <img
+                  src="{{ $blog->image ? asset('storage/' . $blog->image) : asset('assets/images/blog/default.jpg') }}"
+                  alt="{{ $blog->title }}"
+                  class="card-img-top image-zoom-hover blog-img-fixed"
+               >
             </div>
             <div class="card-body">
-               <div class="hstack gap-3 mb-3">
-                  <span class="fs-sm small text-muted svg_lft">
-                     <svg  xmlns="http://www.w3.org/2000/svg"  width="20"  height="20"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1.25"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-calendar-event">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M4 5m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" />
-                        <path d="M16 3l0 4" />
-                        <path d="M8 3l0 4" />
-                        <path d="M4 11l16 0" />
-                        <path d="M8 15h2v2h-2z" />
-                     </svg>
-                     30-March-2025
-                  </span>
-               </div>
-               <h3 class="h5 fw-semibold mb-0 post-title overflow-hidden">
-                  <a href="#">
-                  POSH and PCL Select SeaProc to Power Digital Procurement for All Commercial and Offshore Vessels
-                  </a>
-               </h3>
-               <div class="blog_sub2">
-                  PACC Offshore Services Holdings Ltd and Pacific Carriers Limited have selected iMarine Software (SeaProc) to digitally..
-               </div>
+                  <div class="hstack gap-3 mb-3">
+                     <span class="fs-sm small text-muted svg_lft">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.25">
+                              <path d="M4 5m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2H6a2 2 0 0 1 -2 -2z" />
+                              <path d="M16 3v4M8 3v4M4 11h16M8 15h2v2H8z" />
+                        </svg>
+                        {{ \Carbon\Carbon::parse($blog->created_at)->format('d-M-Y') }}
+                     </span>
+                  </div>
+                  <h3 class="h5 fw-semibold mb-0 post-title overflow-hidden">
+                     <a href="#">
+                        {{ \Illuminate\Support\Str::limit($blog->title, 80) }}
+                     </a>
+                  </h3>
+                  <div class="blog_sub2">
+                     {{ \Illuminate\Support\Str::limit(strip_tags($blog->content), 100) }}
+                  </div>
             </div>
             <div class="card-footer py-3">
-               <a href="">
-               Read More
-               </a>
+                  <a href="#">Read More</a>
             </div>
          </article>
-         <article class="card h-100 overflow-hidden">
-            <div class="position-relative overflow-hidden">
-               <img src="{{ asset('assets//images/blog/02-lg.jpg')}}" class="card-img-top image-zoom-hover" alt="Image">
-            </div>
-            <div class="card-body">
-               <div class="hstack gap-3 mb-3">
-                  <span class="fs-sm small text-muted svg_lft">
-                     <svg  xmlns="http://www.w3.org/2000/svg"  width="20"  height="20"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1.25"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-calendar-event">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M4 5m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" />
-                        <path d="M16 3l0 4" />
-                        <path d="M8 3l0 4" />
-                        <path d="M4 11l16 0" />
-                        <path d="M8 15h2v2h-2z" />
-                     </svg>
-                     30-March-2025
-                  </span>
-               </div>
-               <h3 class="h5 fw-semibold mb-0 post-title overflow-hidden">
-                  <a href="#">
-                  d'Amico Società di Navigazione selects SeaProc to process Procurement across Global Maritime Fleet of 70 vessels
-                  </a>
-               </h3>
-               <div class="blog_sub2">
-                  We are pleased to announce that d'Amico Società di Navigazione has entered into an agreement with iMarine Software...
-               </div>
-            </div>
-            <div class="card-footer py-3">
-               <a href="">
-               Read More
-               </a>
-            </div>
-         </article>
-         <article class="card h-100 overflow-hidden">
-            <div class="position-relative overflow-hidden">
-               <img src="{{ asset('assets/images/blog/03-lg.jpg')}}" class="card-img-top image-zoom-hover" alt="Image">
-            </div>
-            <div class="card-body">
-               <div class="hstack gap-3 mb-3">
-                  <span class="fs-sm small text-muted svg_lft">
-                     <svg  xmlns="http://www.w3.org/2000/svg"  width="20"  height="20"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="1.25"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-calendar-event">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M4 5m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" />
-                        <path d="M16 3l0 4" />
-                        <path d="M8 3l0 4" />
-                        <path d="M4 11l16 0" />
-                        <path d="M8 15h2v2h-2z" />
-                     </svg>
-                     30-March-2025
-                  </span>
-               </div>
-               <h3 class="h5 fw-semibold mb-0 post-title overflow-hidden">
-                  <a href="#">
-                  iMarine Software and ABS Nautical Systems Enhance Partnership to Solve Procurement Challenges for Shipping Industry
-                  </a>
-               </h3>
-               <div class="blog_sub2">
-                  ABS Nautical Systems (ABS NS), a leading provider of Fleet Management Software and iMarine Software (SeaProc),...
-               </div>
-            </div>
-            <div class="card-footer py-3">
-               <a href="">
-               Read More
-               </a>
-            </div>
-         </article>
+         @endforeach
       </div>
+
    </div>
 </div>
 

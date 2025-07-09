@@ -37,4 +37,9 @@ class ServiceReview extends Model
     {
         return $this->belongsTo(Category::class, 'service_category_id');
     }
+
+    public function userServiceProvider()
+    {
+        return $this->belongsTo(User::class, 'service_provider_id');
+    }
 }

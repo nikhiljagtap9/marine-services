@@ -87,6 +87,11 @@ class User extends Authenticatable
         return $this->hasOne(ServiceProviderDetail::class, 'user_id');
     }
 
+    public function reviews()
+    {
+        return $this->hasMany(ServiceReview::class, 'service_provider_id');
+    }
+
     // getActiveSubscriptionForPlan only used in UserListController for Admin
     // get data using Plan Id
     public function getActiveSubscriptionForPlan($planId)
