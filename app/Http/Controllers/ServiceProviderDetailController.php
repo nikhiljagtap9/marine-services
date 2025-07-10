@@ -112,6 +112,8 @@ class ServiceProviderDetailController extends Controller
     // Store submitted data
     public function store(Request $request)
     {
+        $turkeyId = Country::where('name', 'Turkey')->value('id');
+
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|confirmed|min:6',
@@ -119,6 +121,7 @@ class ServiceProviderDetailController extends Controller
             'company_logo' => 'nullable|image|mimes:jpg,png,jpeg|max:1024',
             'company_description' => 'nullable|string',
             'contact_person_name' => 'required|string|max:255',
+            'contact_person_last_name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
             'country' => 'required|string|max:100',
             'city' => 'nullable|string|max:100',
@@ -128,6 +131,13 @@ class ServiceProviderDetailController extends Controller
             'sub_service_type' => 'required|string',
             'contact_number' => 'nullable|string|max:20',
         ]);
+
+        // Conditionally add identity_number if Turkey is selected
+        if ((int)$request->country === (int)$turkeyId) {
+            $rules['identity_number'] = 'required|digits:11';
+        } else {
+            $rules['identity_number'] = 'nullable|string';
+        }
 
         if ($validator->fails()) {
             if ($request->ajax()) {
@@ -159,7 +169,9 @@ class ServiceProviderDetailController extends Controller
             'company_logo' => $logoPath,
             'company_description' => $request->company_description,
             'contact_person_name' => $request->contact_person_name,
+            'contact_person_last_name' => $request->contact_person_last_name,
             'phone' => $request->phone,
+            'identity_number' => $request->identity_number,
             'country' => $request->country,
             'city' => $request->city,
             'office_address' => $request->office_address,
@@ -621,7 +633,10 @@ class ServiceProviderDetailController extends Controller
         if ($subscription) {
             $subscriptionExpired = Carbon::parse($subscription->end_date)->isPast();
 
-            $showPaymentButton = is_null($subscription->payment_id) || $subscriptionExpired;
+            // Check if status is inactive (string comparison)
+            $isInactiveStatus = in_array($subscription->status, ['pending','cancelled', 'expired']);
+
+            $showPaymentButton = $isInactiveStatus || $subscriptionExpired;
         }
 
 

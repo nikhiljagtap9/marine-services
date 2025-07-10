@@ -46,6 +46,7 @@ use App\Http\Controllers\Auth\PasswordController;
 Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::get('/product-listing', [ListingController::class, 'index'])->name('product_listing');
 Route::get('/detail/{subscriptionId}', [ListingController::class, 'detail'])->name('detail');
+Route::get('/basic-detail/{subscriptionId}', [ListingController::class, 'freeDetail'])->name('basic-detail');
 Route::get('/review/detail/{userId}', [ListingController::class, 'detail'])->name('review.detail');
 Route::post('/enquiry-store', [ListingController::class, 'enquiryStore'])->name('enquiry.store');
 
@@ -147,7 +148,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/users', [UserListController::class, 'index'])->name('usres.index');
         Route::get('/users/detail/{subscriptionId}', [UserListController::class, 'detail'])->name('users.detail');
         
-        Route::get('/admin/payments', [PaymentController::class, 'listPayments'])->name('payments.list');
+        Route::get('/payments', [PaymentController::class, 'listPayments'])->name('payments.list');
         Route::get('/blogs', [BlogController::class, 'index'])->name('blogs.index');
         Route::post('/blogs', [BlogController::class, 'store'])->name('blogs.store');
         Route::get('ajax/blogs', [BlogController::class, 'getBlogs'])->name('blogs.list');

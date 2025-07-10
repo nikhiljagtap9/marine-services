@@ -93,7 +93,7 @@ class ListingController extends Controller
         return view('product_listing', compact('products','plan1Providers' ,'countries', 'categories'));
     }
 
-    public function index(Request $request)
+    public function indexNEW(Request $request)
     {
         $countries = Country::orderBy('name')->get();
         $categories = Category::orderBy('name')->get();
@@ -116,7 +116,8 @@ class ListingController extends Controller
         ])
         ->whereHas('user.subscriptions', function ($q) use ($today) {
             $q->whereDate('end_date', '>=', $today)
-            ->where('plan_id', '!=', 1);
+            ->where('plan_id', '!=', 1)
+            ->whereIn('status', ['active']);
         })
         ->whereHas('companyDetail')
         ->whereHas('contactDetail')
@@ -160,68 +161,127 @@ class ListingController extends Controller
             }
         }
 
-        // Plan 1 providers (if filter applied)
-        $plan1Providers = $hasFilters ? $this->getPlan1Providers($request, $hasFilters) : collect();
-
+        // Plan 1 providers
+        $plan1Providers = $this->getPlan1Providers($request, $hasFilters);
         return view('product_listing', compact('products', 'plan1Providers', 'countries', 'categories', 'hasFilters'));
     }
 
+    public function index(Request $request)
+    {
+        $countries = Country::orderBy('name')->get();
+        $categories = Category::orderBy('name')->get();
+        $today = Carbon::today();
 
-    private function getPlan1Providers(Request $request,$hasFilters)
+        // Check if both country and port are present
+        $hasCountryAndPort = $request->filled('country') && $request->filled('ports_services');
+
+        $query = ServiceProviderDetail::with([
+            'companyDetail',
+            'contactDetail',
+            'socialMediaDetails',
+            'user.subscriptions.plan',
+            'portServiceDetails' => function ($q) use ($request) {
+                $q->when($request->sub_service_type, function ($q2) use ($request) {
+                    $q2->whereJsonContains('sub_services', (string) $request->sub_service_type);
+                });
+            },
+            'portServiceDetails.port',
+            'portServiceDetails.country',
+            'portServiceDetails.category'
+        ])
+        ->whereHas('user.subscriptions', function ($q) use ($today) {
+            $q->whereDate('end_date', '>=', $today)
+            ->where('plan_id', '!=', 1)
+            ->whereIn('status', ['active']);
+        })
+        ->whereHas('companyDetail')
+        ->whereHas('contactDetail')
+        ->whereHas('socialMediaDetails');
+
+        // Apply filters only if both country and port are present
+        if ($hasCountryAndPort) {
+            $query->whereHas('portServiceDetails', function ($q) use ($request) {
+                $q->where('country_id', $request->country)
+                ->where('port_id', $request->ports_services);
+
+                if ($request->filled('service_type')) {
+                    $q->where('category_id', $request->service_type);
+                }
+
+                if ($request->filled('sub_service_type')) {
+                    $q->whereJsonContains('sub_services', (string) $request->sub_service_type);
+                }
+            });
+        } elseif ($request->filled('country') || $request->filled('ports_services')) {
+            // If only one is present, return no records
+            $query->whereRaw('1 = 0'); // Always false condition
+        }
+
+        // Rating filter
+        if ($request->filled('rating')) {
+            $query->whereHas('user.serviceReviews', function ($q) use ($request) {
+                $q->where('rating', (int) $request->rating);
+            });
+        }
+
+        // Get paginated result
+        $products = $query->paginate(15)->appends($request->all());
+
+        // Attach active subscription
+        foreach ($products as $product) {
+            if ($product->user) {
+                $product->active_subscription = $product->user->getActiveSubscription();
+            }
+        }
+
+        // Plan 1 providers
+        $plan1Providers = $this->getPlan1Providers($request, $hasCountryAndPort);
+        return view('product_listing', compact('products', 'plan1Providers', 'countries', 'categories', 'hasCountryAndPort'));
+    }
+
+
+    private function getPlan1Providers(Request $request, $hasCountryAndPort)
     {
         $today = Carbon::today();
 
         $query = ServiceProviderDetail::with([
             'companyDetail',
             'contactDetail',
-            'portServiceDetails',
             'socialMediaDetails',
             'user.subscriptions.plan',
-            // 'portServiceDetails' => function ($q) use ($request) {
-            //     // Always eager load portServiceDetails
-            //     $q->when($request->sub_service_type, function ($q2) use ($request) {
-            //         $q2->whereJsonContains('sub_services', (string) $request->sub_service_type);
-            //     });
-            // } // only fecth perticuler subservices
+            'portServiceDetails.port',
+            'portServiceDetails.country',
+            'portServiceDetails.category',
         ])
         ->whereHas('user.subscriptions', function ($q) use ($today) {
-        $q->whereDate('end_date', '>=', $today)
-            ->where('plan_id', 1);
-        })  
+            $q->whereDate('end_date', '>=', $today)
+            ->where('plan_id', 1)
+            ->where('status', 'active');
+        })
         ->whereHas('companyDetail')
         ->whereHas('contactDetail')
         ->whereHas('socialMediaDetails');
-        
-        // Apply filters if any
-        if ($hasFilters) {     
-            // $query->whereHas('portServiceDetails', function ($q) use ($request) {
-            //     $q->where('country_id', $request->country)
-            //     ->where('port_id', $request->ports_services)
-            //     ->where('category_id', $request->service_type)
-            //     ->whereJsonContains('sub_services', (string) $request->sub_service_type);
-            // });
+
+        // ✅ Apply filters only if both country and port are present
+        if ($hasCountryAndPort) {
             $query->whereHas('portServiceDetails', function ($q) use ($request) {
-                    if ($request->filled('country')) {
-                        $q->where('country_id', $request->country);
-                    }
+                $q->where('country_id', $request->country)
+                ->where('port_id', $request->ports_services);
 
-                    if ($request->filled('ports_services')) {
-                        $q->where('port_id', $request->ports_services);
-                    }
+                if ($request->filled('service_type')) {
+                    $q->where('category_id', $request->service_type);
+                }
 
-                    if ($request->filled('service_type')) {
-                        $q->where('category_id', $request->service_type);
-                    }
-
-                    if ($request->filled('sub_service_type')) {
-                        $q->whereJsonContains('sub_services', (string) $request->sub_service_type);
-                    }
+                if ($request->filled('sub_service_type')) {
+                    $q->whereJsonContains('sub_services', (string) $request->sub_service_type);
+                }
             });
-            return $query->get();    // return all matching filtered results
-        } else {
-            
-            return $query->latest()->take(15)->get(); // return latest 15 if no filters
+        } elseif ($request->filled('country') || $request->filled('ports_services')) {
+            // Only one of them is present → return no results
+            $query->whereRaw('1 = 0');
         }
+
+        return $query->get();
     }
 
     public function detail($subscriptionId, Request $request)
@@ -277,6 +337,61 @@ class ListingController extends Controller
             'favoritesCount'
         ));
     }
+
+    public function freedetail($subscriptionId, Request $request)
+    {
+        $subscription = Subscription::with('user', 'plan')->findOrFail($subscriptionId);
+
+        // encrypt the user ID in the QR code 
+        $encryptedUserId = Crypt::encrypt($subscription->user_id);
+
+        $provider = ServiceProviderDetail::with([
+            'companyDetail',
+            'contactDetail',
+            'portServiceDetails.country',
+            'portServiceDetails.port',
+            'portServiceDetails.category',
+            'socialMediaDetails'
+        ])->where('user_id', $subscription->user_id)->firstOrFail();
+
+        // fetch favoritesCount depend on subscription_id
+        $favoritesCount = Favourite::where('subscription_id', $subscriptionId)->count();
+
+        //  fetch service review rating data using user id
+        $allReviews = ServiceReview::where('service_provider_id', $subscription->user_id)->latest()->get();
+
+         // Rating statistics
+        $ratingCounts = $allReviews->groupBy(function ($item) {
+            return floor($item->rating); // group by star 1-5
+        })->map->count();
+
+        $totalRatings = $allReviews->count();
+        $averageRating = $totalRatings > 0 ? number_format($allReviews->avg('rating'), 1) : 0;
+
+        // Paginated reviews with non-empty comments
+        $reviews = ServiceReview::where('service_provider_id', $subscription->user_id)
+            ->whereNotNull('comment')
+            ->where('comment', '!=', '')
+            ->latest()
+            ->paginate(3); // Load 3 per request
+
+        // If AJAX request (Load More), return only partial HTML
+        if ($request->ajax()) {
+            return view('partials.review_item', compact('reviews'))->render();
+        } 
+
+        return view('free_detail', compact(
+            'provider',
+            'subscription',
+            'encryptedUserId',
+            'reviews',
+            'averageRating',
+            'ratingCounts',
+            'totalRatings',
+            'favoritesCount'
+        ));
+    }
+
 
     public function enquiryStore(Request $request)
     {

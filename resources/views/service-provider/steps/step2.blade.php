@@ -1,37 +1,37 @@
 <div class="fxt-form-step">
                               <h2 class="fxt-page-title">Contact Information</h2>
-                              <div class="form-group">
-                                 <label class="Mylabel" for="contact_person_name">Contact Person Name</label>
-                                 <input id="contact_person_name" type="text" class="form-control" name="contact_person_name" value="{{ old('contact_person_name') }}" placeholder="Enter name here" required>
+                              <div class="col-xl-4 col-12 leftt link1 adres_fld_1">
+                                 <label class="Mylabel" for="contact_person_name">Contact Person First Name</label>
+                                 <input id="contact_person_name" type="text" class="form-control" name="contact_person_name" value="{{ old('contact_person_name') }}" placeholder="Enter First name here" required>
+                              </div>
+                               <div class="col-xl-4 col-12 leftt link1 adres_fld_1 adres_fld_2">
+                                <label class="Mylabel" for="contact_person_last_name">Contact Person Last Name</label>
+                                 <input id="contact_person_last_name" type="text" class="form-control" name="contact_person_last_name" value="{{ old('contact_person_last_name') }}" placeholder="Enter Last name here" required>   
                               </div>
                               <div class="form-group">
                                  <label class="Mylabel adres_fld_1" for="phone">Phone Number</label>
                                  <input id="phone" type="text" class="form-control" name="phone" value="{{ old('phone') }}" placeholder="Enter number here" required>
                               </div>
-                             <!-- <div class="col-xl-4 col-12 leftt link1 adres_fld_1">
+                              <div class="col-xl-4 col-12 leftt link1 adres_fld_1">
                                  <label class="Mylabel" for="Linkd">Country</label>
                                  <select class="form-control" name="country" id="country-select" required>
                                     <option value="">Select Country</option>
                                     @foreach($countries as $country)
-                                       <option value="{{ $country->id }}">{{ $country->name }}</option>
+                                       <option value="{{ $country->id }}" data-name="{{ $country->name }}">{{ $country->name }}</option>
                                     @endforeach
                                  </select>
                               </div>
-                               <div class="col-xl-4 col-12 leftt link1 adres_fld_1 adres_fld_2">
-                                 <label class="Mylabel" for="Linkd">City</label>
+
+                              <div class="col-xl-4 col-12 leftt link1 adres_fld_1 adres_fld_2">
+                                 <label class="Mylabel" for="city">City</label>
                                  <select class="form-control" name="city" id="city-select" required>
                                     <option value="">Select City</option>
-                                 </select>    
-                              </div> -->
-
-                              <div class="form-group">
-                                 <label class="Mylabel" for="Linkd">Country</label>
-                                 <select class="form-control" name="country" id="country-select" required>
-                                    <option value="">Select Country</option>
-                                    @foreach($countries as $country)
-                                       <option value="{{ $country->id }}">{{ $country->name }}</option>
-                                    @endforeach
                                  </select>
+                              </div>
+
+                              <div class="form-group" id="identity-number-wrapper" style="display: none;">
+                                 <label class="Mylabel adres_fld_1" for="identity_number">Identity Number</label>
+                                 <input id="identity_number" type="text" class="form-control" name="identity_number" value="{{ old('identity_number') }}" placeholder="Enter Identity number here" required>
                               </div>
 
                               <div class="form-group">

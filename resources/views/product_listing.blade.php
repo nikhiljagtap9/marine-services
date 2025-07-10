@@ -180,17 +180,20 @@
 
          <div class="fre_servc_titl">All Service Providers in Our Network </div>
          <div class="clear"></div>
-         @forelse($plan1Providers as $freeProvider)
+         @forelse($plan1Providers as $provider)
             @php
-               $logo = $freeProvider->company_logo ?? null;
+               $subscription = $provider->user->subscriptions->firstWhere('status', 'active');
+               $logo = $provider->company_logo ?? null;
+               $photos = []; // Optional: load from DB if available (else show default image)
             @endphp
+           
             <div class="singl_busn">
                <img src="{{ !empty($logo) ? asset('storage/' . $logo) : asset('assets/images/dummy_logo.jpg') }}" class="backg_logo">
                <div class="singl_busn_titl">
-                     {{ $freeProvider->company_name }}
+                     {{ $provider->company_name }}
                </div>
                <div class="clear"></div>
-               <a href="#">View</a>
+               <a href="{{ route('basic-detail', $subscription?->id) }}" target="_blank">View</a>
             </div>
          @empty
             <p>No free profiles found.</p>

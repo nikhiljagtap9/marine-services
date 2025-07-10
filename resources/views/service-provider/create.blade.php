@@ -218,6 +218,20 @@
         }
     });
 
+    // show identity_number if country is turkey
+   $('#country-select').on('change', function () {
+      const selectedOption = $(this).find('option:selected');
+      const countryName = selectedOption.data('name');
+
+      if (countryName && countryName.toLowerCase() === 'turkey') {
+            $('#identity-number-wrapper').show();
+            $('#identity_number').attr('required', true);
+      } else {
+            $('#identity-number-wrapper').hide();
+            $('#identity_number').removeAttr('required').val('');
+      }
+   });
+
 </script>
 
 
