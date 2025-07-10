@@ -5,27 +5,29 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ServiceProviderDetail extends Model
-{
-    use HasFactory;
+    class ServiceProviderDetail extends Model
+    {
+        use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'company_name',
-        'company_logo',
-        'company_description',
-        'contact_person_name',
-        'phone',
-     //   'email',
-        'country',
-        'city',
-        'office_address',
-        'lat', 
-        'lng',
-        'port_id',
-        'service_type',
-        'sub_service_type',
-    ];
+        protected $fillable = [
+            'user_id',
+            'company_name',
+            'company_logo',
+            'company_description',
+            'contact_person_name',
+            'contact_person_last_name',
+            'phone',
+            'identity_number',
+        //   'email',
+            'country',
+            'city',
+            'office_address',
+            'lat', 
+            'lng',
+            'port_id',
+            'service_type',
+            'sub_service_type',
+        ];
 
     public function user()
     {

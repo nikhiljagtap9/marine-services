@@ -51,6 +51,7 @@ class PaymentController extends Controller
         $service_provider = \App\Models\ServiceProviderDetail::with('cityRelation')
                             ->where('user_id', auth()->id())
                             ->first();
+
         
         if($service_provider->countryRelation->name == 'Turkey') {
             $price = $price + ($price * 0.2);
@@ -67,10 +68,18 @@ class PaymentController extends Controller
 
         $buyer = new Buyer();
         $buyer->setId($user->id ?? 'guest_' . time());
-        $buyer->setName($user->name);
-        $buyer->setSurname('TestLastName+'); // Optional: Split name if needed
+        $buyer->setName($service_provider->contact_person_name);
+        $buyer->setSurname($service_provider->contact_person_last_name);
         $buyer->setEmail($user->email);
         $buyer->setIdentityNumber("fail-test");
+        
+        // Use dummy if not Turkish
+        if ($service_provider->countryRelation->name == 'Turkey') {
+            $buyer->setIdentityNumber($service_provider->identity_number);
+        } else {
+            $buyer->setIdentityNumber("11111111111"); // fallback
+        }
+
         $buyer->setGsmNumber("+91".$user->phone);
         $buyer->setRegistrationAddress("Online Subscription");
         $buyer->setIp($request->ip());
@@ -98,7 +107,7 @@ class PaymentController extends Controller
 
         $checkoutForm = CheckoutFormInitialize::create($iyzicoRequest, $options);
         Log::info('Conversation ID sent to Iyzico: ' . $iyzicoRequest->getConversationId());
-
+    //    dd($checkoutForm);
         if ($checkoutForm->getStatus() === 'success') {
             return redirect()->away($checkoutForm->getPaymentPageUrl());
         }
@@ -156,6 +165,7 @@ class PaymentController extends Controller
                 // Update existing active subscription
                 $activeSubscription->update([
                     'payment_id' => $payment->id,
+                    'status' => 'active',
                     'start_date' => $startDate,
                     'end_date'   => $endDate,
                 ]);
@@ -166,6 +176,7 @@ class PaymentController extends Controller
                     'user_id'    => $userId,
                     'plan_id'    => $planId,
                     'payment_id' => $payment->id,
+                    'status' => 'active',
                     'start_date' => $startDate,
                     'end_date'   => $endDate,
                 ]);
