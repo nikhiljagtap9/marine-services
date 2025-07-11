@@ -26,4 +26,9 @@ class Subscription extends Model
         return $this->hasMany(ServiceReview::class);
     }
 
+    public function payment()
+    {
+        return $this->belongsTo(Payment::class, 'payment_id');
+    }
+
 }

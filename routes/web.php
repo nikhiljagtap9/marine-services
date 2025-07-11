@@ -149,6 +149,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/users/detail/{subscriptionId}', [UserListController::class, 'detail'])->name('users.detail');
         
         Route::get('/payments', [PaymentController::class, 'listPayments'])->name('payments.list');
+        Route::post('/subscriptions/{id}/activate', [PaymentController::class, 'activate'])->name('admin.subscriptions.activate');
+
         Route::get('/blogs', [BlogController::class, 'index'])->name('blogs.index');
         Route::post('/blogs', [BlogController::class, 'store'])->name('blogs.store');
         Route::get('ajax/blogs', [BlogController::class, 'getBlogs'])->name('blogs.list');
