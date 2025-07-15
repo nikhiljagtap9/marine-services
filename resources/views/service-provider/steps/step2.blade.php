@@ -30,7 +30,7 @@
                               </div>
 
                               <div class="form-group" id="identity-number-wrapper" style="display: none;">
-                                 <label class="Mylabel adres_fld_1" for="identity_number">Identity Number</label>
+                                 <label class="Mylabel adres_fld_1" for="identity_number">Turkish National ID Number</label>
                                  <input id="identity_number" type="text" class="form-control" name="identity_number" value="{{ old('identity_number') }}" placeholder="Enter Identity number here" required>
                               </div>
 

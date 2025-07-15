@@ -155,7 +155,7 @@ cursor: pointer;
                                              <label class="required fw-medium mb-2">Alternative Email</label>
                                              <input type="text"
                                                 value="{{ old('alternative_email', $contact->alternative_email ?? '') }}"
-                                                name="alternative_email" class="form-control" placeholder="Enter Alternative Email">
+                                                name="alternative_email" id="alternative_email" class="form-control" placeholder="Enter Alternative Email">
                                           </div>
                                        </div>
                                        <div class="col-sm-4" bis_skin_checked="1">
@@ -163,7 +163,7 @@ cursor: pointer;
                                              <label class="required fw-medium mb-2">Office Telephone Number</label>
                                              <input type="text"
                                                 value="{{ old('office_telephone', $contact->office_telephone ?? '') }}"
-                                                name="office_telephone" class="form-control" placeholder="Enter Office Telephone Number">
+                                                name="office_telephone" id="office_telephone" class="form-control" placeholder="Enter Office Telephone Number">
                                           </div>
                                        </div>
                                        <div class="col-sm-4" bis_skin_checked="1">
@@ -171,7 +171,7 @@ cursor: pointer;
                                              <label class="required fw-medium mb-2">Mobile Number</label>
                                              <input type="text"
                                                 value="{{old('mobile_number',$contact->mobile_number ?? '')}}"
-                                                name="mobile_number" class="form-control" placeholder="Enter Mobile Number">
+                                                name="mobile_number" id="mobile_number" class="form-control" placeholder="Enter Mobile Number">
                                           </div>
                                        </div>
                                        <div class="col-sm-4" bis_skin_checked="1">
@@ -179,7 +179,7 @@ cursor: pointer;
                                              <label class="required fw-medium mb-2">WhatsApp Number</label>
                                              <input type="text"
                                                 value="{{old('whatsapp_number', $contact->whatsapp_number ?? '')}}"
-                                                name="whatsapp_number" class="form-control" placeholder="Enter WhatsApp Number">
+                                                name="whatsapp_number" id="whatsapp_number" class="form-control" placeholder="Enter WhatsApp Number">
                                           </div>
                                        </div>
                                     </div>
@@ -197,7 +197,7 @@ cursor: pointer;
                                           <label class="required fw-medium mb-2">LinkedIn</label>
                                           <input type="text"
                                              value="{{old('linkedin', $social->linkedin ?? '')}}"
-                                             name="linkedin" class="form-control" placeholder="Enter LinkedIn Link">
+                                             name="linkedin" id="linkedin" class="form-control"  placeholder="https://linkedin.com/in/your-profile">
                                        </div>
                                     </div>
                                     <div class="col-sm-4" bis_skin_checked="1">
@@ -205,7 +205,7 @@ cursor: pointer;
                                           <label class="required fw-medium mb-2">Instagram</label>
                                           <input type="text"
                                              value="{{old('instagram', $social->instagram ?? '')}}"
-                                             name="instagram" class="form-control" placeholder="Enter Instagram">
+                                             name="instagram" id="instagram" class="form-control" placeholder="https://instagram.com/yourusername">
                                        </div>
                                     </div>
                                     <div class="col-sm-4" bis_skin_checked="1">
@@ -213,7 +213,7 @@ cursor: pointer;
                                           <label class="required fw-medium mb-2">X (Twitter)</label>
                                           <input type="text"
                                              value="{{old('twitter', $social->twitter ?? '')}}"
-                                             name="twitter" class="form-control" placeholder="Enter X (Twitter)">
+                                             name="twitter" id="twitter" class="form-control" placeholder="https://x.com/yourhandle">
                                        </div>
                                     </div>
                                  </div>
@@ -494,8 +494,8 @@ cursor: pointer;
                                     <div class="col-sm-4 cols_30 mb-4" bis_skin_checked="1">
                                        <div class="" bis_skin_checked="1">
                                           <label class="required fw-medium mb-2">Certificates</label>
-                                          <input type="file" name="certificates[]" multiple class="form-control" id="certificate-upload" accept=".jpg,.jpeg,.png">
-                                          <small class="text-muted">Max 20 photos (jpeg, png, jpg, max size 1MB each)</small>
+                                          <input type="file" name="certificates[]" multiple class="form-control" id="certificate-upload" accept=".pdf,.jpg,.jpeg,.png">
+                                          <small class="text-muted">Max 20 photos (pdf,jpeg, png, jpg)</small>
                                        </div>
                                        <div class="row" id="certificate-preview">
                                           @if(!empty($company->certificates))
@@ -519,7 +519,7 @@ cursor: pointer;
                                        <div class="" bis_skin_checked="1">
                                           <label class="required fw-medium mb-2">Photos</label>
                                           <input type="file" name="photos[]" multiple class="form-control" id="photo-upload" accept=".jpg,.jpeg,.png">
-                                          <small class="text-muted">Min 3 & max 20 photos (jpeg, png, jpg, max size 1MB each)</small>
+                                          <small class="text-muted">Min 3 & max 20 photos (jpeg, png, jpg)</small>
                                        </div>
                                        <!-- @if(!empty($company->photos))
                                        @php
@@ -945,6 +945,16 @@ cursor: pointer;
                            }
                         }
                   });
+
+                  // Focus the first errored input
+                  setTimeout(() => {
+                        const firstErrorField = $('.error-text').first().prev('input, select, textarea');
+                        if (firstErrorField.length) {
+                           firstErrorField.focus();
+                           firstErrorField[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                  }, 100);
+
                    $('#responseMessage')
                     .removeClass('d-none alert-success')
                     .addClass('alert-danger')
@@ -955,9 +965,6 @@ cursor: pointer;
                     .addClass('alert-danger')
                     .text('Something went wrong. Please try again.');
                }
-
-           
-
             },
             complete: function() {
                  // Hide loader and re-enable button
@@ -1184,7 +1191,4 @@ function rebuildNewCerts() {
       document.getElementById('bankDetails').style.display = 'block';
    }
 </script>
-
-
-
 @endsection

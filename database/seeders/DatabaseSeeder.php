@@ -58,6 +58,7 @@ class DatabaseSeeder extends Seeder
             PortSeeder::class,
             CategorySeeder::class,
             SubCategorySeeder::class,
+            CitySeeder::class,
         ]);
     }
 }

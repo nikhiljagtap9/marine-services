@@ -30,10 +30,10 @@ class AdminAuthController extends Controller
         }
 
         $credentials = $request->only('email', 'password');
+        $remember = $request->filled('remember'); // capture remember checkbox
 
-        if (Auth::guard('admin')->attempt($credentials)) {
+        if (Auth::guard('admin')->attempt($credentials, $remember)) {
             $user = Auth::guard('admin')->user();
-        // dd($user); // Check the returned user
 
             if ($user && $user->isAdmin()) {
                 return redirect()->route('admin.dashboard');

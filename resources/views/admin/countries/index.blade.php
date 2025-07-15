@@ -38,6 +38,7 @@
                             <th>Sr</th>
                             <th>Country Name</th>
                             <th>Total Ports</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -54,9 +55,10 @@
 <div class="popup-overlay popmain" id="popup">
    <div class="popup-content">
       <button class="close-btn" onclick="closePopup()">×</button>
-      <h2>Add Country</h2>
+      <h2 id="popupTitle">Add Country</h2>
        <form id="countryForm">
          @csrf
+         <input type="hidden" name="country_id" id="country_id">
          <div class="col-sm-6" bis_skin_checked="1">
             <!-- start form group -->
             <div class="" bis_skin_checked="1">
@@ -74,7 +76,7 @@
                <path d="M12 5l0 14" />
                <path d="M5 12l14 0" />
             </svg>
-                  Add
+              <span id="submitText">Add</span>
             </button>
       </form>
    </div>
@@ -85,6 +87,10 @@
     <script>
         function openPopup() {
      document.getElementById("popup").style.display = "block";
+     $('#popupTitle').html('Add Country');
+      $('#submitText').text('Add');
+     $('#countryForm')[0].reset();
+      $('#country_id').val('');
    }
    
    function closePopup() {
@@ -106,26 +112,43 @@
                 columns: [
                     { data: 'id' },
                     { data: 'name' },
-                    { data: 'ports_count', title: 'Total Ports'} 
+                    { data: 'ports_count', title: 'Total Ports'},
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                              return `
+                                 <button class="btn btn-sm btn-primary me-1" onclick="editCountry(${row.id})">Edit</button>
+                                 <button class="btn btn-sm btn-danger" onclick="deleteCountry(${row.id})">Delete</button>
+                              `;
+                        }
+                     }
                 ]
             });
 
             $('#countryForm').on('submit', function (e) {
-                e.preventDefault();
-                let formData = $(this).serialize();
+               e.preventDefault();
+               let formData = new FormData(this);
+               let countryId = $('#country_id').val();
+               let url = countryId ? `/admin/countries/${countryId}` : '{{ route("admin.countries.store") }}';
 
-                // Clear any previous errors
+               if (countryId) {
+                  formData.append('_method', 'PUT');
+               }
+                     // Clear any previous errors
                      $('.text-danger').text('');
                      $('.form-control').removeClass('is-invalid');
 
                 $.ajax({
-                    url: '{{ route("admin.countries.store") }}',
-                    method: 'POST',
-                    data: formData,
+                     url: url,
+                     method: 'POST',
+                     data: formData,
+                     processData: false,
+                     contentType: false,
                     success: function (response) {
                         $('#success-message').removeClass('d-none').text(response.message);
                         $('#popup').hide(); 
                         $('#countryForm')[0].reset();
+                        $('#country_id').val('');
                         table.ajax.reload();
                         setTimeout(() => {
                          $('#success-message').addClass('d-none').text('');
@@ -146,6 +169,33 @@
                   }
                 });
             });
+
+
+            window.editCountry = function(id) {
+               $.get(`/admin/countries/${id}/edit`, function (country) {
+                  openPopup();
+                  $('#countryForm')[0].reset();
+                  $('#country_id').val(country.id);
+                  $('[name="name"]').val(country.name);
+                  $('#popupTitle').text('Edit Country');
+                  $('#submitText').text('Update');
+               });
+            };
+
+            window.deleteCountry = function(id) {
+               if (confirm("Are you sure to delete this country?")) {
+                  $.ajax({
+                        url: `/admin/countries/${id}`,
+                        method: 'DELETE',
+                        data: { _token: '{{ csrf_token() }}' },
+                        success: function (response) {
+                           $('#success-message').removeClass('d-none').text(response.message);
+                           $('#countriesTable').DataTable().ajax.reload();
+                           setTimeout(() => $('#success-message').addClass('d-none').text(''), 3000);
+                        }
+                  });
+               }
+            };
         });
    
       </script>

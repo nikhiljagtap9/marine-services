@@ -40,10 +40,10 @@
 <div class="popup-overlay popmain" id="popup">
    <div class="popup-content" style="margin-top:10%">
       <button class="close-btn" onclick="closePopup()">×</button>
-      <h2>Add Blog</h2>
+      <h2 id="popupTitle">Add Blog</h2>
       <form id="blogForm" enctype="multipart/form-data">
          @csrf
-         <input type="hidden" name="blog_id">
+         <input type="hidden" name="blog_id" id="blog_id">
          <div class="col-sm-12" bis_skin_checked="1">
              <div class="col-sm-12" bis_skin_checked="1">
                <label class="fw-medium mb-2">Title</label>
@@ -73,7 +73,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
                <path d="M12 5v14M5 12h14"/>
             </svg>
-             <span id="blogSubmitText">Add Blog</span>
+             <span id="submitText">Add Blog</span>
          </button>
       </form>
    </div>
@@ -82,7 +82,8 @@
 <script>
     function openPopup() {
         document.getElementById("popup").style.display = "block";
-        $('#blogSubmitText').text('Add Blog');
+        $('#popupTitle').html('Add Blog');
+        $('#submitText').text('Add');
     //     $('[name="blog_id"]').val('');
     //     $('[name="title"]').val('');
     //     $('[name="content"]').val('');
@@ -110,8 +111,8 @@ $(document).ready(function () {
                 data: null,
                 render: function (data, type, row) {
                     return `
-                        <button onclick="editBlog(${row.id})">Edit</button>
-                        <button onclick="deleteBlog(${row.id})">Delete</button>
+                        <button class="btn btn-sm btn-primary me-1" onclick="editBlog(${row.id})">Edit</button>
+                        <button class="btn btn-sm btn-danger"  onclick="deleteBlog(${row.id})">Delete</button>
                     `;
                 }
             }
@@ -138,6 +139,8 @@ $(document).ready(function () {
                 $('#success-message').removeClass('d-none').text(response.message);
                 $('#popup').hide();
                 $('#blogForm')[0].reset();
+                $('#blog_id').val('');
+                
                 table.ajax.reload();
                 setTimeout(() => $('#success-message').addClass('d-none').text(''), 3000);
             },
@@ -162,7 +165,8 @@ window.editBlog = function(id) {
         $('[name="title"]').val(blog.title);
         $('[name="content"]').val(blog.content);
         $('[name="status"]').val(blog.status);
-        $('#blogSubmitText').text('Update Blog');
+        $('#popupTitle').text('Edit Blog');
+        $('#submitText').text('Update');
     });
 };
 

@@ -18,14 +18,6 @@ class CountryController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
 
@@ -45,37 +37,31 @@ class CountryController extends Controller
             ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit($id)
     {
-        //
+        $country = Country::findOrFail($id);
+        return response()->json($country);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255|unique:countries,name,' . $id,
+        ]);
+
+        $country = Country::findOrFail($id);
+        $country->update(['name' => $request->name]);
+
+        return response()->json(['message' => 'Country updated successfully.']);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy($id)
     {
-        //
+        $country = Country::findOrFail($id);
+        $country->delete(); // Soft delete
+        return response()->json(['message' => 'Country deleted successfully.']);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
 
     public function getCountries()
     {
