@@ -25,7 +25,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\PaymentSuccess;
 use App\Mail\PaymentFailed;
-
+use App\Models\ServiceProviderDetail;
+use Carbon\Laravel\ServiceProvider;
 
 class PaymentController extends Controller
 {
@@ -52,11 +53,11 @@ class PaymentController extends Controller
                             ->where('user_id', auth()->id())
                             ->first();
 
-        
+        $vatPercentage = env('VAT_PERCENTAGE', 20);
         if($service_provider->countryRelation->name == 'Turkey') {
-            $price = $price + ($price * 0.2);
+            $price = $price + ($price * ($vatPercentage / 100));
         }
-        $price = '0.01';
+        
         $iyzicoRequest = new CreateCheckoutFormInitializeRequest();
         $iyzicoRequest->setLocale(Locale::EN);
         $iyzicoRequest->setConversationId('user_' . $user->id); // Dynamic ID
@@ -184,23 +185,34 @@ class PaymentController extends Controller
             }
 
             // Send success email
-            Mail::to(auth()->user()->email)->send(new PaymentSuccess($payment, $newSubscription ?? $activeSubscription));           
-            
-            return redirect()->route('thankyou.page', $paymentId);
+            try {
+                Mail::to(auth()->user()->email)->send(new PaymentSuccess($payment, $newSubscription ?? $activeSubscription));
+            } catch (\Exception $e) {
+                // Log the error for debugging
+                Log::error('Mail sending failed: ' . $e->getMessage());
+            }
+             return redirect()->route('thankyou.page', $paymentId);
         } else {
             // Send failed email
-            Mail::to(auth()->user()->email)->send(new PaymentFailed($payment));
-
-            return redirect()->route('payment.failed.page', $paymentId);
+             try {
+                Mail::to(auth()->user()->email)->send(new PaymentFailed($payment));
+             }catch(\Exception $e) {
+                // Log the error for debugging
+                Log::error('Mail sending failed: ' . $e->getMessage());
+                
+             }  
+            return redirect()->route('payment.failed.page', $paymentId);        
         }
         
     }
+
     public function storePayment($checkoutForm) // or whatever method you're using
     {
         return Payment::create([
             'user_id'           => auth()->user()->id,
             'payment_id'        => $checkoutForm->getPaymentId(),
             'status'            => $checkoutForm->getPaymentStatus(),
+            'mode'          => 'online',
             'paid_price'        => $checkoutForm->getPaidPrice(),
             'price'             => $checkoutForm->getPrice(),
             'currency'          => $checkoutForm->getCurrency(),
@@ -230,14 +242,67 @@ class PaymentController extends Controller
         return view('paymentfailed', compact('payment'));
     }
 
+    // public function listPayments()
+    // {
+    //      $payments = Payment::with(['user', 'plan'])
+    //     ->orderByDesc('created_at')
+    //     ->get();
+
+    //     return view('admin.payments.index', compact('payments'));
+    // }
+
+    // show subscriptions list with payment table
     public function listPayments()
     {
-         $payments = Payment::with(['user', 'plan'])
-        ->orderByDesc('created_at')
-        ->get();
-
-        return view('admin.payments.index', compact('payments'));
+         $subscriptions = Subscription::with(['user', 'plan', 'payment'])
+            ->orderByDesc('created_at')
+            ->get();
+        return view('admin.payments.index', compact('subscriptions'));
     }
+
+    // avtivate offline subcription
+    public function activate($id)
+    {
+        $subscription = Subscription::with(['plan'])->find($id);
+
+        if (!$subscription) {
+            return response()->json(['success' => false, 'message' => 'Subscription not found.'], 404);
+        }
+
+        if ($subscription->status === 'active') {
+            return response()->json(['success' => false, 'message' => 'Subscription already active.']);
+        }
+
+        $service_provider = ServiceProviderDetail::with('countryRelation')
+          ->where('user_id', $subscription->user_id) 
+           ->first();
+
+        $basePrice = number_format($subscription->plan->price, 2, '.', '');
+        $vatPercentage = env('VAT_PERCENTAGE', 20);
+        $finalPrice = $basePrice;
+        
+         // If country is Turkey, apply 20% VAT
+        if ($service_provider->countryRelation && strtolower($service_provider->countryRelation->name) === 'turkey') {
+            $finalPrice = $basePrice + ($basePrice * ($vatPercentage / 100));
+        }
+
+        // Create payment record
+        $payment = Payment::create([
+            'user_id'       => $subscription->user_id,
+            'status'        => 'SUCCESS',
+            'mode'          => 'offline',
+            'paid_price'    => $finalPrice,
+            'price'         => $basePrice,
+        ]);
+
+        $subscription->payment_id = $payment->id;
+        $subscription->status = 'active';
+        $subscription->save();
+
+        return response()->json(['success' => true, 'message' => 'Subscription activated successfully.']);
+    }
+
+
 
 
 }

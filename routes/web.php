@@ -127,28 +127,45 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/countries', [CountryController::class, 'index'])->name('countries.index');
         Route::post('/countries', [CountryController::class, 'store'])->name('countries.store');
         Route::get('/countries/list', [CountryController::class, 'getCountries'])->name('countries.list');
+        Route::get('/countries/{id}/edit', [CountryController::class, 'edit'])->name('countries.edit');
+        Route::put('/countries/{id}', [CountryController::class, 'update'])->name('countries.update');
+        Route::delete('/countries/{id}', [CountryController::class, 'destroy'])->name('countries.destroy');
 
      //   Route::resource('ports', PortController::class);
         Route::get('/ports', [PortController::class, 'index'])->name('ports.index');
         Route::post('/ports', [PortController::class, 'store'])->name('ports.store');
         Route::get('ajax/ports', [PortController::class, 'getPorts'])->name('ports.list');
+        Route::get('/ports/{id}/edit', [PortController::class, 'edit'])->name('ports.edit');
+        Route::put('/ports/{id}', [PortController::class, 'update'])->name('ports.update');
+        Route::delete('/ports/{id}', [PortController::class, 'destroy'])->name('ports.destroy');
 
         Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
         Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
         Route::get('ajax/categories', [CategoryController::class, 'getCategories'])->name('categories.list');
+        Route::get('/categories/{id}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
+        Route::put('/categories/{id}', [CategoryController::class, 'update'])->name('categories.update');
+        Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 
         Route::get('/sub-categories', [SubCategoryController::class, 'index'])->name('sub-categories.index');
         Route::post('/sub-categories', [SubCategoryController::class, 'store'])->name('sub-categories.store');
         Route::get('ajax/sub-categories', [SubCategoryController::class, 'getSubCategories'])->name('sub-categories.list');
+        Route::get('/sub-categories/{id}/edit', [SubCategoryController::class, 'edit'])->name('sub-categories.edit');
+        Route::put('/sub-categories/{id}', [SubCategoryController::class, 'update'])->name('sub-categories.update');
+        Route::delete('/sub-categories/{id}', [SubCategoryController::class, 'destroy'])->name('sub-categories.destroy');
 
         Route::get('/cities', [CityController::class, 'index'])->name('cities.index');
         Route::post('/cities', [CityController::class, 'store'])->name('cities.store');
         Route::get('ajax/cities', [CityController::class, 'getCities'])->name('cities.list');
+        Route::get('/cities/{id}/edit', [CityController::class, 'edit'])->name('cities.edit');
+        Route::put('/cities/{id}', [CityController::class, 'update'])->name('cities.update');
+        Route::delete('/cities/{id}', [CityController::class, 'destroy'])->name('cities.destroy');
 
         Route::get('/users', [UserListController::class, 'index'])->name('usres.index');
         Route::get('/users/detail/{subscriptionId}', [UserListController::class, 'detail'])->name('users.detail');
         
         Route::get('/payments', [PaymentController::class, 'listPayments'])->name('payments.list');
+        Route::post('/subscriptions/{id}/activate', [PaymentController::class, 'activate'])->name('admin.subscriptions.activate');
+
         Route::get('/blogs', [BlogController::class, 'index'])->name('blogs.index');
         Route::post('/blogs', [BlogController::class, 'store'])->name('blogs.store');
         Route::get('ajax/blogs', [BlogController::class, 'getBlogs'])->name('blogs.list');

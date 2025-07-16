@@ -681,9 +681,9 @@ class ServiceProviderDetailController extends Controller
             'emergency_contact_number' => 'nullable|required_if:has_emergency_contact,1',
             
             // Social
-            'linkedin' => 'nullable|url',
-            'instagram' => 'nullable|url',
-            'twitter' => 'nullable|url',
+            'linkedin' => 'nullable|url|regex:/^https?:\/\/(www\.)?linkedin\.com\/.*$/i',
+            'instagram' => 'nullable|url|regex:/^https?:\/\/(www\.)?instagram\.com\/.*$/i',
+            'twitter' => 'nullable|url|regex:/^https?:\/\/(www\.)?x\.com\/.*$/i',
 
             // Company
             'slogan' => $isBasic ? 'nullable|string' : 'required|string',
@@ -692,13 +692,13 @@ class ServiceProviderDetailController extends Controller
             'reference_shipowners' => 'nullable|string',
 
             'certificates' => 'nullable|array',
-            'certificates.*' => 'file|mimes:pdf,jpeg,png,jpg|max:1024',
+            'certificates.*' => 'file|mimes:pdf,jpeg,png,jpg',
 
             'photos' => [
                 $isBasic || $hasPhotos ? 'nullable' : 'required',
                 'array',
             ],
-            'photos.*' => 'image|mimes:jpeg,png,jpg|max:1024',
+            'photos.*' => 'image|mimes:jpeg,png,jpg',
 
             // Port Services
             'country.0' => 'required|string',
@@ -716,6 +716,9 @@ class ServiceProviderDetailController extends Controller
             'country.0.required' => 'Please select country.',
             'port.0.required' => 'Please select port.',
             'service_category.0.0.required' => 'Please select at least one service category in the first group.',
+            'linkedin.regex' => 'Please enter a valid link like https://linkedin.com/in/yourcompany',
+            'instagram.regex' => 'Please enter a valid link like https://instagram.com/yourcompany',
+            'twitter.regex' => 'Please enter a valid link like https://x.com/yourcompany',
         ]);
 
         // Start ----- Add manual check CERTIFICATE condition

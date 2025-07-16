@@ -76,7 +76,7 @@
                                 <li><a href="{{ route('admin.ports.index') }}">Manage Ports</a></li> 
                                 <li><a href="{{ route('admin.categories.index') }}">Manage Categories</a></li> 
                                 <li><a href="{{ route('admin.sub-categories.index') }}">Manage Sub-Categories</a></li>
-                                <li><a href="{{ route('admin.payments.list') }}">Subscription</a></li>  
+                                <li><a href="{{ route('admin.payments.list') }}">Subscription Payments</a></li>  
                                 <li><a href="{{ route('admin.blogs.index') }}">Manage Blogs</a></li>      
                              </ul>
                      </li>   

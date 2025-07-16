@@ -12,6 +12,7 @@ class Payment extends Model
         'user_id',
         'payment_id',
         'status',
+        'mode',
         'paid_price',
         'price',
         'currency',
