@@ -48,7 +48,7 @@
                <div class="form-group mb-4">
                     <label class="required">Password</label>
                     <input type="password" name="password" id="password" class="form-control password @error('password') is-invalid @enderror" autocomplete="off">
-                    <i data-bs-toggle="#password" class="fa-regular fa-eye-slash toggle-password"></i>
+                    <i data-bs-toggle="#password" class="fa fa-regular fa-eye-slash toggle-password"></i>
                     @error('password')
                         <div class="invalid-feedback text-start">{{ $message }}</div>
                     @enderror
@@ -101,3 +101,7 @@
 <div class="clear"></div>
 
 @endsection
+
+
+
+

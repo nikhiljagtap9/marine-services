@@ -1,16 +1,22 @@
 <div class="fxt-form-step">
                               <h2 class="fxt-page-title">Contact Information</h2>
                               <div class="col-xl-4 col-12 leftt link1 adres_fld_1">
-                                 <label class="Mylabel" for="contact_person_name">Contact Person First Name</label>
-                                 <input id="contact_person_name" type="text" class="form-control" name="contact_person_name" value="{{ old('contact_person_name') }}" placeholder="Enter First name here" required>
+                                 <label class="Mylabel" for="contact_person_name">First Name</label>
+                                 <input id="contact_person_name" type="text" class="form-control" name="contact_person_name" value="{{ old('contact_person_name') }}" placeholder="Enter First name" required>
                               </div>
                                <div class="col-xl-4 col-12 leftt link1 adres_fld_1 adres_fld_2">
-                                <label class="Mylabel" for="contact_person_last_name">Contact Person Last Name</label>
-                                 <input id="contact_person_last_name" type="text" class="form-control" name="contact_person_last_name" value="{{ old('contact_person_last_name') }}" placeholder="Enter Last name here" required>   
+                                <label class="Mylabel" for="contact_person_last_name">Last Name</label>
+                                 <input id="contact_person_last_name" type="text" class="form-control" name="contact_person_last_name" value="{{ old('contact_person_last_name') }}" placeholder="Enter Last name" required>   
                               </div>
                               <div class="form-group">
                                  <label class="Mylabel adres_fld_1" for="phone">Phone Number</label>
-                                 <input id="phone" type="text" class="form-control" name="phone" value="{{ old('phone') }}" placeholder="Enter number here" required>
+                                 <input id="phone" type="tel" class="form-control" name="phone" 
+                                    value="{{ old('phone') }}" 
+                                    pattern="[0-9]+" 
+                                    maxlength="20" 
+                                    placeholder="Enter Phone number" 
+                                    required 
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                               </div>
                               <div class="col-xl-4 col-12 leftt link1 adres_fld_1">
                                  <label class="Mylabel" for="Linkd">Country</label>

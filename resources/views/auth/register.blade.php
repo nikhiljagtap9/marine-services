@@ -43,7 +43,7 @@
                          @csrf
                         <!-- Start Form Group -->
                         <div class="form-group mb-4">
-                            <label class="required">Company Name or Vessel Name </label>
+                            <label class="required">Company or Vessel Name </label>
                             <input type="text" name="company_name" id="company_name" class="form-control @error('company_name') is-invalid @enderror" value="{{ old('company_name') }}">
                             @error('company_name')
                                 <div class="invalid-feedback text-start">{{ $message }}</div>
@@ -52,7 +52,7 @@
                         <!-- /.End Form Group -->
                         <!-- Start Form Group -->
                         <div class="form-group mb-4">
-                            <label class="required">Company email address or vessel email address</label>
+                            <label class="required">Company or Vessel email address</label>
                             <input type="email" name="email" id="email"  class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}">
                             @error('email')
                                 <div class="invalid-feedback text-start">{{ $message }}</div>
@@ -79,8 +79,8 @@
                         <!-- Start Form Group -->
                         <div class="form-group mb-4">
                             <label class="required">Confirm Password</label>
-                            <input  type="password" id="password_confirmation" name="password_confirmation"  class="form-control c-password" autocomplete="off">
-                            <i data-bs-toggle="#password_confirmation" class="fa fa-eye toggle-password " aria-hidden="true"></i>
+                            <input  type="password" id="password_confirmation" name="password_confirmation"  class="form-control @error('password') is-invalid @enderror" autocomplete="off">
+                            <i data-bs-toggle="#password_confirmation" class="fa fa-eye toggle-password" aria-hidden="true"></i>
                             @error('password')
                                 <div class="invalid-feedback text-start">{{ $message }}</div>
                             @enderror

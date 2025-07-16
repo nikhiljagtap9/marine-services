@@ -122,7 +122,7 @@ class ServiceProviderDetailController extends Controller
             'company_description' => 'nullable|string',
             'contact_person_name' => 'required|string|max:255',
             'contact_person_last_name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
+            'phone' => ['required', 'regex:/^\d+$/', 'max:20'],
             'country' => 'required|string|max:100',
             'city' => 'nullable|string|max:100',
             'office_address' => 'required|string',

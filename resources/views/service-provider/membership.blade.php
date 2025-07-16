@@ -115,6 +115,12 @@ font-weight: bold;
 cursor: pointer;
 }
 </style>
+@php
+      use Carbon\Carbon;
+
+      $startDate = Carbon::now();
+      $octFirst = Carbon::create($startDate->year, 10, 1);
+@endphp
 <div id="preloader" class="preloader">
    <div class='inner'>
       <div class='line1'></div>
@@ -568,17 +574,21 @@ cursor: pointer;
                                  <div class="col-sm-12 text-end com_mn" bis_skin_checked="1" id="make_payment">
                                     <img src="{{ asset('service-provider/assets/img/payment.png')}}" class="mak_pmnt" >
                                     <div class="clear"></div>
-                                    <!-- <a onclick="showModal()" class="btn btn-primary submit_btn submit_btn_membr" >
-                                       Make Payment  
-                                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-right">
-                                          <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                          <path d="M5 12l14 0"></path>
-                                          <path d="M13 18l6 -6"></path>
-                                          <path d="M13 6l6 6"></path>
-                                       </svg>
-                                    </a> -->
-                                    
-                                       <button type="submit" class="btn btn-primary submit_btn" id="submitBtn">
+                                     
+                                     @if($selectedPlan->name == 'Silver' && $startDate->lt($octFirst))
+                                       <button type="submit" class="btn btn-primary submit_btn" fdprocessedid="43gnio" data-action="subscribe">
+                                          Subscribe Now
+                                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-right">
+                                             <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                             <path d="M5 12l14 0"></path>
+                                             <path d="M13 18l6 -6"></path>
+                                             <path d="M13 6l6 6"></path>
+                                          </svg>
+                                       </button> 
+                                       @endif
+                                                
+                                    @if($startDate->greaterThanOrEqualTo($octFirst) || $selectedPlan->name !== 'Silver')
+                                       <button type="submit" class="btn btn-primary submit_btn" id="submitBtn" data-action="payment">
                                        <span id="submitText">Make Payment </span>
                                        <span id="submitLoader" class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-right">
@@ -588,7 +598,17 @@ cursor: pointer;
                                           <path d="M13 6l6 6"></path>
                                        </svg>
                                        </button>
-                                    
+                                    @endif
+
+                                       <!-- <a onclick="showModal()" class="btn btn-primary submit_btn submit_btn_membr" >
+                                       Make Payment  
+                                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-right">
+                                          <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                          <path d="M5 12l14 0"></path>
+                                          <path d="M13 18l6 -6"></path>
+                                          <path d="M13 6l6 6"></path>
+                                       </svg>
+                                    </a> -->
                                  </div>
                                  
                               </div>
@@ -884,6 +904,13 @@ cursor: pointer;
 
    // Attach auto-save to each field with debounce
    $(document).ready(function() {
+
+      let clickedAction = 'payment'; // default action
+
+      // Detect which button was clicked
+      $('.submit_btn').on('click', function () {
+         clickedAction = $(this).data('action');
+      });
        
       $('#masterForm').on('submit', function(e) {
          e.preventDefault();
@@ -908,16 +935,22 @@ cursor: pointer;
             'X-CSRF-TOKEN': '{{ csrf_token() }}'
             },
             success: function(response) {
+               const message = clickedAction === 'payment'
+                     ? 'Form validated. Redirecting to payment...'
+                     : 'Form validated. Please wait you are Redirecting';
                $('#responseMessage')
                 .removeClass('d-none alert-danger')
                 .addClass('alert-success')
-                .text('Form validated. Redirecting to payment...');
+                .text(message);
                
                // Reload page after 2 seconds
                   setTimeout(function() {
                      // Show payment popup/modal
-                     showModal();
-                    // window.location.href = "{{ route('service-provider.confirmTemp') }}";
+                     if (clickedAction === 'payment') {
+                        showModal();
+                     }else{
+                        window.location.href = "{{ route('service-provider.confirmTemp') }}";
+                     }                  
                   }, 2000);
             },
            error: function(xhr) {
