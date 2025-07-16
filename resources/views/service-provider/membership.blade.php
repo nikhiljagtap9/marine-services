@@ -647,7 +647,13 @@ cursor: pointer;
                <strong>BENEFICIARY:</strong> {{ config('bank.beneficiary') }}<br>
                <strong>ACCOUNT NO:</strong> {{ config('bank.account') }}<br>
                <strong>IBAN:</strong> {{ config('bank.iban') }}<br>
-               <strong>SWIFT CODE:</strong> {{ config('bank.swift') }}
+               <strong>SWIFT CODE:</strong> {{ config('bank.swift') }}<br><br>
+               
+                 <h3 style="color: #646464"> 
+                  <strong>NOTE: </strong> Bank transfers may take a few business days. 
+                  Please notify us via WhatsApp at +90 532 482 82 15 and share the receipt after completing the transfer 
+                  </h3>
+               
             </div>
          </div>
       </div>

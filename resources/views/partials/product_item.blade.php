@@ -4,6 +4,16 @@
             return $coordinate + ((mt_rand() / mt_getrandmax()) * $range * 2 - $range);
         }
     }
+
+    if (!function_exists('isLikelyOnLand')) {
+        function isLikelyOnLand($lat, $lng) {
+            // Very rough filter to avoid open ocean
+            return $lat !== null && $lng !== null &&
+                   $lat >= -60 && $lat <= 85 &&
+                   $lng >= -180 && $lng <= 180;
+        }
+    }
+
     $mainPortDetails = $products->first()?->portServiceDetails->first();
     $mainPortLat = $mainPortDetails?->port?->lat ?? null;
     $mainPortLng = $mainPortDetails?->port?->lng ?? null;
@@ -25,14 +35,18 @@
 
         $portLat = $portDetails?->port?->lat ?? null;
         $portLng = $portDetails?->port?->lng ?? null;
-
-
+        
+        // Try nearby
         $randomLat = $portLat ? randomNearby($portLat) : null;
         $randomLng = $portLng ? randomNearby($portLng) : null;
+        
+        // If random is not valid, fall back to original
+        $finalLat = isLikelyOnLand($randomLat, $randomLng) ? $randomLat : $portLat;
+        $finalLng = isLikelyOnLand($randomLat, $randomLng) ? $randomLng : $portLng;
 
     @endphp
 
-    <div class="hotel-item product-item" data-lat="{{ $randomLat }}" data-lng="{{ $randomLng }}">
+    <div class="hotel-item product-item" data-lat="{{ $finalLat }}" data-lng="{{ $finalLng }}">
         <div class="card rounded-3 border-0 shadow-sm w-100 flex-fill overflow-hidden card-hover flex-fill w-100 card-hover-bg">
         <!-- Card Image Wrap with Slider -->
         <a href="{{ route('detail', $provider->active_subscription->id) }}" target="_blank" class="card-img-wrap card-image-hover overflow-hidden dark-overlay">

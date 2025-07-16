@@ -223,11 +223,12 @@
 <script>
    // Use blade echo to inject PHP variables into JS
     // Passing PHP variables into JS variables
-    const mapContainer = document.getElementById('map-container');
-    const lat = parseFloat(mapContainer.getAttribute('data-lat'));
-    const lng = parseFloat(mapContainer.getAttribute('data-lng'));
+   const mapContainer = document.getElementById('map-container');
+   const lat = parseFloat(mapContainer.getAttribute('data-lat'));
+   const lng = parseFloat(mapContainer.getAttribute('data-lng'));
    const map = L.map('map').setView([lat, lng], 13);
-   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+ //  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+   L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png').addTo(map);
    
    const hotelItems = document.querySelectorAll('.hotel-item');
    const markers = [];
