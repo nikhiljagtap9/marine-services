@@ -501,9 +501,31 @@ cursor: pointer;
                                        <div class="" bis_skin_checked="1">
                                           <label class="required fw-medium mb-2">Certificates</label>
                                           <input type="file" name="certificates[]" multiple class="form-control" id="certificate-upload" accept=".pdf,.jpg,.jpeg,.png">
+                                          <div class="text-danger mt-1" id="cert-upload-error"></div> <!-- error shows here -->
                                           <small class="text-muted">Max 20 photos (pdf,jpeg, png, jpg)</small>
                                        </div>
-                                       <div class="row" id="certificate-preview">
+
+                                       <div class="row mt-3" id="certificate-preview">
+  @php
+      $sessionCerts = session()->get('uploaded_certificates', []);
+      $dbCerts = [];
+
+      if (isset($company) && !empty($company->certificates)) {
+          $dbCerts = json_decode($company->certificates, true);
+      }
+
+      $allCerts = array_merge($dbCerts, $sessionCerts);
+  @endphp
+
+  @foreach($allCerts as $key => $cert)
+      <div class="col-md-3 mb-2 position-relative" id="cert-{{ $key }}">
+              <img src="{{ asset('storage/' . $cert) }}" class="img-thumbnail" width="100%">
+          <input type="hidden" name="existing_cert[]" value="{{ $cert }}">
+          <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 remove-cert-btn" data-cert="{{ $cert }}">×</button>
+      </div>
+  @endforeach
+</div>
+                                       <!-- <div class="row" id="certificate-preview">
                                           @if(!empty($company->certificates))
                                           @php
                                           $certs = json_decode($company->certificates, true);
@@ -518,30 +540,38 @@ cursor: pointer;
                                                       </div>
                                              @endforeach
                                           @endif
-                                       </div>
+                                       </div> -->
 
                                     </div>
                                     <div class="col-sm-4 cols_30 mb-4" bis_skin_checked="1">
                                        <div class="" bis_skin_checked="1">
                                           <label class="required fw-medium mb-2">Photos</label>
                                           <input type="file" name="photos[]" multiple class="form-control" id="photo-upload" accept=".jpg,.jpeg,.png">
-                                          <small class="text-muted">Min 3 & max 20 photos (jpeg, png, jpg)</small>
+                                          <div class="text-danger mt-1" id="photo-upload-error"></div> <!-- error shows here -->
+                                          <small class="text-muted">Min 3 & max 20 photos (jpeg, png, jpg)</small>                     
                                        </div>
-                                       <!-- @if(!empty($company->photos))
-                                       @php
-                                       $photos = json_decode($company->photos, true);
-                                       @endphp
-                                       <div class="row">
-                                          @foreach($photos as $photo)
-                                          <div class="col-md-3">
-                                             <img src="{{ asset('storage/' . $photo) }}" class="img-thumbnail mb-2" width="100" />
-                                          </div>
-                                          @endforeach
+                                       <div class="row mt-3" id="photo-preview">
+                                          @php
+    $sessionPhotos = session()->get('uploaded_photos', []);
+   
+    $dbPhotos = [];
+
+    if (isset($company) && is_object($company) && !empty($company->photos)) {
+        $dbPhotos = json_decode($company->photos, true);
+    }
+
+    $allPhotos = array_merge($dbPhotos, $sessionPhotos);
+@endphp
+
+ @foreach($allPhotos as $key => $photo)
+        <div class="col-md-3 mb-2 position-relative">
+            <img src="{{ asset('storage/' . $photo) }}" class="img-thumbnail" width="100">
+            <input type="hidden" name="existing_photos[]" value="{{ $photo }}">
+             <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 remove-photo-btn" data-photo="{{ $photo }}">×</button>
+        </div>
+    @endforeach
                                        </div>
-                                       @endif -->
-
-
-                                       <div class="row" id="photo-preview">
+                                       <!-- <div class="row" id="photo-preview">
                                           @if(!empty($company->photos))
                                                 @php
                                                    $photos = json_decode($company->photos, true);
@@ -556,7 +586,7 @@ cursor: pointer;
                                                    </div>
                                                 @endforeach
                                           @endif
-                                       </div>
+                                       </div> -->
                                     </div>
 
                                     <div class="col-sm-4 cols_30 mb-4" bis_skin_checked="1">
@@ -1022,7 +1052,7 @@ cursor: pointer;
    //    });
    });
 </script>
-
+<!-- 
 <script>
     // multiple upload photo, preview,removed
     let selectedFiles = [];
@@ -1102,8 +1132,122 @@ cursor: pointer;
             reader.readAsDataURL(file);
         });
     }
+</script> -->
+
+<script>
+$('#photo-upload').on('change', function (e) {
+    const files = Array.from(e.target.files);
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+
+    files.forEach((file, index) => {
+        const fileId = Date.now() + '_' + index;
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+            const previewHtml = `
+                <div class="col-md-3 mb-2" id="photo-${fileId}">
+                    <div class="position-relative">
+                        <img src="${e.target.result}" class="img-thumbnail mb-1" width="100%">
+                        <div class="upload-status text-center text-muted small">Uploading...</div>
+                        <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 remove-photo-btn" data-photo="" data-file-id="${fileId}">×</button>
+                    </div>
+                </div>
+            `;
+            $('#photo-preview').append(previewHtml);
+
+            uploadFile(file, fileId);
+        };
+
+        reader.readAsDataURL(file);
+    });
+
+    // Clear input to allow re-selecting same file again
+    $(this).val('');
+});
+
+function uploadFile(file, fileId) {
+    const formData = new FormData();
+    formData.append('photo', file);
+    formData.append('_token', '{{ csrf_token() }}');
+
+    $.ajax({
+        url: '{{ route("company.uploadPhoto") }}',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (res) {
+            if (res.status === 'success') {
+               const $photoDiv = $(`#photo-${fileId}`);
+
+                // Update upload status
+                $photoDiv.find('.upload-status').html('<span class="text-success">Uploaded</span>');
+
+                // Set actual photo path in the remove button
+                const $removeBtn = $photoDiv.find('.remove-photo-btn');
+                $removeBtn.attr('data-photo', res.path);         // Add actual path
+
+
+                // Append hidden input for backend
+                $photoDiv.append(`<input type="hidden" name="photos[]" value="${res.path}">`);
+            } else {
+                $(`#photo-${fileId} .upload-status`).html('<span class="text-danger">Failed</span>');
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("AJAX Upload Error:", xhr.responseText);
+            
+            let errorMessage = 'Upload Error';
+            
+            // Handle Laravel validation errors
+            if (xhr.responseJSON && xhr.responseJSON.errors && xhr.responseJSON.errors.photos) {
+               errorMessage = xhr.responseJSON.errors.photos[0]; // Show the first message
+            } else if (xhr.responseJSON && xhr.responseJSON.message) {
+               errorMessage = xhr.responseJSON.message;
+            } else if (xhr.responseText) {
+               errorMessage = xhr.responseText;
+            }
+
+            $('#photo-upload-error').html(errorMessage);
+                     $(`#photo-${fileId} .upload-status`).html(`<span class="text-danger">Upload Error</span>`);
+         }
+    });
+}
+
+// Delete photo from preview
+$(document).on('click', '.remove-photo-btn', function () {
+    const $btn = $(this);
+    const photoPath = $btn.data('photo');
+
+    // Send AJAX to delete from session
+    $.ajax({
+        url: '{{ route("company.deletePhoto") }}',
+        type: 'POST',
+        data: {
+            _token: '{{ csrf_token() }}',
+            photo: photoPath
+        },
+        success: function (res) {
+            if (res.status === 'success') {
+                // Remove the preview card from DOM
+                // Smooth fade out and remove
+               $btn.closest('.photo-box, .col-md-3').fadeOut(300, function () {
+                     $(this).remove();
+               });
+            } else {
+                alert('Delete failed.');
+            }
+        },
+        error: function () {
+            alert('Error deleting photo.');
+        }
+    });
+});
+
+
 </script>
 
+<!-- 
 <script>
     // multiple upload certificate, preview,removed
 let selectedCerts = [];
@@ -1117,21 +1261,6 @@ $('#certificate-upload').on('change', function (e) {
     ];
 
     newFiles.forEach((file) => {
-      //   if (!allowedTypes.includes(file.type)) {
-      //       alert(file.name + " is not a valid file.");
-      //       return;
-      //   }
-
-      //   if (file.size > 1024 * 1024) {
-      //       alert(file.name + " exceeds 1MB.");
-      //       return;
-      //   }
-
-      //   if ((selectedCerts.length + $('.existing-cert').length) >= 20) {
-      //       alert("You can upload a maximum of 20 certificates.");
-      //       return;
-      //   }
-
         selectedCerts.push(file);
         const index = selectedCerts.length - 1;
 
@@ -1209,6 +1338,121 @@ function rebuildNewCerts() {
         reader.readAsDataURL(file);
     });
 }
+</script> -->
+
+<script>
+
+$('#certificate-upload').on('change', function (e) {
+    const files = Array.from(e.target.files);
+    const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg'];
+
+    files.forEach((file, index) => {
+        const fileId = Date.now() + '_' + index;
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+            let previewContent = '';
+            if (file.type === 'application/pdf') {
+                previewContent = `<iframe src="${e.target.result}" class="img-thumbnail mb-1" width="100%" height="150px"></iframe>`;
+            } else {
+                previewContent = `<img src="${e.target.result}" class="img-thumbnail mb-1" width="100%">`;
+            }
+
+            const previewHtml = `
+                <div class="col-md-3 mb-2" id="cert-${fileId}">
+                    <div class="position-relative">
+                        ${previewContent}
+                        <div class="upload-status text-center text-muted small">Uploading...</div>
+                        <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 remove-cert-btn" data-cert="" data-file-id="${fileId}">×</button>
+                    </div>
+                </div>
+            `;
+            $('#certificate-preview').append(previewHtml);
+
+            uploadCertificate(file, fileId);
+        };
+
+        reader.readAsDataURL(file);
+    });
+
+    $(this).val('');
+});
+
+function uploadCertificate(file, fileId) {
+    const formData = new FormData();
+    formData.append('certificate', file);
+    formData.append('_token', '{{ csrf_token() }}');
+
+    $.ajax({
+        url: '{{ route("company.uploadCertificate") }}',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (res) {
+            if (res.status === 'success') {
+                const $certDiv = $(`#cert-${fileId}`);
+
+                // Show upload success
+                $certDiv.find('.upload-status').html('<span class="text-success">Uploaded</span>');
+
+                // Set actual file path on remove button
+                const $removeBtn = $certDiv.find('.remove-cert-btn');
+                $removeBtn.attr('data-cert', res.path);  // <- Set path here
+
+                // Append hidden input for form submission
+                $certDiv.append(`<input type="hidden" name="certificates[]" value="${res.path}">`);
+            } else {
+                $(`#cert-${fileId} .upload-status`).html('<span class="text-danger">Failed</span>');
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("AJAX Upload Error:", xhr.responseText);
+            
+            let errorMessage = 'Upload Error';
+            if (xhr.responseJSON?.errors?.certificate) {
+                errorMessage = xhr.responseJSON.errors.certificate[0];
+            } else if (xhr.responseJSON?.message) {
+                errorMessage = xhr.responseJSON.message;
+            } else if (xhr.responseText) {
+                errorMessage = xhr.responseText;
+            }
+
+            $('#cert-upload-error').html(errorMessage);
+            $(`#cert-${fileId} .upload-status`).html(`<span class="text-danger">Upload Error</span>`);
+        }
+    });
+}
+
+
+// Delete certificate from session and fade out
+$(document).on('click', '.remove-cert-btn', function () {
+    const $btn = $(this);
+    const certPath = $btn.data('cert');
+
+    $.ajax({
+        url: '{{ route("company.deleteCertificate") }}',
+        type: 'POST',
+        data: {
+            _token: '{{ csrf_token() }}',
+            certificate: certPath
+        },
+        success: function (res) {
+            if (res.status === 'success') {
+                $btn.closest('.col-md-3').fadeOut(300, function () {
+                    $(this).remove();
+                });
+            } else {
+                alert('Failed to delete certificate.');
+            }
+        },
+        error: function () {
+            alert('Error deleting certificate.');
+        }
+    });
+});
+
+
 </script>
 
 <script>

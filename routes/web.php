@@ -104,6 +104,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/service-provider/create', [ServiceProviderDetailController::class, 'create'])->name('service-provider.create');
     Route::post('/service-provider/store', [ServiceProviderDetailController::class, 'store'])->name('service-provider.store');
     Route::get('/service-provider/confirm', [ServiceProviderDetailController::class, 'confirm'])->name('service-provider.confirm');
+
+Route::post('/upload-photo', [ServiceProviderDetailController::class, 'uploadPhoto'])->name('company.uploadPhoto');
+Route::post('/company/delete-photo', [ServiceProviderDetailController::class, 'deletePhoto'])->name('company.deletePhoto');
+Route::post('/upload-certificate', [ServiceProviderDetailController::class, 'uploadCertificate'])->name('company.uploadCertificate');
+Route::post('/delete-certificate', [ServiceProviderDetailController::class, 'deleteCertificate'])->name('company.deleteCertificate');
+
    
     
     Route::get('/get-cities/{country_id}',[ServiceProviderDetailController::class, 'getCities'])->name('get-cities');
