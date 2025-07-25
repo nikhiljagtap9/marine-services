@@ -25,6 +25,11 @@ use App\Http\Controllers\FavouriteController;
 use App\Http\Controllers\ContactClickController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\Auth\PasswordController;
+use App\Http\Controllers\Admin\TermsController;
+use App\Http\Controllers\Admin\PrivacyPolicyController; 
+use App\Http\Controllers\Admin\ConsentStatementController; 
+use App\Http\Controllers\Admin\DistanceSalesAgreementController; 
+use App\Http\Controllers\Admin\DataProcessingPolicyController; 
 
 /*
 |--------------------------------------------------------------------------
@@ -69,25 +74,11 @@ Route::get('/contact_us', function () {
     return view('contact_us');
 })->name('contact_us');
 
-Route::get('/privacy', function () {
-    return view('privacy');
-})->name('privacy');
-
-Route::get('/consent', function () {
-    return view('consent');
-})->name('consent');
-
-Route::get('t&c', function () {
-    return view('t&c');
-})->name('t&c');
-
-Route::get('data_processing', function () {
-    return view('data_processing');
-})->name('data_processing');
-
-Route::get('distance_sales_agreement', function () {
-    return view('distance_sales_agreement');
-})->name('distance_sales_agreement');
+Route::get('t&c', [HomeController::class, 'showTerms'])->name('t&c');
+Route::get('privacy', [HomeController::class, 'showPrivacy'])->name('privacy');
+Route::get('consent', [HomeController::class, 'showConsent'])->name('consent');
+Route::get('data_processing', [HomeController::class, 'showDataProcessing'])->name('data_processing');
+Route::get('distance_sales_agreement', [HomeController::class, 'showDistanceSalesAgreement'])->name('distance_sales_agreement');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -105,10 +96,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/service-provider/store', [ServiceProviderDetailController::class, 'store'])->name('service-provider.store');
     Route::get('/service-provider/confirm', [ServiceProviderDetailController::class, 'confirm'])->name('service-provider.confirm');
 
-Route::post('/upload-photo', [ServiceProviderDetailController::class, 'uploadPhoto'])->name('company.uploadPhoto');
-Route::post('/company/delete-photo', [ServiceProviderDetailController::class, 'deletePhoto'])->name('company.deletePhoto');
-Route::post('/upload-certificate', [ServiceProviderDetailController::class, 'uploadCertificate'])->name('company.uploadCertificate');
-Route::post('/delete-certificate', [ServiceProviderDetailController::class, 'deleteCertificate'])->name('company.deleteCertificate');
+    Route::post('/upload-photo', [ServiceProviderDetailController::class, 'uploadPhoto'])->name('company.uploadPhoto');
+    Route::post('/company/delete-photo', [ServiceProviderDetailController::class, 'deletePhoto'])->name('company.deletePhoto');
+    Route::post('/upload-certificate', [ServiceProviderDetailController::class, 'uploadCertificate'])->name('company.uploadCertificate');
+    Route::post('/delete-certificate', [ServiceProviderDetailController::class, 'deleteCertificate'])->name('company.deleteCertificate');
 
    
     
@@ -166,9 +157,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('/cities/{id}', [CityController::class, 'update'])->name('cities.update');
         Route::delete('/cities/{id}', [CityController::class, 'destroy'])->name('cities.destroy');
 
-        Route::get('/users', [UserListController::class, 'index'])->name('usres.index');
+        Route::get('/users', [UserListController::class, 'index'])->name('users.index');
         Route::get('/users/detail/{subscriptionId}', [UserListController::class, 'detail'])->name('users.detail');
-        
+        Route::get('/users/clients', [UserListController::class, 'getClients'])->name('users.clients');
+
         Route::get('/payments', [PaymentController::class, 'listPayments'])->name('payments.list');
         Route::post('/subscriptions/{id}/activate', [PaymentController::class, 'activate'])->name('admin.subscriptions.activate');
 
@@ -178,6 +170,26 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/blogs/{id}/edit', [BlogController::class, 'edit'])->name('blogs.edit');
         Route::put('/blogs/{id}', [BlogController::class, 'update'])->name('blogs.update');
         Route::delete('/blogs/{id}', [BlogController::class, 'destroy'])->name('blogs.destroy');
+
+        Route::get('/terms', [TermsController::class, 'index'])->name('tc.index');
+        Route::post('/terms', [TermsController::class, 'store'])->name('tc.store');
+        Route::delete('/terms/{id}', [TermsController::class, 'destroy'])->name('tc.delete');
+
+        Route::get('/privacy', [PrivacyPolicyController::class, 'index'])->name('privacy.index');
+        Route::post('/privacy/store', [PrivacyPolicyController::class, 'store'])->name('privacy.store');
+        Route::delete('/privacy/{id}', [PrivacyPolicyController::class, 'destroy'])->name('privacy.delete');
+
+        Route::get('/consent', [ConsentStatementController::class, 'index'])->name('consent.index');
+        Route::post('/consent', [ConsentStatementController::class, 'store'])->name('consent.store');
+        Route::delete('/consent/{id}', [ConsentStatementController::class, 'destroy'])->name('consent.destroy');
+
+        Route::get('/distance-sales', [DistanceSalesAgreementController::class, 'index'])->name('distance-sales.index');
+        Route::post('/distance-sales', [DistanceSalesAgreementController::class, 'store'])->name('distance-sales.store');
+        Route::delete('/distance-sales/{id}', [DistanceSalesAgreementController::class, 'destroy'])->name('distance-sales.destroy');
+
+        Route::get('/data-processing', [DataProcessingPolicyController::class, 'index'])->name('data-processing.index');
+        Route::post('/data-processing', [DataProcessingPolicyController::class, 'store'])->name('data-processing.store');
+        Route::delete('/data-processing/{id}', [DataProcessingPolicyController::class, 'destroy'])->name('data-processing.destroy');
     });
 });
 

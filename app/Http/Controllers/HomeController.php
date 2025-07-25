@@ -8,6 +8,11 @@ use App\Models\Category;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Blog;
 use App\Models\User;
+use App\Models\TermsCondition;
+use App\Models\PrivacyPolicy;
+use App\Models\ConsentStatement;
+use App\Models\DataProcessingPolicy;
+use App\Models\DistanceSalesAgreement;
 
 class HomeController extends Controller
 {
@@ -67,4 +72,40 @@ class HomeController extends Controller
 
          return back()->with('success', 'Thank you! Our team will contact you shortly.');
     }
+
+    public function showTerms()
+    {
+        $terms = TermsCondition::where('status', 'published')->get();
+
+        return view('t&c', compact('terms'));
+    }
+
+    public function showPrivacy()
+    {
+        $privacies = PrivacyPolicy::where('status', 'published')->get();
+
+        return view('privacy', compact('privacies'));
+    }
+
+    public function showConsent()
+    {
+        $consents = ConsentStatement::where('status', 'published')->get();
+
+        return view('consent', compact('consents'));
+    }
+
+    public function showDataProcessing()
+    {
+        $datas = DataProcessingPolicy::where('status', 'published')->get();
+
+        return view('data_processing', compact('datas'));
+    }
+
+    public function showDistanceSalesAgreement()
+    {
+        $sales = DistanceSalesAgreement::where('status', 'published')->get();
+
+        return view('distance_sales_agreement', compact('sales'));
+    }
+
 }

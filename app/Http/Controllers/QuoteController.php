@@ -41,11 +41,22 @@ class QuoteController extends Controller
                 'category_id'     => $categoryIds, // This can be ["1,2"] etc.
             ]);
 
+            // for email
+            $categoryNames = Category::whereIn('id', $categoryIds)->pluck('name')->toArray();
+            $quote->category_names = $categoryNames;
+            $quote->requester_name = Auth::user()->name;
+            $quote->port_name = $quoteData['port_name'] ?? 'N/A';
+            $quote->request_date = now()->format('d M Y');
+
             // Fetch user and send mail
             $user = User::find($quoteData['user_id']);
-            if ($user && $user->email) {
-               Mail::to($user->email)->send(new QuoteRequested($quote));
-              //  Mail::to('niksjagtap9@gmail.com')->send(new QuoteRequested($quote));
+            if ($user && $user->email) {        
+                try {
+                    Mail::to($user->email)->send(new QuoteRequested($quote));
+                } catch (\Exception $e) {
+                    \Log::error('Failed to send Quote Requested email to provider: ' . $e->getMessage());
+                    // Optionally, you can notify the admin or fail silently
+                }
             }
         }
 

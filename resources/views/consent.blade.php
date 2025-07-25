@@ -35,26 +35,20 @@
                                        </p>
                                          
                                     </div>
-                                    <div class="section">
-                                       <div class="section-title">1. Data Collection and Processing</div>
-                                       <div class="section-content">
-                                          Your personal data will be collected and processed for the purpose of providing services on our platform, managing user interactions, and conducting analysis. This process will be carried out to ensure the proper functioning of the services provided and to enhance the user experience.
+                                    @foreach($consents as $consent)
+                                       <div class="section">
+                                             <div class="section-title">{{ $loop->iteration }}. {{ $consent->section_title }}</div>
+                                             <div class="section-content">
+                                                <ul class="mb-0">
+                                                   @foreach(explode("\n", $consent->content) as $point)
+                                                         @if(trim($point))
+                                                            <li>{{ trim($point) }}</li>
+                                                         @endif
+                                                   @endforeach
+                                                </ul>
+                                             </div>
                                        </div>
-                                    </div>
-                                    <div class="section">
-                                       <div class="section-title">2.Data Sharing</div>
-                                       <div class="section-content">
-                                         Your personal data may be shared with third parties necessary for providing the platform's services (e.g., hosting providers, software developers, analytics firms). Additionally, data may be shared between Platform Users and Service Providers. In this case, Platform Users' data may be shared with Service Providers, and Service Providers' data may be shared with Platform Users.
-Service Providers' data may also be shared with other Service Providers. This provides Service Providers with various metrics to compare their own performance. These metrics may include the number of views, clicks, quote requests and response rates, star ratings and reviews, changes in star ratings (increase or decrease), among others. Additionally, Service Providers may view other performance metrics to assess their competitors' performance. These comparisons can help Service Providers make improvements to increase their visibility on the platform.
-
-                                       </div>
-                                    </div>
-                                    <div class="section">
-                                       <div class="section-title">3. Data Transfer Abroad</div>
-                                       <div class="section-content">
-                                         Your personal data may be stored on servers located abroad as part of the Rated Marine Services infrastructure. All necessary measures will be taken to ensure the secure transfer of this data.
-                                       </div>
-                                    </div>
+                                    @endforeach 
                                     
                                      
                                   

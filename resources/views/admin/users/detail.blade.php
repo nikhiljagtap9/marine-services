@@ -17,13 +17,85 @@
         <div class="decoration blur-3"></div>
         <div class="container-xxl">
             <div class="card mb-4">
+    <div class="card-header"><strong>Contact Click Stats</strong></div>
+    <div class="card-body">
+        <div class="row">
+            <!-- Contact -->
+            <div class="col-sm-3">
+                <div class="mb-4 d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">Contact</h6>
+                    <div class="d-flex align-items-center justify-content-center rounded arrow-btn percentage-increase">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-world">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+                            <path d="M3.6 9h16.8" />
+                            <path d="M3.6 15h16.8" />
+                            <path d="M11.5 3a17 17 0 0 0 0 18" />
+                            <path d="M12.5 3a17 17 0 0 1 0 18" />
+                        </svg>
+                    </div>
+                </div>
+                <h1 class="price"><span class="counter">{{ $clickCounts['contact'] ?? 0 }}</span></h1>
+            </div>
+
+            <!-- WhatsApp -->
+            <div class="col-sm-3">
+                <div class="mb-4 d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">WhatsApp</h6>
+                    <div class="d-flex align-items-center justify-content-center rounded arrow-btn percentage-increase">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-ship">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M2 20a2.4 2.4 0 0 0 2 1a2.4 2.4 0 0 0 2 -1a2.4 2.4 0 0 1 2 -1a2.4 2.4 0 0 1 2 1a2.4 2.4 0 0 0 2 1a2.4 2.4 0 0 0 2 -1a2.4 2.4 0 0 1 2 -1a2.4 2.4 0 0 1 2 1a2.4 2.4 0 0 0 2 1a2.4 2.4 0 0 0 2 -1" />
+                            <path d="M4 18l-1 -5h18l-2 4" />
+                            <path d="M5 13v-6h8l4 6" />
+                            <path d="M7 7v-4h-1" />
+                        </svg>
+                    </div>
+                </div>
+                <h1 class="price counter">{{ $clickCounts['whatsapp'] ?? 0 }}</h1>
+            </div>
+
+            <!-- Email -->
+            <div class="col-sm-3">
+                <div class="mb-4 d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">Email</h6>
+                    <div class="d-flex align-items-center justify-content-center rounded arrow-btn percentage-increase">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-star">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z" />
+                        </svg>
+                    </div>
+                </div>
+                <h1 class="price counter">{{ $clickCounts['email'] ?? 0 }}</h1>
+            </div>
+
+            <!-- Location -->
+            <div class="col-sm-3">
+                <div class="mb-4 d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">Location</h6>
+                    <div class="d-flex align-items-center justify-content-center rounded arrow-btn percentage-increase">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-star">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z" />
+                        </svg>
+                    </div>
+                </div>
+                <h1 class="price counter">{{ $clickCounts['location'] ?? 0 }}</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+            <div class="card mb-4">
                 <div class="card-header position-relative">
                     <h6 class="fs-17 fw-semi-bold mb-0">Subscription Details</h6>
                 </div>
+                
                 <div class="card-body">
                     <div class="row g-4">
                         <!-- start form group -->
-                        <div class="col-sm-4">
+                        <div class="col-sm-3">
                             <!-- start form group -->
                             <div class="">
                                 <label class="fw-medium mb-2">Plan Name</label>
@@ -31,7 +103,7 @@
                             </div>
                             <!-- end /. form group -->
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-3">
                             <!-- start form group -->
                             <div class="">
                                 <label class="fw-medium mb-2">Start Date</label>
@@ -39,13 +111,29 @@
                             </div>
                             <!-- end /. form group -->
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-3">
                             <!-- start form group -->
                             <div class="">
                                 <label class="fw-medium mb-2">End Date</label>
                                 <div> {{ \Carbon\Carbon::parse($subscription->end_date)->format('d M Y') }}</div>
                             </div>
                             <!-- end /. form group -->
+                        </div>
+                        <div class="col-sm-3">
+                        <label class="fw-medium mb-2">Status</label>
+                            <div>
+                                @php
+                                    $status = $subscription->actual_status;
+                                @endphp
+
+                                @if ($status === 'active')
+                                    <span class="badge bg-success">{{ ucfirst($status) }}</span>
+                                @elseif ($status === 'expired')
+                                    <span class="badge bg-danger">{{ ucfirst($status) }}</span>
+                                @else
+                                    <span class="badge bg-secondary">{{ ucfirst($status) }}</span>
+                                @endif
+                            </div>
                         </div>
                         <!-- end /. form group -->
                     </div> 

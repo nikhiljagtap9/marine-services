@@ -99,6 +99,17 @@
 <script>
 $(document).ready(function () {
     let table = $('#blogsTable').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                extend: 'csvHtml5',
+                text: 'Download CSV',
+                title: 'Blog_List',
+                exportOptions: {
+                    columns: [0, 1, 2] // Excludes "Action" (index 3)
+                }
+            }
+        ],
         ajax: {
             url: '{{ route("admin.blogs.list") }}',
             dataSrc: 'data'

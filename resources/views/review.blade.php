@@ -18,7 +18,9 @@
    }
 </style>
 @section('content')
-
+@php
+    $today = \Carbon\Carbon::now()->format('Y-m-d');
+@endphp
 <div class="reviw_wrap">
    <video class="reviw_wrap_inner" autoplay="" muted="" loop="">
             <source src="{{ asset('privacy-t&c-consent/assets/img/vi.mp4')}}" type="video/mp4">
@@ -107,7 +109,7 @@
                               <div class="col-sm-4" bis_skin_checked="1">
                                  <div class="" bis_skin_checked="1">
                                     <label class="required fw-medium mb-2">Date of Service</label>
-                                    <input name="service_date" type="date" value="{{ old('service_date') }}" class="form-control" placeholder="Enter Date of Service">
+                                    <input name="service_date" max="{{ $today }}" type="date" value="{{ old('service_date') }}" class="form-control" placeholder="Enter Date of Service">
                                     @error('service_date')
                                           <div class="invalid-feedback text-start">{{ $message }}</div>
                                     @enderror

@@ -50,25 +50,32 @@
             New Quote Request
         </div>
         <div class="email-body">
-            <p><strong>Company Name:</strong> {{ ucwords($quote->company_name) }}</p>
+            <p>Dear {{ ucwords($quote->company_name) }},</p>
 
-            <p><strong>Requested By:</strong>
-                {{ optional($quote->requestedByUser)->name ? ucwords($quote->requestedByUser->name) : 'N/A' }}
+            <p>A shipowner or manager has requested a quote from your company via Rated Marine Services.</p>
+
+            <ul>
+                <li><strong>Service Category:</strong> {{ implode(', ', $quote->category_names ?? []) }}</li>
+                <li><strong>Shipowner/Manager Name:</strong> {{ ucwords($quote->requester_name) }}</li>
+                <li><strong>Location:</strong> {{ $quote->port_name }}</li>
+                <li><strong>Date:</strong> {{ $quote->request_date }}</li>
+            </ul>
+
+            <p>Please log in to your dashboard to view the full request and provide your offer promptly.</p>
+
+            <p>
+                <a href="{{ url('/login') }}" style="background-color: #155bc1; color: white; padding: 10px 15px; text-decoration: none; border-radius: 4px;">
+                    View Request
+                </a>
             </p>
 
-            <p><strong>Service Provider:</strong>
-                {{ optional($quote->serviceProvider)->name ? ucwords($quote->serviceProvider->name) : 'N/A' }}
-            </p>
-
-            <p><strong>Categories:</strong>
-                {{ implode(', ', $quote->getCategoryNames()) ?: 'N/A' }}
-            </p>
+            <p>Fast response increases your chances of selection!</p>
 
 
         </div>
         <div class="email-footer">
-            Regards,<br>
-            Rated Marine Services Team
+            Kind regards,<br>
+            Rated Marine Services
         </div>
     </div>
 </body>

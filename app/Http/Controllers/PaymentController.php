@@ -63,7 +63,7 @@ class PaymentController extends Controller
         $iyzicoRequest->setConversationId('user_' . $user->id); // Dynamic ID
         $iyzicoRequest->setPrice($price);
         $iyzicoRequest->setPaidPrice($price);
-        $iyzicoRequest->setCurrency(Currency::TL);
+        $iyzicoRequest->setCurrency(Currency::USD);
         $iyzicoRequest->setPaymentGroup(PaymentGroup::SUBSCRIPTION);
         $iyzicoRequest->setCallbackUrl(route('iyzico.callback',  ['payload' => $payload]));
 

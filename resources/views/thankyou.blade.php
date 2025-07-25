@@ -50,7 +50,9 @@
                     <p class="description-success">Your Registration is Complete. <br>
                         You can log in and begin exploring all our services starting 1st July 2025.<br>
 
-                        Your Silver plan is free until 1st October 2025 <br>
+                        @if(strtolower($payment['plan_name'] ?? '') === 'silver')
+                            Your Silver plan is free until 1st October 2025 <br>
+                        @endif
                         
                         Don’t forget to upgrade to one of our paid plans before your free plan expires.
                     </p>

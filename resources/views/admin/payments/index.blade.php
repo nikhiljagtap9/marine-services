@@ -35,6 +35,7 @@
 }
 </style>
 
+
 <div class="body-content">
     <div class="container-xxl">
         <div class="card">
@@ -44,7 +45,7 @@
             <div class="card-body">
                <div id="subscription-message" class="alert d-none"></div>
                 <div class="table-responsive">
-                    <table class="table table-borderless text-nowrap category-list">
+                    <table id="subscriptions-list" class="table table-borderless text-nowrap">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -71,22 +72,28 @@
                                             {{ ucfirst($subscription->status) }}
                                         </span>
                                     </td> -->
-                                    <td>
-                                       @if($subscription->status === 'pending')
-                                          <span class="badge bg-warning text-dark">Pending</span>
-                                          <button class="btn btn-sm btn-primary mt-1 activate-subscription" data-id="{{ $subscription->id }}">
-                                                Activate
-                                          </button>
-                                       @elseif($subscription->status === 'active')
-                                          <span class="badge bg-success">Active</span>
-                                       @elseif($subscription->status === 'expired')
-                                          <span class="badge bg-secondary">Expired</span>
-                                       @elseif($subscription->status === 'cancelled')
-                                          <span class="badge bg-danger">Cancelled</span>
-                                       @else
-                                          <span class="badge bg-light text-dark">Unknown</span>
-                                       @endif
-                                    </td>
+                        
+                                   <td>
+    @if ($subscription->status === 'pending')
+        <span class="badge bg-warning text-dark">Pending</span>
+        <button class="btn btn-sm btn-primary mt-1 activate-subscription" data-id="{{ $subscription->id }}">
+            Activate
+        </button>
+    
+    @elseif ($subscription->status === 'active')
+        <span class="badge bg-success">Active</span>
+
+    @elseif ($subscription->status === 'expired')
+        <span class="badge bg-secondary">Expired</span>
+
+    @elseif ($subscription->status === 'cancelled')
+        <span class="badge bg-danger">Cancelled</span>
+
+    @else
+        <span class="badge bg-light text-dark">Unknown</span>
+    @endif
+</td>
+
                                     <td>
                                        <span class="badge bg-{{ ($subscription->payment->status ?? '') === 'SUCCESS' ? 'success' : 'danger' }}">
                                           {{ $subscription->payment->status ?? 'N/A' }}
@@ -182,5 +189,27 @@
         });
     });
 </script>
+
+<script>
+     $('#subscriptions-list').DataTable({  
+      dom: 'Bfrtip',
+      buttons: [
+         {
+               extend: 'csvHtml5',
+               text: 'Download CSV',
+               title: 'All_Subscriptions',
+               exportOptions: {
+                  columns: [0, 1, 2, 4, 5, 6, 7, 8, 9, 10]
+               }
+         }
+      ],
+   });
+
+</script>
 @endsection
+
+
+   
+
+
 

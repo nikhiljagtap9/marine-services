@@ -25,7 +25,13 @@
       <script src="{{ asset('admin/assets/plugins/jquery.counterup/jquery.counterup.min.js')}}"></script>
       <!-- Page Scripts(used by all page) -->
       <script src="{{ asset('admin/assets/dist/js/app.min.js')}}"></script>
-      <!-- Page Active Scripts(used by this page) -->
+      
+       <!-- DataTables Buttons JS & CSS -->
+      <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+      <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+      <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+       <!-- Page Active Scripts(used by this page) -->
       <script src="{{ asset('admin/assets/dist/js/dashboard.js')}}"></script> 
    </body>
 </html>

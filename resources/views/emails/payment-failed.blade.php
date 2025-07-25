@@ -1,3 +1,6 @@
+@php
+    $planName = ucfirst($payment->plan->name); // e.g., Silver / Gold / Platinum
+@endphp
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,27 +41,41 @@
             border-top: 1px solid #eeeeee;
             padding-top: 15px;
         }
+        .retry-btn {
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: inline-block;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
-    <div class="email-container">
-        <div class="email-header">
-            ❌ Payment Failed
-        </div>
-        <div class="email-body">
-            <p><strong>Dear {{ auth()->user()->name }},</strong></p>
-            <p>Unfortunately, your payment could not be completed. Please find the details below:</p>
-
-            <p><strong>Attempted Amount:</strong> {{ $payment->price }} {{ $payment->currency }}</p>
-            <p><strong>Payment ID:</strong> {{ $payment->payment_id ?? 'N/A' }}</p>
-            <p><strong>Reason:</strong> Payment failed due to an issue with the transaction or card details.</p>
-
-            <p>If you continue facing issues, please contact our support team.</p>
-        </div>
-        <div class="email-footer">
-            Need help? We're here for you,<br>
-            Rated Marine Services Team
-        </div>
+<div class="email-container">
+    <div class="email-header">
+        Payment Failed
     </div>
+    <div class="email-body">
+        <p>Dear {{ ucfirst(auth()->user()->name) }},</p>
+
+        <p>Unfortunately, your recent payment attempt on <strong>Rated Marine Services</strong> was unsuccessful.</p>
+
+        <p><strong>Payment Status:</strong> <span style="color:#dc3545;">FAILED</span></p>
+        <p><strong>Date:</strong> {{ \Carbon\Carbon::parse($payment->created_at)->format('d M Y h:i A') }}</p>
+        <p><strong>Plan:</strong> {{ $planName }}</p>
+
+        <p>Please log in to your dashboard and retry the payment to avoid disruption of your membership.</p>
+
+        <a href="#" class="retry-btn">Retry Payment</a>
+
+        <p>If you need assistance, our support team is here to help you.</p>
+    </div>
+    <div class="email-footer">
+        Kind regards,<br>
+        <strong>Rated Marine Services Billing Team</strong>
+    </div>
+</div>
 </body>
 </html>

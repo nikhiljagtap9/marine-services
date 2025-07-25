@@ -114,6 +114,17 @@ class User extends Authenticatable
             ->first();
     }
 
+    /**
+     * Get the latest subscription for a specific plan (even if expired)
+     */
+    public function getLatestSubscriptionForPlan($planId)
+    {
+        return $this->subscriptions()
+            ->where('plan_id', $planId)
+            ->latest('end_date')
+            ->first();
+    }
+
     public function serviceReviews()
     {
         return $this->hasMany(ServiceReview::class, 'service_provider_id');

@@ -62,7 +62,20 @@
                      </li>
                      
 
-                     <li class="{{ request()->routeIs('admin.countries.*', 'admin.cities.*', 'admin.ports.*', 'admin.categories.*', 'admin.sub-categories.*', 'admin.blogs.*','admin.payments.*') ? 'mm-active' : '' }}">
+                     <li class="{{ request()->routeIs(
+                                 'admin.countries.*',
+                                 'admin.cities.*',
+                                 'admin.ports.*',
+                                 'admin.categories.*',
+                                 'admin.sub-categories.*',
+                                 'admin.payments.*',
+                                 'admin.blogs.*',
+                                 'admin.tc.*',
+                                 'admin.privacy.*',
+                                 'admin.consent.*',
+                                 'admin.distance-sales.*',
+                                 'admin.data-processing.*'
+                              ) ? 'mm-active' : '' }}">
                             <a class="has-arrow material-ripple" href="#">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-plus" viewBox="0 0 16 16">
                                     <path d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5" />
@@ -77,11 +90,22 @@
                                 <li><a href="{{ route('admin.categories.index') }}">Manage Categories</a></li> 
                                 <li><a href="{{ route('admin.sub-categories.index') }}">Manage Sub-Categories</a></li>
                                 <li><a href="{{ route('admin.payments.list') }}">Subscription Payments</a></li>  
-                                <li><a href="{{ route('admin.blogs.index') }}">Manage Blogs</a></li>      
+                                <li><a href="{{ route('admin.blogs.index') }}">Manage Blogs</a></li> 
+                                <li>
+                                    <a class="has-arrow" href="#" aria-expanded="false">Pages</a>
+                                    <ul class="nav-fourth-level">
+                                       <li><a href="#">About Us</a></li>
+                                       <li><a href="{{route('admin.tc.index')}}">Terms & Conditions</a></li>
+                                       <li><a href="{{route('admin.privacy.index')}}">Privacy Policy</a></li>
+                                       <li><a href="{{route('admin.consent.index')}}">Consent Statement</a></li>
+                                       <li><a href="{{route('admin.distance-sales.index')}}">Distance Sales Agreement</a></li>
+                                       <li><a href="{{route('admin.data-processing.index')}}">Data Processing & Storage Policy</a></li>
+                                    </ul>
+                                </li>  
                              </ul>
                      </li>   
                      
-                     <li class="{{ request()->routeIs('admin.usres.*') ? 'mm-active' : '' }}">
+                     <li class="{{ request()->routeIs('admin.users.*') ? 'mm-active' : '' }}">
                             <a class="has-arrow material-ripple" href="#">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-nested" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M4.5 11.5A.5.5 0 0 1 5 11h10a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5m-2-4A.5.5 0 0 1 3 7h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m-2-4A.5.5 0 0 1 1 3h10a.5.5 0 0 1 0 1H1a.5.5 0 0 1-.5-.5" />
@@ -89,13 +113,14 @@
                                 <span class="ms-2">Users</span>
                             </a>
                             <ul class="nav-second-level">                            
-                               <li class="{{ request()->has('plan') ? 'mm-active' : '' }}">
+                               <li class="{{ request()->has('plan') || request()->routeIs('admin.users.index') ? 'mm-active' : '' }}">
                                     <a class="has-arrow" href="#" aria-expanded="false">Service Provider</a>
-                                    <ul class="nav-third-level {{ request()->has('plan') ? 'mm-show' : '' }}">
-                                       <li><a href="{{ route('admin.usres.index', ['plan' => '1']) }}">Basic Plan</a></li>  
-                                       <li><a href="{{ route('admin.usres.index', ['plan' => '2']) }}">Silver Plan</a></li>
-                                       <li><a href="{{ route('admin.usres.index', ['plan' => '3']) }}">Gold Plan</a></li>
-                                       <li><a href="{{ route('admin.usres.index', ['plan' => '4']) }}">Platinum Plan</a></li>
+                                    <ul class="nav-third-level {{ request()->has('plan') || request()->routeIs('admin.users.index') ? 'mm-show' : '' }}">
+                                       <li><a href="{{ route('admin.users.index') }}">All</a></li>
+                                       <li><a href="{{ route('admin.users.index', ['plan' => '1']) }}">Basic Plan</a></li>  
+                                       <li><a href="{{ route('admin.users.index', ['plan' => '2']) }}">Silver Plan</a></li>
+                                       <li><a href="{{ route('admin.users.index', ['plan' => '3']) }}">Gold Plan</a></li>
+                                       <li><a href="{{ route('admin.users.index', ['plan' => '4']) }}">Platinum Plan</a></li>
                                        <!-- <li>
                                           <a class="has-arrow" href="#" aria-expanded="false">Level - 3</a>
                                           <ul class="nav-fourth-level">
@@ -104,7 +129,7 @@
                                        </li> -->
                                     </ul>
                                 </li>
-                                 <li><a href="#">Client</a></li>
+                                <li><a href="{{ route('admin.users.clients') }}">View Clients</a></li>
                             </ul>
                         </li>
   

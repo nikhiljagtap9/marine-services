@@ -421,7 +421,15 @@ class ListingController extends Controller
         $subscription = Subscription::with('user')->find($request->subscription_id);
 
         if ($subscription && $subscription->user && $subscription->user->email) {
-            Mail::to($subscription->user->email)->send(new EnquirySubmitted($enquiry));
+            
+            try {
+               Mail::to($subscription->user->email)->send(new EnquirySubmitted($enquiry));
+            } catch (\Exception $e) {
+                \Log::error('Failed to send Enquiry Submitted email to provider.', [
+                'email' => $subscription->user->email ?? 'N/A',
+                'error' => $e->getMessage()
+                ]);
+            }  
         }
 
         return redirect()->back()->with('success', 'Enquiry submitted successfully.')->withFragment('enquiryForm');

@@ -86,9 +86,11 @@ class ReviewController extends Controller
         // Send email to service provider
         $provider = User::find($id);
         if ($provider && $provider->email) {
-          //  Mail::to($provider->email)->send(new ServiceReviewSubmitted($review));
-            Mail::to('niksjagtap9@gmail.com')->send(new ServiceReviewSubmitted($review));
-            
+            try {
+                Mail::to($provider->email)->send(new ServiceReviewSubmitted($review));
+            } catch (\Exception $e) {
+                \Log::error('Failed to send service review email to provider: ' . $e->getMessage());
+            }            
         }
 
         return back()->with('success', 'Thank you for your review!');
